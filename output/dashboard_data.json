@@ -1,0 +1,2046 @@
+{
+  "metadata": {
+    "generated_at_utc": "2026-11-14T21:19:08Z",
+    "bbox": "-66.0,-33.5,-63.5,-31.0",
+    "date_reference": null,
+    "day_range": 5,
+    "is_synthetic": false,
+    "total_detections": 31,
+    "active_fronts_count": 8,
+    "isolated_hotspots_count": 1
+  },
+  "kpis": {
+    "viirs_detections": 28,
+    "modis_detections": 3,
+    "harmonized_equivalent_detections": 45.0,
+    "peak_pass_frp_mw": 374.55,
+    "total_estimated_fre_mj": 2915012.1,
+    "total_detection_envelope_ha": 650.1,
+    "multisensor_confirmed_fronts": 1
+  },
+  "satellite_breakdown": {
+    "NOAA-20": {
+      "count": 16,
+      "percentage": 51.61
+    },
+    "NOAA-21": {
+      "count": 12,
+      "percentage": 38.71
+    },
+    "Aqua": {
+      "count": 2,
+      "percentage": 6.45
+    },
+    "Terra": {
+      "count": 1,
+      "percentage": 3.23
+    }
+  },
+  "temporal_series": [
+    {
+      "timestamp_hour_utc": "2026-11-11 05:00",
+      "sensor_family": "VIIRS",
+      "detections": 1,
+      "pass_frp_mw": 1.15,
+      "max_brightness_k": 301.02
+    },
+    {
+      "timestamp_hour_utc": "2026-11-12 05:00",
+      "sensor_family": "VIIRS",
+      "detections": 1,
+      "pass_frp_mw": 1.01,
+      "max_brightness_k": 307.72
+    },
+    {
+      "timestamp_hour_utc": "2026-11-12 17:00",
+      "sensor_family": "VIIRS",
+      "detections": 3,
+      "pass_frp_mw": 133.23,
+      "max_brightness_k": 353.67
+    },
+    {
+      "timestamp_hour_utc": "2026-11-12 18:00",
+      "sensor_family": "VIIRS",
+      "detections": 9,
+      "pass_frp_mw": 456.73,
+      "max_brightness_k": 367.0
+    },
+    {
+      "timestamp_hour_utc": "2026-11-12 20:00",
+      "sensor_family": "MODIS",
+      "detections": 2,
+      "pass_frp_mw": 25.96,
+      "max_brightness_k": 317.29
+    },
+    {
+      "timestamp_hour_utc": "2026-11-13 05:00",
+      "sensor_family": "VIIRS",
+      "detections": 2,
+      "pass_frp_mw": 2.67,
+      "max_brightness_k": 307.96
+    },
+    {
+      "timestamp_hour_utc": "2026-11-13 12:00",
+      "sensor_family": "MODIS",
+      "detections": 1,
+      "pass_frp_mw": 11.73,
+      "max_brightness_k": 318.32
+    },
+    {
+      "timestamp_hour_utc": "2026-11-13 17:00",
+      "sensor_family": "VIIRS",
+      "detections": 3,
+      "pass_frp_mw": 17.48,
+      "max_brightness_k": 336.62
+    },
+    {
+      "timestamp_hour_utc": "2026-11-13 18:00",
+      "sensor_family": "VIIRS",
+      "detections": 9,
+      "pass_frp_mw": 51.69,
+      "max_brightness_k": 356.48
+    }
+  ],
+  "events": [
+    {
+      "event_id": "FIRE_CLUSTER_001",
+      "event_type": "Frente Activo",
+      "location_name": "Sierras de San Luis (El Trapiche / La Florida)",
+      "centroid_lat": -33.2548,
+      "centroid_lon": -65.95332,
+      "points_count": 12,
+      "viirs_count": 11,
+      "modis_count": 1,
+      "multisensor_confirmed": true,
+      "satellites_involved": "Aqua, NOAA-20, NOAA-21",
+      "frp_peak_mw": 374.55,
+      "fre_est_mj": 2036545.2,
+      "temp_brightness_max_k": 367.0,
+      "mean_delta_temp_k": 32.99,
+      "detection_area_ha": 47.1,
+      "first_detected": "2026-11-12 17:15:00",
+      "last_detected": "2026-11-13 05:18:00",
+      "duration_hours": 12.05,
+      "spread_vector_km": 0.237,
+      "spread_speed_kmh": 0.077,
+      "spread_azimuth_deg": 12.6,
+      "spread_cardinal": "N",
+      "severity_level": "Severidad Alta",
+      "polygon_coords": [
+        [
+          -33.25633,
+          -65.94402
+        ],
+        [
+          -33.25388,
+          -65.94758
+        ],
+        [
+          -33.25238,
+          -65.953
+        ],
+        [
+          -33.25226,
+          -65.95634
+        ],
+        [
+          -33.25298,
+          -65.9576
+        ],
+        [
+          -33.25679,
+          -65.95911
+        ],
+        [
+          -33.25656,
+          -65.95151
+        ],
+        [
+          -33.25633,
+          -65.94402
+        ]
+      ]
+    },
+    {
+      "event_id": "FIRE_CLUSTER_005",
+      "event_type": "Frente Activo",
+      "location_name": "Valle de Traslasierra (Mina Clavero / Cura Brochero, Córdoba)",
+      "centroid_lat": -31.72459,
+      "centroid_lon": -65.03149,
+      "points_count": 3,
+      "viirs_count": 3,
+      "modis_count": 0,
+      "multisensor_confirmed": false,
+      "satellites_involved": "NOAA-20",
+      "frp_peak_mw": 22.77,
+      "fre_est_mj": 81972.0,
+      "temp_brightness_max_k": 356.48,
+      "mean_delta_temp_k": 44.64,
+      "detection_area_ha": 9.7,
+      "first_detected": "2026-11-13 18:38:00",
+      "last_detected": "2026-11-13 18:38:00",
+      "duration_hours": 0.0,
+      "spread_vector_km": 0.0,
+      "spread_speed_kmh": 0.0,
+      "spread_azimuth_deg": null,
+      "spread_cardinal": "Estacionario",
+      "severity_level": "Severidad Baja",
+      "polygon_coords": [
+        [
+          -31.72383,
+          -65.03474
+        ],
+        [
+          -31.72699,
+          -65.02927
+        ],
+        [
+          -31.72295,
+          -65.03046
+        ],
+        [
+          -31.72383,
+          -65.03474
+        ]
+      ]
+    },
+    {
+      "event_id": "FIRE_CLUSTER_006",
+      "event_type": "Frente Activo",
+      "location_name": "Sierras Chicas / Gran Córdoba (Córdoba)",
+      "centroid_lat": -31.40288,
+      "centroid_lon": -64.11921,
+      "points_count": 5,
+      "viirs_count": 5,
+      "modis_count": 0,
+      "multisensor_confirmed": false,
+      "satellites_involved": "NOAA-20, NOAA-21",
+      "frp_peak_mw": 12.63,
+      "fre_est_mj": 34435.5,
+      "temp_brightness_max_k": 343.5,
+      "mean_delta_temp_k": 33.26,
+      "detection_area_ha": 43.3,
+      "first_detected": "2026-11-12 05:37:00",
+      "last_detected": "2026-11-13 18:38:00",
+      "duration_hours": 37.02,
+      "spread_vector_km": 1.133,
+      "spread_speed_kmh": 0.061,
+      "spread_azimuth_deg": 47.3,
+      "spread_cardinal": "NE",
+      "severity_level": "Severidad Baja",
+      "polygon_coords": [
+        [
+          -31.39897,
+          -64.11707
+        ],
+        [
+          -31.41113,
+          -64.13239
+        ],
+        [
+          -31.40291,
+          -64.11656
+        ],
+        [
+          -31.40072,
+          -64.11296
+        ],
+        [
+          -31.39897,
+          -64.11707
+        ]
+      ]
+    },
+    {
+      "event_id": "FIRE_CLUSTER_007",
+      "event_type": "Frente Activo",
+      "location_name": "Norte Puntano (Quines / Candelaria, San Luis)",
+      "centroid_lat": -32.11715,
+      "centroid_lon": -65.74159,
+      "points_count": 2,
+      "viirs_count": 0,
+      "modis_count": 2,
+      "multisensor_confirmed": false,
+      "satellites_involved": "Aqua, Terra",
+      "frp_peak_mw": 11.73,
+      "fre_est_mj": 656709.0,
+      "temp_brightness_max_k": 318.32,
+      "mean_delta_temp_k": 16.52,
+      "detection_area_ha": 403.9,
+      "first_detected": "2026-11-12 20:57:00",
+      "last_detected": "2026-11-13 12:55:00",
+      "duration_hours": 15.97,
+      "spread_vector_km": 0.0,
+      "spread_speed_kmh": 0.0,
+      "spread_azimuth_deg": null,
+      "spread_cardinal": "Estacionario",
+      "severity_level": "Severidad Baja",
+      "polygon_coords": [
+        [
+          -32.10696,
+          -65.74159
+        ],
+        [
+          -32.10833,
+          -65.73557
+        ],
+        [
+          -32.11206,
+          -65.73117
+        ],
+        [
+          -32.11715,
+          -65.72956
+        ],
+        [
+          -32.12224,
+          -65.73117
+        ],
+        [
+          -32.12597,
+          -65.73557
+        ],
+        [
+          -32.12734,
+          -65.74159
+        ],
+        [
+          -32.12597,
+          -65.7476
+        ],
+        [
+          -32.12224,
+          -65.752
+        ],
+        [
+          -32.11715,
+          -65.75361
+        ],
+        [
+          -32.11206,
+          -65.752
+        ],
+        [
+          -32.10833,
+          -65.7476
+        ],
+        [
+          -32.10696,
+          -65.74159
+        ]
+      ]
+    },
+    {
+      "event_id": "FIRE_CLUSTER_003",
+      "event_type": "Frente Activo",
+      "location_name": "Sierra de las Quijadas / Luján (San Luis)",
+      "centroid_lat": -32.18718,
+      "centroid_lon": -65.65928,
+      "points_count": 2,
+      "viirs_count": 2,
+      "modis_count": 0,
+      "multisensor_confirmed": false,
+      "satellites_involved": "NOAA-20",
+      "frp_peak_mw": 11.06,
+      "fre_est_mj": 39816.0,
+      "temp_brightness_max_k": 345.21,
+      "mean_delta_temp_k": 32.49,
+      "detection_area_ha": 47.3,
+      "first_detected": "2026-11-13 18:38:00",
+      "last_detected": "2026-11-13 18:38:00",
+      "duration_hours": 0.0,
+      "spread_vector_km": 0.0,
+      "spread_speed_kmh": 0.0,
+      "spread_azimuth_deg": null,
+      "spread_cardinal": "Estacionario",
+      "severity_level": "Severidad Baja",
+      "polygon_coords": [
+        [
+          -32.18369,
+          -65.65928
+        ],
+        [
+          -32.18416,
+          -65.65723
+        ],
+        [
+          -32.18544,
+          -65.65572
+        ],
+        [
+          -32.18718,
+          -65.65517
+        ],
+        [
+          -32.18892,
+          -65.65572
+        ],
+        [
+          -32.1902,
+          -65.65723
+        ],
+        [
+          -32.19067,
+          -65.65928
+        ],
+        [
+          -32.1902,
+          -65.66134
+        ],
+        [
+          -32.18892,
+          -65.66285
+        ],
+        [
+          -32.18718,
+          -65.6634
+        ],
+        [
+          -32.18544,
+          -65.66285
+        ],
+        [
+          -32.18416,
+          -65.66134
+        ],
+        [
+          -32.18369,
+          -65.65928
+        ]
+      ]
+    },
+    {
+      "event_id": "ISO_25",
+      "event_type": "Foco Aislado",
+      "location_name": "Reserva Chancaní / Oeste Traslasierra (Córdoba)",
+      "centroid_lat": -31.85509,
+      "centroid_lon": -65.55127,
+      "points_count": 1,
+      "viirs_count": 1,
+      "modis_count": 0,
+      "multisensor_confirmed": false,
+      "satellites_involved": "NOAA-21",
+      "frp_peak_mw": 9.24,
+      "fre_est_mj": 33264.0,
+      "temp_brightness_max_k": 333.67,
+      "mean_delta_temp_k": 27.05,
+      "detection_area_ha": 20.24,
+      "first_detected": "2026-11-13 17:43:00",
+      "last_detected": "2026-11-13 17:43:00",
+      "duration_hours": 0.0,
+      "spread_vector_km": 0.0,
+      "spread_speed_kmh": 0.0,
+      "spread_azimuth_deg": null,
+      "spread_cardinal": "Estacionario",
+      "severity_level": "Severidad Baja",
+      "polygon_coords": [
+        [
+          -31.85281,
+          -65.55127
+        ],
+        [
+          -31.85312,
+          -65.54993
+        ],
+        [
+          -31.85395,
+          -65.54895
+        ],
+        [
+          -31.85509,
+          -65.54859
+        ],
+        [
+          -31.85623,
+          -65.54895
+        ],
+        [
+          -31.85706,
+          -65.54993
+        ],
+        [
+          -31.85737,
+          -65.55127
+        ],
+        [
+          -31.85706,
+          -65.55261
+        ],
+        [
+          -31.85623,
+          -65.55359
+        ],
+        [
+          -31.85509,
+          -65.55395
+        ],
+        [
+          -31.85395,
+          -65.55359
+        ],
+        [
+          -31.85312,
+          -65.55261
+        ],
+        [
+          -31.85281,
+          -65.55127
+        ]
+      ]
+    },
+    {
+      "event_id": "FIRE_CLUSTER_004",
+      "event_type": "Frente Activo",
+      "location_name": "Traslasierra Sur (San Javier / Yacanto, Córdoba)",
+      "centroid_lat": -32.05185,
+      "centroid_lon": -65.1694,
+      "points_count": 2,
+      "viirs_count": 2,
+      "modis_count": 0,
+      "multisensor_confirmed": false,
+      "satellites_involved": "NOAA-20",
+      "frp_peak_mw": 5.23,
+      "fre_est_mj": 18828.0,
+      "temp_brightness_max_k": 342.37,
+      "mean_delta_temp_k": 34.45,
+      "detection_area_ha": 34.3,
+      "first_detected": "2026-11-13 18:38:00",
+      "last_detected": "2026-11-13 18:38:00",
+      "duration_hours": 0.0,
+      "spread_vector_km": 0.0,
+      "spread_speed_kmh": 0.0,
+      "spread_azimuth_deg": null,
+      "spread_cardinal": "Estacionario",
+      "severity_level": "Severidad Baja",
+      "polygon_coords": [
+        [
+          -32.04888,
+          -65.1694
+        ],
+        [
+          -32.04927,
+          -65.16765
+        ],
+        [
+          -32.05036,
+          -65.16637
+        ],
+        [
+          -32.05185,
+          -65.1659
+        ],
+        [
+          -32.05333,
+          -65.16637
+        ],
+        [
+          -32.05442,
+          -65.16765
+        ],
+        [
+          -32.05481,
+          -65.1694
+        ],
+        [
+          -32.05442,
+          -65.17116
+        ],
+        [
+          -32.05333,
+          -65.17244
+        ],
+        [
+          -32.05185,
+          -65.17291
+        ],
+        [
+          -32.05036,
+          -65.17244
+        ],
+        [
+          -32.04927,
+          -65.17116
+        ],
+        [
+          -32.04888,
+          -65.1694
+        ]
+      ]
+    },
+    {
+      "event_id": "FIRE_CLUSTER_002",
+      "event_type": "Frente Activo",
+      "location_name": "Valle del Conlara / El Morro (San Luis)",
+      "centroid_lat": -32.91066,
+      "centroid_lon": -65.42809,
+      "points_count": 2,
+      "viirs_count": 2,
+      "modis_count": 0,
+      "multisensor_confirmed": false,
+      "satellites_involved": "NOAA-20, NOAA-21",
+      "frp_peak_mw": 3.19,
+      "fre_est_mj": 9302.4,
+      "temp_brightness_max_k": 342.47,
+      "mean_delta_temp_k": 25.81,
+      "detection_area_ha": 33.3,
+      "first_detected": "2026-11-12 18:00:00",
+      "last_detected": "2026-11-12 18:57:00",
+      "duration_hours": 0.95,
+      "spread_vector_km": 0.0,
+      "spread_speed_kmh": 0.0,
+      "spread_azimuth_deg": null,
+      "spread_cardinal": "Estacionario",
+      "severity_level": "Severidad Baja",
+      "polygon_coords": [
+        [
+          -32.90773,
+          -65.42809
+        ],
+        [
+          -32.90812,
+          -65.42634
+        ],
+        [
+          -32.90919,
+          -65.42507
+        ],
+        [
+          -32.91066,
+          -65.4246
+        ],
+        [
+          -32.91212,
+          -65.42507
+        ],
+        [
+          -32.91319,
+          -65.42634
+        ],
+        [
+          -32.91358,
+          -65.42809
+        ],
+        [
+          -32.91319,
+          -65.42983
+        ],
+        [
+          -32.91212,
+          -65.4311
+        ],
+        [
+          -32.91066,
+          -65.43157
+        ],
+        [
+          -32.90919,
+          -65.4311
+        ],
+        [
+          -32.90812,
+          -65.42983
+        ],
+        [
+          -32.90773,
+          -65.42809
+        ]
+      ]
+    },
+    {
+      "event_id": "FIRE_CLUSTER_000",
+      "event_type": "Frente Activo",
+      "location_name": "Pilar / Río Segundo (Córdoba)",
+      "centroid_lat": -31.66311,
+      "centroid_lon": -63.83293,
+      "points_count": 2,
+      "viirs_count": 2,
+      "modis_count": 0,
+      "multisensor_confirmed": false,
+      "satellites_involved": "NOAA-20, NOAA-21",
+      "frp_peak_mw": 1.15,
+      "fre_est_mj": 4140.0,
+      "temp_brightness_max_k": 306.71,
+      "mean_delta_temp_k": 14.88,
+      "detection_area_ha": 31.2,
+      "first_detected": "2026-11-11 05:12:00",
+      "last_detected": "2026-11-13 05:18:00",
+      "duration_hours": 48.1,
+      "spread_vector_km": 0.0,
+      "spread_speed_kmh": 0.0,
+      "spread_azimuth_deg": null,
+      "spread_cardinal": "Estacionario",
+      "severity_level": "Severidad Baja",
+      "polygon_coords": [
+        [
+          -31.66027,
+          -63.83293
+        ],
+        [
+          -31.66065,
+          -63.83126
+        ],
+        [
+          -31.66169,
+          -63.83004
+        ],
+        [
+          -31.66311,
+          -63.8296
+        ],
+        [
+          -31.66452,
+          -63.83004
+        ],
+        [
+          -31.66556,
+          -63.83126
+        ],
+        [
+          -31.66594,
+          -63.83293
+        ],
+        [
+          -31.66556,
+          -63.83459
+        ],
+        [
+          -31.66452,
+          -63.83581
+        ],
+        [
+          -31.66311,
+          -63.83625
+        ],
+        [
+          -31.66169,
+          -63.83581
+        ],
+        [
+          -31.66065,
+          -63.83459
+        ],
+        [
+          -31.66027,
+          -63.83293
+        ]
+      ]
+    }
+  ],
+  "points": [
+    {
+      "latitude": -31.66217,
+      "longitude": -63.83502,
+      "sensor_family": "VIIRS",
+      "satellite_name": "NOAA-20",
+      "frp_mw": 1.15,
+      "frp_density_mw_km2": 6.55,
+      "temp_ch4_k": 301.02,
+      "delta_temp_k": 15.27,
+      "confidence_cat": "Nominal",
+      "confidence_score": 0.65,
+      "pixel_area_km2": 0.1755,
+      "acq_datetime": "2026-11-11 05:12:00",
+      "cluster_id": 0
+    },
+    {
+      "latitude": -33.25679,
+      "longitude": -65.95911,
+      "sensor_family": "VIIRS",
+      "satellite_name": "NOAA-20",
+      "frp_mw": 52.18,
+      "frp_density_mw_km2": 97.99,
+      "temp_ch4_k": 349.04,
+      "delta_temp_k": 41.58,
+      "confidence_cat": "Nominal",
+      "confidence_score": 0.65,
+      "pixel_area_km2": 0.5325,
+      "acq_datetime": "2026-11-12 17:15:00",
+      "cluster_id": 1
+    },
+    {
+      "latitude": -33.25656,
+      "longitude": -65.95151,
+      "sensor_family": "VIIRS",
+      "satellite_name": "NOAA-20",
+      "frp_mw": 52.18,
+      "frp_density_mw_km2": 97.99,
+      "temp_ch4_k": 353.67,
+      "delta_temp_k": 43.2,
+      "confidence_cat": "Nominal",
+      "confidence_score": 0.65,
+      "pixel_area_km2": 0.5325,
+      "acq_datetime": "2026-11-12 17:15:00",
+      "cluster_id": 1
+    },
+    {
+      "latitude": -33.25633,
+      "longitude": -65.94402,
+      "sensor_family": "VIIRS",
+      "satellite_name": "NOAA-20",
+      "frp_mw": 28.87,
+      "frp_density_mw_km2": 54.22,
+      "temp_ch4_k": 332.35,
+      "delta_temp_k": 26.73,
+      "confidence_cat": "Low",
+      "confidence_score": 0.3,
+      "pixel_area_km2": 0.5325,
+      "acq_datetime": "2026-11-12 17:15:00",
+      "cluster_id": 1
+    },
+    {
+      "latitude": -33.25544,
+      "longitude": -65.95412,
+      "sensor_family": "VIIRS",
+      "satellite_name": "NOAA-20",
+      "frp_mw": 38.37,
+      "frp_density_mw_km2": 120.66,
+      "temp_ch4_k": 351.46,
+      "delta_temp_k": 34.8,
+      "confidence_cat": "Nominal",
+      "confidence_score": 0.65,
+      "pixel_area_km2": 0.318,
+      "acq_datetime": "2026-11-12 18:57:00",
+      "cluster_id": 1
+    },
+    {
+      "latitude": -33.25388,
+      "longitude": -65.94758,
+      "sensor_family": "VIIRS",
+      "satellite_name": "NOAA-20",
+      "frp_mw": 38.37,
+      "frp_density_mw_km2": 120.66,
+      "temp_ch4_k": 344.16,
+      "delta_temp_k": 33.4,
+      "confidence_cat": "Nominal",
+      "confidence_score": 0.65,
+      "pixel_area_km2": 0.318,
+      "acq_datetime": "2026-11-12 18:57:00",
+      "cluster_id": 1
+    },
+    {
+      "latitude": -32.9125,
+      "longitude": -65.42658,
+      "sensor_family": "VIIRS",
+      "satellite_name": "NOAA-20",
+      "frp_mw": 2.25,
+      "frp_density_mw_km2": 12.4,
+      "temp_ch4_k": 336.11,
+      "delta_temp_k": 25.36,
+      "confidence_cat": "Low",
+      "confidence_score": 0.3,
+      "pixel_area_km2": 0.1815,
+      "acq_datetime": "2026-11-12 18:57:00",
+      "cluster_id": 2
+    },
+    {
+      "latitude": -32.18913,
+      "longitude": -65.65876,
+      "sensor_family": "VIIRS",
+      "satellite_name": "NOAA-20",
+      "frp_mw": 5.53,
+      "frp_density_mw_km2": 23.38,
+      "temp_ch4_k": 335.14,
+      "delta_temp_k": 27.79,
+      "confidence_cat": "Low",
+      "confidence_score": 0.3,
+      "pixel_area_km2": 0.2365,
+      "acq_datetime": "2026-11-13 18:38:00",
+      "cluster_id": 3
+    },
+    {
+      "latitude": -32.18523,
+      "longitude": -65.65981,
+      "sensor_family": "VIIRS",
+      "satellite_name": "NOAA-20",
+      "frp_mw": 5.53,
+      "frp_density_mw_km2": 23.38,
+      "temp_ch4_k": 345.21,
+      "delta_temp_k": 37.19,
+      "confidence_cat": "Nominal",
+      "confidence_score": 0.65,
+      "pixel_area_km2": 0.2365,
+      "acq_datetime": "2026-11-13 18:38:00",
+      "cluster_id": 3
+    },
+    {
+      "latitude": -32.05212,
+      "longitude": -65.17107,
+      "sensor_family": "VIIRS",
+      "satellite_name": "NOAA-20",
+      "frp_mw": 2.84,
+      "frp_density_mw_km2": 16.55,
+      "temp_ch4_k": 339.24,
+      "delta_temp_k": 32.54,
+      "confidence_cat": "Nominal",
+      "confidence_score": 0.65,
+      "pixel_area_km2": 0.1716,
+      "acq_datetime": "2026-11-13 18:38:00",
+      "cluster_id": 4
+    },
+    {
+      "latitude": -32.05157,
+      "longitude": -65.16774,
+      "sensor_family": "VIIRS",
+      "satellite_name": "NOAA-20",
+      "frp_mw": 2.39,
+      "frp_density_mw_km2": 13.93,
+      "temp_ch4_k": 342.37,
+      "delta_temp_k": 36.35,
+      "confidence_cat": "Nominal",
+      "confidence_score": 0.65,
+      "pixel_area_km2": 0.1716,
+      "acq_datetime": "2026-11-13 18:38:00",
+      "cluster_id": 4
+    },
+    {
+      "latitude": -31.72699,
+      "longitude": -65.02927,
+      "sensor_family": "VIIRS",
+      "satellite_name": "NOAA-20",
+      "frp_mw": 5.05,
+      "frp_density_mw_km2": 28.69,
+      "temp_ch4_k": 347.04,
+      "delta_temp_k": 43.57,
+      "confidence_cat": "Nominal",
+      "confidence_score": 0.65,
+      "pixel_area_km2": 0.176,
+      "acq_datetime": "2026-11-13 18:38:00",
+      "cluster_id": 5
+    },
+    {
+      "latitude": -31.72383,
+      "longitude": -65.03474,
+      "sensor_family": "VIIRS",
+      "satellite_name": "NOAA-20",
+      "frp_mw": 14.46,
+      "frp_density_mw_km2": 82.16,
+      "temp_ch4_k": 356.48,
+      "delta_temp_k": 50.33,
+      "confidence_cat": "Low",
+      "confidence_score": 0.3,
+      "pixel_area_km2": 0.176,
+      "acq_datetime": "2026-11-13 18:38:00",
+      "cluster_id": 5
+    },
+    {
+      "latitude": -31.72295,
+      "longitude": -65.03046,
+      "sensor_family": "VIIRS",
+      "satellite_name": "NOAA-20",
+      "frp_mw": 3.26,
+      "frp_density_mw_km2": 18.52,
+      "temp_ch4_k": 343.43,
+      "delta_temp_k": 40.02,
+      "confidence_cat": "Nominal",
+      "confidence_score": 0.65,
+      "pixel_area_km2": 0.176,
+      "acq_datetime": "2026-11-13 18:38:00",
+      "cluster_id": 5
+    },
+    {
+      "latitude": -31.40072,
+      "longitude": -64.11296,
+      "sensor_family": "VIIRS",
+      "satellite_name": "NOAA-20",
+      "frp_mw": 6.96,
+      "frp_density_mw_km2": 32.19,
+      "temp_ch4_k": 343.5,
+      "delta_temp_k": 41.63,
+      "confidence_cat": "Nominal",
+      "confidence_score": 0.65,
+      "pixel_area_km2": 0.2162,
+      "acq_datetime": "2026-11-13 18:38:00",
+      "cluster_id": 6
+    },
+    {
+      "latitude": -31.40066,
+      "longitude": -64.11709,
+      "sensor_family": "VIIRS",
+      "satellite_name": "NOAA-20",
+      "frp_mw": 5.67,
+      "frp_density_mw_km2": 26.23,
+      "temp_ch4_k": 341.95,
+      "delta_temp_k": 39.91,
+      "confidence_cat": "Nominal",
+      "confidence_score": 0.65,
+      "pixel_area_km2": 0.2162,
+      "acq_datetime": "2026-11-13 18:38:00",
+      "cluster_id": 6
+    },
+    {
+      "latitude": -31.41113,
+      "longitude": -64.13239,
+      "sensor_family": "VIIRS",
+      "satellite_name": "NOAA-21",
+      "frp_mw": 1.01,
+      "frp_density_mw_km2": 5.03,
+      "temp_ch4_k": 307.72,
+      "delta_temp_k": 15.93,
+      "confidence_cat": "Nominal",
+      "confidence_score": 0.65,
+      "pixel_area_km2": 0.2009,
+      "acq_datetime": "2026-11-12 05:37:00",
+      "cluster_id": 6
+    },
+    {
+      "latitude": -33.25648,
+      "longitude": -65.95698,
+      "sensor_family": "VIIRS",
+      "satellite_name": "NOAA-21",
+      "frp_mw": 18.84,
+      "frp_density_mw_km2": 115.3,
+      "temp_ch4_k": 367.0,
+      "delta_temp_k": 47.77,
+      "confidence_cat": "High",
+      "confidence_score": 0.95,
+      "pixel_area_km2": 0.1634,
+      "acq_datetime": "2026-11-12 18:00:00",
+      "cluster_id": 1
+    },
+    {
+      "latitude": -33.25589,
+      "longitude": -65.95238,
+      "sensor_family": "VIIRS",
+      "satellite_name": "NOAA-21",
+      "frp_mw": 33.01,
+      "frp_density_mw_km2": 202.02,
+      "temp_ch4_k": 352.8,
+      "delta_temp_k": 31.24,
+      "confidence_cat": "Nominal",
+      "confidence_score": 0.65,
+      "pixel_area_km2": 0.1634,
+      "acq_datetime": "2026-11-12 18:00:00",
+      "cluster_id": 1
+    },
+    {
+      "latitude": -33.25298,
+      "longitude": -65.9576,
+      "sensor_family": "VIIRS",
+      "satellite_name": "NOAA-21",
+      "frp_mw": 86.12,
+      "frp_density_mw_km2": 527.05,
+      "temp_ch4_k": 367.0,
+      "delta_temp_k": 35.31,
+      "confidence_cat": "High",
+      "confidence_score": 0.95,
+      "pixel_area_km2": 0.1634,
+      "acq_datetime": "2026-11-12 18:00:00",
+      "cluster_id": 1
+    },
+    {
+      "latitude": -33.25238,
+      "longitude": -65.953,
+      "sensor_family": "VIIRS",
+      "satellite_name": "NOAA-21",
+      "frp_mw": 127.37,
+      "frp_density_mw_km2": 779.5,
+      "temp_ch4_k": 367.0,
+      "delta_temp_k": 32.32,
+      "confidence_cat": "High",
+      "confidence_score": 0.95,
+      "pixel_area_km2": 0.1634,
+      "acq_datetime": "2026-11-12 18:00:00",
+      "cluster_id": 1
+    },
+    {
+      "latitude": -33.25226,
+      "longitude": -65.95634,
+      "sensor_family": "VIIRS",
+      "satellite_name": "NOAA-21",
+      "frp_mw": 109.21,
+      "frp_density_mw_km2": 668.36,
+      "temp_ch4_k": 367.0,
+      "delta_temp_k": 39.15,
+      "confidence_cat": "High",
+      "confidence_score": 0.95,
+      "pixel_area_km2": 0.1634,
+      "acq_datetime": "2026-11-12 18:00:00",
+      "cluster_id": 1
+    },
+    {
+      "latitude": -32.90881,
+      "longitude": -65.42959,
+      "sensor_family": "VIIRS",
+      "satellite_name": "NOAA-21",
+      "frp_mw": 3.19,
+      "frp_density_mw_km2": 21.03,
+      "temp_ch4_k": 342.47,
+      "delta_temp_k": 26.27,
+      "confidence_cat": "Low",
+      "confidence_score": 0.3,
+      "pixel_area_km2": 0.1517,
+      "acq_datetime": "2026-11-12 18:00:00",
+      "cluster_id": 2
+    },
+    {
+      "latitude": -33.25365,
+      "longitude": -65.95475,
+      "sensor_family": "VIIRS",
+      "satellite_name": "NOAA-21",
+      "frp_mw": 1.77,
+      "frp_density_mw_km2": 11.96,
+      "temp_ch4_k": 307.96,
+      "delta_temp_k": 14.0,
+      "confidence_cat": "Nominal",
+      "confidence_score": 0.65,
+      "pixel_area_km2": 0.148,
+      "acq_datetime": "2026-11-13 05:18:00",
+      "cluster_id": 1
+    },
+    {
+      "latitude": -31.66404,
+      "longitude": -63.83083,
+      "sensor_family": "VIIRS",
+      "satellite_name": "NOAA-21",
+      "frp_mw": 0.9,
+      "frp_density_mw_km2": 6.58,
+      "temp_ch4_k": 306.71,
+      "delta_temp_k": 14.49,
+      "confidence_cat": "Nominal",
+      "confidence_score": 0.65,
+      "pixel_area_km2": 0.1368,
+      "acq_datetime": "2026-11-13 05:18:00",
+      "cluster_id": 0
+    },
+    {
+      "latitude": -31.85509,
+      "longitude": -65.55127,
+      "sensor_family": "VIIRS",
+      "satellite_name": "NOAA-21",
+      "frp_mw": 9.24,
+      "frp_density_mw_km2": 45.65,
+      "temp_ch4_k": 333.67,
+      "delta_temp_k": 27.05,
+      "confidence_cat": "Low",
+      "confidence_score": 0.3,
+      "pixel_area_km2": 0.2024,
+      "acq_datetime": "2026-11-13 17:43:00",
+      "cluster_id": -1
+    },
+    {
+      "latitude": -31.40291,
+      "longitude": -64.11656,
+      "sensor_family": "VIIRS",
+      "satellite_name": "NOAA-21",
+      "frp_mw": 4.12,
+      "frp_density_mw_km2": 17.84,
+      "temp_ch4_k": 336.62,
+      "delta_temp_k": 34.96,
+      "confidence_cat": "Nominal",
+      "confidence_score": 0.65,
+      "pixel_area_km2": 0.231,
+      "acq_datetime": "2026-11-13 17:43:00",
+      "cluster_id": 6
+    },
+    {
+      "latitude": -31.39897,
+      "longitude": -64.11707,
+      "sensor_family": "VIIRS",
+      "satellite_name": "NOAA-21",
+      "frp_mw": 4.12,
+      "frp_density_mw_km2": 17.84,
+      "temp_ch4_k": 335.82,
+      "delta_temp_k": 33.88,
+      "confidence_cat": "Nominal",
+      "confidence_score": 0.65,
+      "pixel_area_km2": 0.231,
+      "acq_datetime": "2026-11-13 17:43:00",
+      "cluster_id": 6
+    },
+    {
+      "latitude": -33.25496,
+      "longitude": -65.95249,
+      "sensor_family": "MODIS",
+      "satellite_name": "Aqua",
+      "frp_mw": 14.84,
+      "frp_density_mw_km2": 7.42,
+      "temp_ch4_k": 317.29,
+      "delta_temp_k": 16.35,
+      "confidence_cat": "Nominal",
+      "confidence_score": 0.52,
+      "pixel_area_km2": 2.0,
+      "acq_datetime": "2026-11-12 20:57:00",
+      "cluster_id": 1
+    },
+    {
+      "latitude": -32.11662,
+      "longitude": -65.74206,
+      "sensor_family": "MODIS",
+      "satellite_name": "Aqua",
+      "frp_mw": 11.12,
+      "frp_density_mw_km2": 4.89,
+      "temp_ch4_k": 316.98,
+      "delta_temp_k": 16.08,
+      "confidence_cat": "Nominal",
+      "confidence_score": 0.5,
+      "pixel_area_km2": 2.275,
+      "acq_datetime": "2026-11-12 20:57:00",
+      "cluster_id": 7
+    },
+    {
+      "latitude": -32.11768,
+      "longitude": -65.74111,
+      "sensor_family": "MODIS",
+      "satellite_name": "Terra",
+      "frp_mw": 11.73,
+      "frp_density_mw_km2": 6.65,
+      "temp_ch4_k": 318.32,
+      "delta_temp_k": 16.95,
+      "confidence_cat": "Nominal",
+      "confidence_score": 0.44,
+      "pixel_area_km2": 1.764,
+      "acq_datetime": "2026-11-13 12:55:00",
+      "cluster_id": 7
+    }
+  ],
+  "burning_activity_calendar": {
+    "region": "Sierras_Cordoba_SanLuis",
+    "region_display_name": "Sierras de Córdoba y San Luis (Argentina)",
+    "target_year": 2026,
+    "current_week": 46,
+    "current_week_anomaly_z": -0.45,
+    "historical_peak_period": "Agosto – Octubre (Semanas 31 a 44)",
+    "seasonal_risk_index": 35,
+    "total_harmonized_hotspots": 45.0,
+    "total_raw_hotspots": 31,
+    "weeks": [
+      {
+        "week": 1,
+        "month": "Ene",
+        "baseline_mean": 17.0,
+        "baseline_std": 7.6,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 2,
+        "month": "Ene",
+        "baseline_mean": 16.9,
+        "baseline_std": 7.6,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 3,
+        "month": "Ene",
+        "baseline_mean": 16.7,
+        "baseline_std": 7.5,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 4,
+        "month": "Ene",
+        "baseline_mean": 16.4,
+        "baseline_std": 7.4,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 5,
+        "month": "Ene",
+        "baseline_mean": 16.1,
+        "baseline_std": 7.3,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 6,
+        "month": "Feb",
+        "baseline_mean": 15.7,
+        "baseline_std": 7.1,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 7,
+        "month": "Feb",
+        "baseline_mean": 15.3,
+        "baseline_std": 6.9,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 8,
+        "month": "Feb",
+        "baseline_mean": 14.8,
+        "baseline_std": 6.7,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 9,
+        "month": "Feb",
+        "baseline_mean": 14.3,
+        "baseline_std": 6.4,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 10,
+        "month": "Mar",
+        "baseline_mean": 13.8,
+        "baseline_std": 6.2,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 11,
+        "month": "Mar",
+        "baseline_mean": 13.2,
+        "baseline_std": 5.9,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 12,
+        "month": "Mar",
+        "baseline_mean": 12.6,
+        "baseline_std": 5.7,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 13,
+        "month": "Mar",
+        "baseline_mean": 12.0,
+        "baseline_std": 5.4,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 14,
+        "month": "Abr",
+        "baseline_mean": 11.4,
+        "baseline_std": 5.1,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 15,
+        "month": "Abr",
+        "baseline_mean": 10.8,
+        "baseline_std": 4.9,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 16,
+        "month": "Abr",
+        "baseline_mean": 10.2,
+        "baseline_std": 4.6,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 17,
+        "month": "Abr",
+        "baseline_mean": 9.7,
+        "baseline_std": 4.4,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 18,
+        "month": "Abr",
+        "baseline_mean": 9.2,
+        "baseline_std": 4.1,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 19,
+        "month": "May",
+        "baseline_mean": 8.7,
+        "baseline_std": 4.0,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 20,
+        "month": "May",
+        "baseline_mean": 8.3,
+        "baseline_std": 4.0,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 21,
+        "month": "May",
+        "baseline_mean": 35.0,
+        "baseline_std": 14.0,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 22,
+        "month": "May",
+        "baseline_mean": 41.2,
+        "baseline_std": 16.5,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 23,
+        "month": "Jun",
+        "baseline_mean": 46.8,
+        "baseline_std": 18.7,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 24,
+        "month": "Jun",
+        "baseline_mean": 51.2,
+        "baseline_std": 20.5,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 25,
+        "month": "Jun",
+        "baseline_mean": 54.0,
+        "baseline_std": 21.6,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 26,
+        "month": "Jun",
+        "baseline_mean": 55.0,
+        "baseline_std": 22.0,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 27,
+        "month": "Jul",
+        "baseline_mean": 54.0,
+        "baseline_std": 21.6,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 28,
+        "month": "Jul",
+        "baseline_mean": 51.2,
+        "baseline_std": 20.5,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 29,
+        "month": "Jul",
+        "baseline_mean": 46.8,
+        "baseline_std": 18.7,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 30,
+        "month": "Jul",
+        "baseline_mean": 41.2,
+        "baseline_std": 16.5,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 31,
+        "month": "Jul",
+        "baseline_mean": 110.0,
+        "baseline_std": 38.5,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 32,
+        "month": "Ago",
+        "baseline_mean": 132.5,
+        "baseline_std": 46.4,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 33,
+        "month": "Ago",
+        "baseline_mean": 153.3,
+        "baseline_std": 53.6,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 34,
+        "month": "Ago",
+        "baseline_mean": 170.5,
+        "baseline_std": 59.7,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 35,
+        "month": "Ago",
+        "baseline_mean": 182.8,
+        "baseline_std": 64.0,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 36,
+        "month": "Sep",
+        "baseline_mean": 189.2,
+        "baseline_std": 66.2,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 37,
+        "month": "Sep",
+        "baseline_mean": 189.2,
+        "baseline_std": 66.2,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 38,
+        "month": "Sep",
+        "baseline_mean": 182.8,
+        "baseline_std": 64.0,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 39,
+        "month": "Sep",
+        "baseline_mean": 170.5,
+        "baseline_std": 59.7,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 40,
+        "month": "Oct",
+        "baseline_mean": 153.3,
+        "baseline_std": 53.6,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 41,
+        "month": "Oct",
+        "baseline_mean": 132.5,
+        "baseline_std": 46.4,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 42,
+        "month": "Oct",
+        "baseline_mean": 110.0,
+        "baseline_std": 38.5,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 43,
+        "month": "Oct",
+        "baseline_mean": 46.8,
+        "baseline_std": 18.7,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 44,
+        "month": "Oct",
+        "baseline_mean": 51.2,
+        "baseline_std": 20.5,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 45,
+        "month": "Nov",
+        "baseline_mean": 54.0,
+        "baseline_std": 21.6,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 46,
+        "month": "Nov",
+        "baseline_mean": 55.0,
+        "baseline_std": 22.0,
+        "observed_raw": 31,
+        "observed_harmonized": 45.0,
+        "observed_frp_mw": 701.7,
+        "z_score": -0.45,
+        "status": "Por Debajo de la Media",
+        "tier": 1,
+        "color": "#fee08b",
+        "is_current": true
+      },
+      {
+        "week": 47,
+        "month": "Nov",
+        "baseline_mean": 16.1,
+        "baseline_std": 7.3,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 48,
+        "month": "Nov",
+        "baseline_mean": 16.4,
+        "baseline_std": 7.4,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 49,
+        "month": "Dic",
+        "baseline_mean": 16.7,
+        "baseline_std": 7.5,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 50,
+        "month": "Dic",
+        "baseline_mean": 16.9,
+        "baseline_std": 7.6,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 51,
+        "month": "Dic",
+        "baseline_mean": 17.0,
+        "baseline_std": 7.6,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      },
+      {
+        "week": 52,
+        "month": "Dic",
+        "baseline_mean": 17.0,
+        "baseline_std": 7.7,
+        "observed_raw": 0,
+        "observed_harmonized": 0.0,
+        "observed_frp_mw": 0.0,
+        "z_score": 0.0,
+        "status": "Sin Detecciones Activas",
+        "tier": 0,
+        "color": "#1e293b",
+        "is_current": false
+      }
+    ],
+    "months": [
+      {
+        "month_num": 1,
+        "month_name": "Enero",
+        "baseline_expected": 83.1,
+        "observed_harmonized": 0.0,
+        "observed_raw": 0,
+        "is_peak_season": false
+      },
+      {
+        "month_num": 2,
+        "month_name": "Febrero",
+        "baseline_expected": 60.1,
+        "observed_harmonized": 0.0,
+        "observed_raw": 0,
+        "is_peak_season": false
+      },
+      {
+        "month_num": 3,
+        "month_name": "Marzo",
+        "baseline_expected": 51.6,
+        "observed_harmonized": 0.0,
+        "observed_raw": 0,
+        "is_peak_season": false
+      },
+      {
+        "month_num": 4,
+        "month_name": "Abril",
+        "baseline_expected": 51.3,
+        "observed_harmonized": 0.0,
+        "observed_raw": 0,
+        "is_peak_season": false
+      },
+      {
+        "month_num": 5,
+        "month_name": "Mayo",
+        "baseline_expected": 93.2,
+        "observed_harmonized": 0.0,
+        "observed_raw": 0,
+        "is_peak_season": false
+      },
+      {
+        "month_num": 6,
+        "month_name": "Junio",
+        "baseline_expected": 207.0,
+        "observed_harmonized": 0.0,
+        "observed_raw": 0,
+        "is_peak_season": false
+      },
+      {
+        "month_num": 7,
+        "month_name": "Julio",
+        "baseline_expected": 303.2,
+        "observed_harmonized": 0.0,
+        "observed_raw": 0,
+        "is_peak_season": false
+      },
+      {
+        "month_num": 8,
+        "month_name": "Agosto",
+        "baseline_expected": 639.1,
+        "observed_harmonized": 0.0,
+        "observed_raw": 0,
+        "is_peak_season": true
+      },
+      {
+        "month_num": 9,
+        "month_name": "Septiembre",
+        "baseline_expected": 731.7,
+        "observed_harmonized": 0.0,
+        "observed_raw": 0,
+        "is_peak_season": true
+      },
+      {
+        "month_num": 10,
+        "month_name": "Octubre",
+        "baseline_expected": 493.8,
+        "observed_harmonized": 0.0,
+        "observed_raw": 0,
+        "is_peak_season": true
+      },
+      {
+        "month_num": 11,
+        "month_name": "Noviembre",
+        "baseline_expected": 141.5,
+        "observed_harmonized": 45.0,
+        "observed_raw": 31,
+        "is_peak_season": false
+      },
+      {
+        "month_num": 12,
+        "month_name": "Diciembre",
+        "baseline_expected": 67.6,
+        "observed_harmonized": 0.0,
+        "observed_raw": 0,
+        "is_peak_season": false
+      }
+    ]
+  },
+  "cross_sensor_calibration": {
+    "total_viirs_hotspots": 28,
+    "total_modis_hotspots": 3,
+    "empirical_count_ratio": 9.33,
+    "theoretical_nadir_footprint_ratio": 7.11,
+    "effective_detection_ratio_literature": 4.0,
+    "colocated_fronts_count": 1,
+    "mean_temp_ch4_difference_k": 33.57,
+    "calibration_model": "Multi-Sensor Footprint Transfer & Harmonized Hotspot Count",
+    "modis_equivalent_multiplier_applied": true
+  }
+}

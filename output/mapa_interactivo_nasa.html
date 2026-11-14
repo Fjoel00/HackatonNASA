@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_1ac0a43de120862db5e2af401882d584 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+    <script src="https://cdn.jsdelivr.net/gh/python-visualization/folium@main/folium/templates/leaflet_heat.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@3.0.0/Control.FullScreen.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@3.0.0/Control.FullScreen.css"/>
+</head>
+<body>
+    
+    
+        <div style="
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 315px;
+            background-color: rgba(20, 24, 33, 0.92);
+            color: #ffffff;
+            border: 1px solid #444;
+            border-radius: 10px;
+            padding: 14px 18px;
+            z-index: 9999;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+        ">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span style="font-size: 15px; font-weight: bold; color: #ff6633;">🚀 NASA Space Apps</span>
+                <span style="font-size: 11px; background: #334466; padding: 2px 6px; border-radius: 4px;">FIRMS</span>
+            </div>
+            <div style="font-size: 12px; color: #aaa; margin-bottom: 8px;">Caso: Sierras de Córdoba y San Luis</div>
+            <hr style="border: 0; border-top: 1px solid #333; margin: 6px 0;">
+
+            <div style="display: flex; justify-content: space-between; margin: 4px 0;">
+                <span style="font-size: 12px; color: #ccc;">Focos Detectados:</span>
+                <b style="font-size: 13px; color: #fff;">31</b>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin: 4px 0;">
+                <span style="font-size: 12px; color: #ff8833;">VIIRS 375m:</span>
+                <b style="font-size: 12px;">28 (90.3%)</b>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin: 4px 0;">
+                <span style="font-size: 12px; color: #ff3333;">MODIS 1km:</span>
+                <b style="font-size: 12px;">3 (9.7%)</b>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin: 4px 0;">
+                <span style="font-size: 12px; color: #ccc;">Frentes Consolidados:</span>
+                <b style="font-size: 13px; color: #ffd700;">8 incidentes</b>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin: 4px 0;">
+                <span style="font-size: 12px; color: #ccc;">FRP Pico de Pasada:</span>
+                <b style="font-size: 13px; color: #ff4444;">374.6 MW</b>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin: 4px 0;">
+                <span style="font-size: 12px; color: #ccc;">Energía Total (FRE):</span>
+                <b style="font-size: 12px; color: #ffaa44;">2,915.01 GJ</b>
+            </div>
+            <div style="font-size: 10px; color: #888; margin-top: 8px; text-align: center;">
+                Clustering Haversine (DBSCAN) & Fusión Científica
+            </div>
+        </div>
+        
+    
+            <div class="folium-map" id="map_1ac0a43de120862db5e2af401882d584" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_1ac0a43de120862db5e2af401882d584 = L.map(
+                "map_1ac0a43de120862db5e2af401882d584",
+                {
+                    center: [-32.41808774193548, -65.30142774193548],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 8,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_1ac0a43de120862db5e2af401882d584);
+
+            
+
+        
+    
+            var tile_layer_9855e507f6dff382383c53e7ab72e858 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_9855e507f6dff382383c53e7ab72e858.addTo(map_1ac0a43de120862db5e2af401882d584);
+        
+    
+            var tile_layer_687f508464a12348b5a44059a8e1bc7d = L.tileLayer(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "Esri World Imagery",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_687f508464a12348b5a44059a8e1bc7d.addTo(map_1ac0a43de120862db5e2af401882d584);
+        
+    
+            var tile_layer_88bb2369eb9d620e5c18211b628e3adf = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_88bb2369eb9d620e5c18211b628e3adf.addTo(map_1ac0a43de120862db5e2af401882d584);
+        
+    
+            var heat_map_1d5700123f8d7853a3c2aa12b87628b3 = L.heatLayer(
+                [[-31.66217, -63.83502, 1.15], [-33.25679, -65.95911, 52.18], [-33.25656, -65.95151, 52.18], [-33.25633, -65.94402, 28.87], [-33.25544, -65.95412, 38.37], [-33.25388, -65.94758, 38.37], [-32.9125, -65.42658, 2.25], [-32.18913, -65.65876, 5.53], [-32.18523, -65.65981, 5.53], [-32.05212, -65.17107, 2.84], [-32.05157, -65.16774, 2.39], [-31.72699, -65.02927, 5.05], [-31.72383, -65.03474, 14.46], [-31.72295, -65.03046, 3.26], [-31.40072, -64.11296, 6.96], [-31.40066, -64.11709, 5.67], [-31.41113, -64.13239, 1.01], [-33.25648, -65.95698, 18.84], [-33.25589, -65.95238, 33.01], [-33.25298, -65.9576, 86.12], [-33.25238, -65.953, 100.0], [-33.25226, -65.95634, 100.0], [-32.90881, -65.42959, 3.19], [-33.25365, -65.95475, 1.77], [-31.66404, -63.83083, 0.9], [-31.85509, -65.55127, 9.24], [-31.40291, -64.11656, 4.12], [-31.39897, -64.11707, 4.12], [-33.25496, -65.95249, 14.84], [-32.11662, -65.74206, 11.12], [-32.11768, -65.74111, 11.73]],
+                {
+  "minOpacity": 0.3,
+  "maxZoom": 12,
+  "radius": 15,
+  "blur": 12,
+}
+            );
+        
+    
+            heat_map_1d5700123f8d7853a3c2aa12b87628b3.addTo(map_1ac0a43de120862db5e2af401882d584);
+        
+    
+            var feature_group_c020b57c7f7f80c055cb1fdaf2d9e499 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_7cd91fad68bfa8c9cc94c7b64206e6cc = L.circleMarker(
+                [-31.66217, -63.83502],
+                {"bubblingMouseEvents": true, "color": "#ff5500", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff8800", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c020b57c7f7f80c055cb1fdaf2d9e499);
+        
+    
+        var popup_a58be0d29a08739084050db3d81911dd = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_5e66994fc44f3972cb10e641df1b9de3 = $(`<div id="html_5e66994fc44f3972cb10e641df1b9de3" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #ff6600;">🛰️ VIIRS 375m (N20)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #0<br>                 <b>Temp. Brillo (TI4):</b> 301.02 K<br>                 <b>Anomalía Térmica (ΔT):</b> 15.27 K<br>                 <b>FRP:</b> 1.15 MW (6.55 MW/km²)<br>                 <b>Confianza:</b> Nominal (65%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-11 05:12:00<br>             </div>             </div>`)[0];
+                popup_a58be0d29a08739084050db3d81911dd.setContent(html_5e66994fc44f3972cb10e641df1b9de3);
+            
+        
+
+        circle_marker_7cd91fad68bfa8c9cc94c7b64206e6cc.bindPopup(popup_a58be0d29a08739084050db3d81911dd)
+        ;
+
+        
+    
+    
+            var circle_marker_afe7e4b09c976bcf74d36bb5054c0062 = L.circleMarker(
+                [-33.25679, -65.95911],
+                {"bubblingMouseEvents": true, "color": "#ff5500", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff8800", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c020b57c7f7f80c055cb1fdaf2d9e499);
+        
+    
+        var popup_378d57e3c0ae9ad8f201b44ca0b0269e = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_8376b7ec2f8c24c7cd8cdcf9d2aeaca3 = $(`<div id="html_8376b7ec2f8c24c7cd8cdcf9d2aeaca3" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #ff6600;">🛰️ VIIRS 375m (N20)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #1<br>                 <b>Temp. Brillo (TI4):</b> 349.04 K<br>                 <b>Anomalía Térmica (ΔT):</b> 41.58 K<br>                 <b>FRP:</b> 52.18 MW (97.99 MW/km²)<br>                 <b>Confianza:</b> Nominal (65%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-12 17:15:00<br>             </div>             </div>`)[0];
+                popup_378d57e3c0ae9ad8f201b44ca0b0269e.setContent(html_8376b7ec2f8c24c7cd8cdcf9d2aeaca3);
+            
+        
+
+        circle_marker_afe7e4b09c976bcf74d36bb5054c0062.bindPopup(popup_378d57e3c0ae9ad8f201b44ca0b0269e)
+        ;
+
+        
+    
+    
+            var circle_marker_c254c62fd7b0f9093d950098e048b381 = L.circleMarker(
+                [-33.25656, -65.95151],
+                {"bubblingMouseEvents": true, "color": "#ff5500", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff8800", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c020b57c7f7f80c055cb1fdaf2d9e499);
+        
+    
+        var popup_06a4aac5d912d95e034d34318f59459c = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_43dd0b7a1a8d2f4b4eb9ec0acfea6e08 = $(`<div id="html_43dd0b7a1a8d2f4b4eb9ec0acfea6e08" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #ff6600;">🛰️ VIIRS 375m (N20)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #1<br>                 <b>Temp. Brillo (TI4):</b> 353.67 K<br>                 <b>Anomalía Térmica (ΔT):</b> 43.2 K<br>                 <b>FRP:</b> 52.18 MW (97.99 MW/km²)<br>                 <b>Confianza:</b> Nominal (65%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-12 17:15:00<br>             </div>             </div>`)[0];
+                popup_06a4aac5d912d95e034d34318f59459c.setContent(html_43dd0b7a1a8d2f4b4eb9ec0acfea6e08);
+            
+        
+
+        circle_marker_c254c62fd7b0f9093d950098e048b381.bindPopup(popup_06a4aac5d912d95e034d34318f59459c)
+        ;
+
+        
+    
+    
+            var circle_marker_aafc23853955cee7cec46d448dc825c7 = L.circleMarker(
+                [-33.25633, -65.94402],
+                {"bubblingMouseEvents": true, "color": "#ff5500", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff8800", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c020b57c7f7f80c055cb1fdaf2d9e499);
+        
+    
+        var popup_a5291677e0e9b59cb4a5e75b5a852b69 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_50c9a8786a6d477109816b537000f7ad = $(`<div id="html_50c9a8786a6d477109816b537000f7ad" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #ff6600;">🛰️ VIIRS 375m (N20)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #1<br>                 <b>Temp. Brillo (TI4):</b> 332.35 K<br>                 <b>Anomalía Térmica (ΔT):</b> 26.73 K<br>                 <b>FRP:</b> 28.87 MW (54.22 MW/km²)<br>                 <b>Confianza:</b> Low (30%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-12 17:15:00<br>             </div>             </div>`)[0];
+                popup_a5291677e0e9b59cb4a5e75b5a852b69.setContent(html_50c9a8786a6d477109816b537000f7ad);
+            
+        
+
+        circle_marker_aafc23853955cee7cec46d448dc825c7.bindPopup(popup_a5291677e0e9b59cb4a5e75b5a852b69)
+        ;
+
+        
+    
+    
+            var circle_marker_552471f057a59ba77e6f79589bc70cc7 = L.circleMarker(
+                [-33.25544, -65.95412],
+                {"bubblingMouseEvents": true, "color": "#ff5500", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff8800", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c020b57c7f7f80c055cb1fdaf2d9e499);
+        
+    
+        var popup_1091a6756b2e61979cb692b388411465 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_e2dd0d0c90432d721c944075ef95476c = $(`<div id="html_e2dd0d0c90432d721c944075ef95476c" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #ff6600;">🛰️ VIIRS 375m (N20)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #1<br>                 <b>Temp. Brillo (TI4):</b> 351.46 K<br>                 <b>Anomalía Térmica (ΔT):</b> 34.8 K<br>                 <b>FRP:</b> 38.37 MW (120.66 MW/km²)<br>                 <b>Confianza:</b> Nominal (65%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-12 18:57:00<br>             </div>             </div>`)[0];
+                popup_1091a6756b2e61979cb692b388411465.setContent(html_e2dd0d0c90432d721c944075ef95476c);
+            
+        
+
+        circle_marker_552471f057a59ba77e6f79589bc70cc7.bindPopup(popup_1091a6756b2e61979cb692b388411465)
+        ;
+
+        
+    
+    
+            var circle_marker_e4d15f92f784716177d4700129c6e424 = L.circleMarker(
+                [-33.25388, -65.94758],
+                {"bubblingMouseEvents": true, "color": "#ff5500", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff8800", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c020b57c7f7f80c055cb1fdaf2d9e499);
+        
+    
+        var popup_a22475fd1186da1e41cec9e47848226d = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_3fae81349a22cd988623e8a6640b5169 = $(`<div id="html_3fae81349a22cd988623e8a6640b5169" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #ff6600;">🛰️ VIIRS 375m (N20)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #1<br>                 <b>Temp. Brillo (TI4):</b> 344.16 K<br>                 <b>Anomalía Térmica (ΔT):</b> 33.4 K<br>                 <b>FRP:</b> 38.37 MW (120.66 MW/km²)<br>                 <b>Confianza:</b> Nominal (65%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-12 18:57:00<br>             </div>             </div>`)[0];
+                popup_a22475fd1186da1e41cec9e47848226d.setContent(html_3fae81349a22cd988623e8a6640b5169);
+            
+        
+
+        circle_marker_e4d15f92f784716177d4700129c6e424.bindPopup(popup_a22475fd1186da1e41cec9e47848226d)
+        ;
+
+        
+    
+    
+            var circle_marker_79a52c551c0fafd823043fe02fad131e = L.circleMarker(
+                [-32.9125, -65.42658],
+                {"bubblingMouseEvents": true, "color": "#ff5500", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff8800", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c020b57c7f7f80c055cb1fdaf2d9e499);
+        
+    
+        var popup_8180f1d16f8af4b5598b893de2bb47f9 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_75924d979eb8a06f8a678eb768c12266 = $(`<div id="html_75924d979eb8a06f8a678eb768c12266" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #ff6600;">🛰️ VIIRS 375m (N20)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #2<br>                 <b>Temp. Brillo (TI4):</b> 336.11 K<br>                 <b>Anomalía Térmica (ΔT):</b> 25.36 K<br>                 <b>FRP:</b> 2.25 MW (12.4 MW/km²)<br>                 <b>Confianza:</b> Low (30%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-12 18:57:00<br>             </div>             </div>`)[0];
+                popup_8180f1d16f8af4b5598b893de2bb47f9.setContent(html_75924d979eb8a06f8a678eb768c12266);
+            
+        
+
+        circle_marker_79a52c551c0fafd823043fe02fad131e.bindPopup(popup_8180f1d16f8af4b5598b893de2bb47f9)
+        ;
+
+        
+    
+    
+            var circle_marker_34bccb3f2a1ee4734a776e5dc45b0a03 = L.circleMarker(
+                [-32.18913, -65.65876],
+                {"bubblingMouseEvents": true, "color": "#ff5500", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff8800", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c020b57c7f7f80c055cb1fdaf2d9e499);
+        
+    
+        var popup_e6c324360d9e7db8f60dac003b2afaa3 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_d7b816f795ace01b47851c57f185597f = $(`<div id="html_d7b816f795ace01b47851c57f185597f" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #ff6600;">🛰️ VIIRS 375m (N20)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #3<br>                 <b>Temp. Brillo (TI4):</b> 335.14 K<br>                 <b>Anomalía Térmica (ΔT):</b> 27.79 K<br>                 <b>FRP:</b> 5.53 MW (23.38 MW/km²)<br>                 <b>Confianza:</b> Low (30%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-13 18:38:00<br>             </div>             </div>`)[0];
+                popup_e6c324360d9e7db8f60dac003b2afaa3.setContent(html_d7b816f795ace01b47851c57f185597f);
+            
+        
+
+        circle_marker_34bccb3f2a1ee4734a776e5dc45b0a03.bindPopup(popup_e6c324360d9e7db8f60dac003b2afaa3)
+        ;
+
+        
+    
+    
+            var circle_marker_ab99f42e461822b2dbb98aa133bdaded = L.circleMarker(
+                [-32.18523, -65.65981],
+                {"bubblingMouseEvents": true, "color": "#ff5500", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff8800", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c020b57c7f7f80c055cb1fdaf2d9e499);
+        
+    
+        var popup_33769a2ed38ceb0124ec74e83a4d4471 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_40f089f999481ba804414a49d0451c58 = $(`<div id="html_40f089f999481ba804414a49d0451c58" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #ff6600;">🛰️ VIIRS 375m (N20)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #3<br>                 <b>Temp. Brillo (TI4):</b> 345.21 K<br>                 <b>Anomalía Térmica (ΔT):</b> 37.19 K<br>                 <b>FRP:</b> 5.53 MW (23.38 MW/km²)<br>                 <b>Confianza:</b> Nominal (65%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-13 18:38:00<br>             </div>             </div>`)[0];
+                popup_33769a2ed38ceb0124ec74e83a4d4471.setContent(html_40f089f999481ba804414a49d0451c58);
+            
+        
+
+        circle_marker_ab99f42e461822b2dbb98aa133bdaded.bindPopup(popup_33769a2ed38ceb0124ec74e83a4d4471)
+        ;
+
+        
+    
+    
+            var circle_marker_de59d438af87dae0b99153a565bddfa6 = L.circleMarker(
+                [-32.05212, -65.17107],
+                {"bubblingMouseEvents": true, "color": "#ff5500", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff8800", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c020b57c7f7f80c055cb1fdaf2d9e499);
+        
+    
+        var popup_20ff256df54290d140cbc3d4ec693d69 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_d3b72a36a891a428a91e0283c080f19d = $(`<div id="html_d3b72a36a891a428a91e0283c080f19d" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #ff6600;">🛰️ VIIRS 375m (N20)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #4<br>                 <b>Temp. Brillo (TI4):</b> 339.24 K<br>                 <b>Anomalía Térmica (ΔT):</b> 32.54 K<br>                 <b>FRP:</b> 2.84 MW (16.55 MW/km²)<br>                 <b>Confianza:</b> Nominal (65%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-13 18:38:00<br>             </div>             </div>`)[0];
+                popup_20ff256df54290d140cbc3d4ec693d69.setContent(html_d3b72a36a891a428a91e0283c080f19d);
+            
+        
+
+        circle_marker_de59d438af87dae0b99153a565bddfa6.bindPopup(popup_20ff256df54290d140cbc3d4ec693d69)
+        ;
+
+        
+    
+    
+            var circle_marker_cf51862eda22e8ede5faaea98300420a = L.circleMarker(
+                [-32.05157, -65.16774],
+                {"bubblingMouseEvents": true, "color": "#ff5500", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff8800", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c020b57c7f7f80c055cb1fdaf2d9e499);
+        
+    
+        var popup_0f0159a7bd576a3714209b73cdb23ca0 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_6179134c00d7295bd929031a5f462e54 = $(`<div id="html_6179134c00d7295bd929031a5f462e54" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #ff6600;">🛰️ VIIRS 375m (N20)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #4<br>                 <b>Temp. Brillo (TI4):</b> 342.37 K<br>                 <b>Anomalía Térmica (ΔT):</b> 36.35 K<br>                 <b>FRP:</b> 2.39 MW (13.93 MW/km²)<br>                 <b>Confianza:</b> Nominal (65%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-13 18:38:00<br>             </div>             </div>`)[0];
+                popup_0f0159a7bd576a3714209b73cdb23ca0.setContent(html_6179134c00d7295bd929031a5f462e54);
+            
+        
+
+        circle_marker_cf51862eda22e8ede5faaea98300420a.bindPopup(popup_0f0159a7bd576a3714209b73cdb23ca0)
+        ;
+
+        
+    
+    
+            var circle_marker_b7cf0c1afe6eeba1ab366965e587bc79 = L.circleMarker(
+                [-31.72699, -65.02927],
+                {"bubblingMouseEvents": true, "color": "#ff5500", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff8800", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c020b57c7f7f80c055cb1fdaf2d9e499);
+        
+    
+        var popup_010c74a3abe09b54f3d2ca6ab081d943 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_b880891290aa2324d0458e40a826fda9 = $(`<div id="html_b880891290aa2324d0458e40a826fda9" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #ff6600;">🛰️ VIIRS 375m (N20)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #5<br>                 <b>Temp. Brillo (TI4):</b> 347.04 K<br>                 <b>Anomalía Térmica (ΔT):</b> 43.57 K<br>                 <b>FRP:</b> 5.05 MW (28.69 MW/km²)<br>                 <b>Confianza:</b> Nominal (65%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-13 18:38:00<br>             </div>             </div>`)[0];
+                popup_010c74a3abe09b54f3d2ca6ab081d943.setContent(html_b880891290aa2324d0458e40a826fda9);
+            
+        
+
+        circle_marker_b7cf0c1afe6eeba1ab366965e587bc79.bindPopup(popup_010c74a3abe09b54f3d2ca6ab081d943)
+        ;
+
+        
+    
+    
+            var circle_marker_e4281ff5e1566c1791e8421d9e4e8b7c = L.circleMarker(
+                [-31.72383, -65.03474],
+                {"bubblingMouseEvents": true, "color": "#ff5500", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff8800", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c020b57c7f7f80c055cb1fdaf2d9e499);
+        
+    
+        var popup_fed4ab56b6ae728d2c486af54ecb9e84 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_330c7bef2f24e678426d213c2c58c8ef = $(`<div id="html_330c7bef2f24e678426d213c2c58c8ef" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #ff6600;">🛰️ VIIRS 375m (N20)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #5<br>                 <b>Temp. Brillo (TI4):</b> 356.48 K<br>                 <b>Anomalía Térmica (ΔT):</b> 50.33 K<br>                 <b>FRP:</b> 14.46 MW (82.16 MW/km²)<br>                 <b>Confianza:</b> Low (30%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-13 18:38:00<br>             </div>             </div>`)[0];
+                popup_fed4ab56b6ae728d2c486af54ecb9e84.setContent(html_330c7bef2f24e678426d213c2c58c8ef);
+            
+        
+
+        circle_marker_e4281ff5e1566c1791e8421d9e4e8b7c.bindPopup(popup_fed4ab56b6ae728d2c486af54ecb9e84)
+        ;
+
+        
+    
+    
+            var circle_marker_ea5a451cf4783fca4d91ff2018a1a015 = L.circleMarker(
+                [-31.72295, -65.03046],
+                {"bubblingMouseEvents": true, "color": "#ff5500", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff8800", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c020b57c7f7f80c055cb1fdaf2d9e499);
+        
+    
+        var popup_4f9c2e68d6d116760da47633ea4aad9c = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_f3568d66014bcf6a53b0a5cf229bd2b8 = $(`<div id="html_f3568d66014bcf6a53b0a5cf229bd2b8" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #ff6600;">🛰️ VIIRS 375m (N20)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #5<br>                 <b>Temp. Brillo (TI4):</b> 343.43 K<br>                 <b>Anomalía Térmica (ΔT):</b> 40.02 K<br>                 <b>FRP:</b> 3.26 MW (18.52 MW/km²)<br>                 <b>Confianza:</b> Nominal (65%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-13 18:38:00<br>             </div>             </div>`)[0];
+                popup_4f9c2e68d6d116760da47633ea4aad9c.setContent(html_f3568d66014bcf6a53b0a5cf229bd2b8);
+            
+        
+
+        circle_marker_ea5a451cf4783fca4d91ff2018a1a015.bindPopup(popup_4f9c2e68d6d116760da47633ea4aad9c)
+        ;
+
+        
+    
+    
+            var circle_marker_79f9c9f6c3c0bdbaa5452d6f5185ae2b = L.circleMarker(
+                [-31.40072, -64.11296],
+                {"bubblingMouseEvents": true, "color": "#ff5500", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff8800", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c020b57c7f7f80c055cb1fdaf2d9e499);
+        
+    
+        var popup_2761386935be948ab226eb0774a3fd35 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_bf1ef34db903d30cab14dde1f4fd0ac2 = $(`<div id="html_bf1ef34db903d30cab14dde1f4fd0ac2" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #ff6600;">🛰️ VIIRS 375m (N20)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #6<br>                 <b>Temp. Brillo (TI4):</b> 343.5 K<br>                 <b>Anomalía Térmica (ΔT):</b> 41.63 K<br>                 <b>FRP:</b> 6.96 MW (32.19 MW/km²)<br>                 <b>Confianza:</b> Nominal (65%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-13 18:38:00<br>             </div>             </div>`)[0];
+                popup_2761386935be948ab226eb0774a3fd35.setContent(html_bf1ef34db903d30cab14dde1f4fd0ac2);
+            
+        
+
+        circle_marker_79f9c9f6c3c0bdbaa5452d6f5185ae2b.bindPopup(popup_2761386935be948ab226eb0774a3fd35)
+        ;
+
+        
+    
+    
+            var circle_marker_07744dc0439e102bd1adae5b818d0675 = L.circleMarker(
+                [-31.40066, -64.11709],
+                {"bubblingMouseEvents": true, "color": "#ff5500", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff8800", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c020b57c7f7f80c055cb1fdaf2d9e499);
+        
+    
+        var popup_bd286302a142329cd6a136ffcd7a12e9 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_60edd041d660e0632f5820bd20ef5683 = $(`<div id="html_60edd041d660e0632f5820bd20ef5683" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #ff6600;">🛰️ VIIRS 375m (N20)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #6<br>                 <b>Temp. Brillo (TI4):</b> 341.95 K<br>                 <b>Anomalía Térmica (ΔT):</b> 39.91 K<br>                 <b>FRP:</b> 5.67 MW (26.23 MW/km²)<br>                 <b>Confianza:</b> Nominal (65%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-13 18:38:00<br>             </div>             </div>`)[0];
+                popup_bd286302a142329cd6a136ffcd7a12e9.setContent(html_60edd041d660e0632f5820bd20ef5683);
+            
+        
+
+        circle_marker_07744dc0439e102bd1adae5b818d0675.bindPopup(popup_bd286302a142329cd6a136ffcd7a12e9)
+        ;
+
+        
+    
+    
+            var circle_marker_d4b9cd1757bde4307bc4358130cc7d1b = L.circleMarker(
+                [-31.41113, -64.13239],
+                {"bubblingMouseEvents": true, "color": "#ff5500", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff8800", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c020b57c7f7f80c055cb1fdaf2d9e499);
+        
+    
+        var popup_c6eb017e34c926bf8d8517183a699f5a = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_f9500398d19b9622d0bff8132a2dfa32 = $(`<div id="html_f9500398d19b9622d0bff8132a2dfa32" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #ff6600;">🛰️ VIIRS 375m (N21)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #6<br>                 <b>Temp. Brillo (TI4):</b> 307.72 K<br>                 <b>Anomalía Térmica (ΔT):</b> 15.93 K<br>                 <b>FRP:</b> 1.01 MW (5.03 MW/km²)<br>                 <b>Confianza:</b> Nominal (65%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-12 05:37:00<br>             </div>             </div>`)[0];
+                popup_c6eb017e34c926bf8d8517183a699f5a.setContent(html_f9500398d19b9622d0bff8132a2dfa32);
+            
+        
+
+        circle_marker_d4b9cd1757bde4307bc4358130cc7d1b.bindPopup(popup_c6eb017e34c926bf8d8517183a699f5a)
+        ;
+
+        
+    
+    
+            var circle_marker_c5760978679abd43ae65ed21324f2e2b = L.circleMarker(
+                [-33.25648, -65.95698],
+                {"bubblingMouseEvents": true, "color": "#ff5500", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff8800", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c020b57c7f7f80c055cb1fdaf2d9e499);
+        
+    
+        var popup_9850448656a61b3c60e0a01f49407648 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_239f9306b836eae2c300ef7e8173f1a3 = $(`<div id="html_239f9306b836eae2c300ef7e8173f1a3" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #ff6600;">🛰️ VIIRS 375m (N21)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #1<br>                 <b>Temp. Brillo (TI4):</b> 367.0 K<br>                 <b>Anomalía Térmica (ΔT):</b> 47.77 K<br>                 <b>FRP:</b> 18.84 MW (115.3 MW/km²)<br>                 <b>Confianza:</b> High (95%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-12 18:00:00<br>             </div>             </div>`)[0];
+                popup_9850448656a61b3c60e0a01f49407648.setContent(html_239f9306b836eae2c300ef7e8173f1a3);
+            
+        
+
+        circle_marker_c5760978679abd43ae65ed21324f2e2b.bindPopup(popup_9850448656a61b3c60e0a01f49407648)
+        ;
+
+        
+    
+    
+            var circle_marker_f4f5e65404fc293d500a507483ae26a4 = L.circleMarker(
+                [-33.25589, -65.95238],
+                {"bubblingMouseEvents": true, "color": "#ff5500", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff8800", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c020b57c7f7f80c055cb1fdaf2d9e499);
+        
+    
+        var popup_54308a21a8661e2897a18a29917f3ee3 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_e65b291ca14f312e952fbe4744da17e7 = $(`<div id="html_e65b291ca14f312e952fbe4744da17e7" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #ff6600;">🛰️ VIIRS 375m (N21)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #1<br>                 <b>Temp. Brillo (TI4):</b> 352.8 K<br>                 <b>Anomalía Térmica (ΔT):</b> 31.24 K<br>                 <b>FRP:</b> 33.01 MW (202.02 MW/km²)<br>                 <b>Confianza:</b> Nominal (65%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-12 18:00:00<br>             </div>             </div>`)[0];
+                popup_54308a21a8661e2897a18a29917f3ee3.setContent(html_e65b291ca14f312e952fbe4744da17e7);
+            
+        
+
+        circle_marker_f4f5e65404fc293d500a507483ae26a4.bindPopup(popup_54308a21a8661e2897a18a29917f3ee3)
+        ;
+
+        
+    
+    
+            var circle_marker_07fd37126b0d82ff6d6d5e3acafe1391 = L.circleMarker(
+                [-33.25298, -65.9576],
+                {"bubblingMouseEvents": true, "color": "#ff5500", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff8800", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c020b57c7f7f80c055cb1fdaf2d9e499);
+        
+    
+        var popup_c974632622f26e5c33d73f818491cd19 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_3e0d455af345bd9fdd49535f442c9470 = $(`<div id="html_3e0d455af345bd9fdd49535f442c9470" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #ff6600;">🛰️ VIIRS 375m (N21)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #1<br>                 <b>Temp. Brillo (TI4):</b> 367.0 K<br>                 <b>Anomalía Térmica (ΔT):</b> 35.31 K<br>                 <b>FRP:</b> 86.12 MW (527.05 MW/km²)<br>                 <b>Confianza:</b> High (95%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-12 18:00:00<br>             </div>             </div>`)[0];
+                popup_c974632622f26e5c33d73f818491cd19.setContent(html_3e0d455af345bd9fdd49535f442c9470);
+            
+        
+
+        circle_marker_07fd37126b0d82ff6d6d5e3acafe1391.bindPopup(popup_c974632622f26e5c33d73f818491cd19)
+        ;
+
+        
+    
+    
+            var circle_marker_35c8776f2f2f5bc0001b0106817b7558 = L.circleMarker(
+                [-33.25238, -65.953],
+                {"bubblingMouseEvents": true, "color": "#ff5500", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff8800", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c020b57c7f7f80c055cb1fdaf2d9e499);
+        
+    
+        var popup_84f71f7e83c2f5cfbdd3de472fd5bc8c = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_1c143977711bef78b80ce5de816dd918 = $(`<div id="html_1c143977711bef78b80ce5de816dd918" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #ff6600;">🛰️ VIIRS 375m (N21)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #1<br>                 <b>Temp. Brillo (TI4):</b> 367.0 K<br>                 <b>Anomalía Térmica (ΔT):</b> 32.32 K<br>                 <b>FRP:</b> 127.37 MW (779.5 MW/km²)<br>                 <b>Confianza:</b> High (95%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-12 18:00:00<br>             </div>             </div>`)[0];
+                popup_84f71f7e83c2f5cfbdd3de472fd5bc8c.setContent(html_1c143977711bef78b80ce5de816dd918);
+            
+        
+
+        circle_marker_35c8776f2f2f5bc0001b0106817b7558.bindPopup(popup_84f71f7e83c2f5cfbdd3de472fd5bc8c)
+        ;
+
+        
+    
+    
+            var circle_marker_fa7281fc76cee3f471e7aa045c5e43fb = L.circleMarker(
+                [-33.25226, -65.95634],
+                {"bubblingMouseEvents": true, "color": "#ff5500", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff8800", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c020b57c7f7f80c055cb1fdaf2d9e499);
+        
+    
+        var popup_970bfe454dfbb99b3b6a28fd3eaf4dc6 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_6425888f335091b696aac5429fbc1141 = $(`<div id="html_6425888f335091b696aac5429fbc1141" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #ff6600;">🛰️ VIIRS 375m (N21)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #1<br>                 <b>Temp. Brillo (TI4):</b> 367.0 K<br>                 <b>Anomalía Térmica (ΔT):</b> 39.15 K<br>                 <b>FRP:</b> 109.21 MW (668.36 MW/km²)<br>                 <b>Confianza:</b> High (95%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-12 18:00:00<br>             </div>             </div>`)[0];
+                popup_970bfe454dfbb99b3b6a28fd3eaf4dc6.setContent(html_6425888f335091b696aac5429fbc1141);
+            
+        
+
+        circle_marker_fa7281fc76cee3f471e7aa045c5e43fb.bindPopup(popup_970bfe454dfbb99b3b6a28fd3eaf4dc6)
+        ;
+
+        
+    
+    
+            var circle_marker_99ce7dea924fd96c250281d6074ab593 = L.circleMarker(
+                [-32.90881, -65.42959],
+                {"bubblingMouseEvents": true, "color": "#ff5500", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff8800", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c020b57c7f7f80c055cb1fdaf2d9e499);
+        
+    
+        var popup_2fe9f7ba8289e252cf1dcd69d8d320fb = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_07bc9a084b46a6d08270bd063ad2403d = $(`<div id="html_07bc9a084b46a6d08270bd063ad2403d" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #ff6600;">🛰️ VIIRS 375m (N21)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #2<br>                 <b>Temp. Brillo (TI4):</b> 342.47 K<br>                 <b>Anomalía Térmica (ΔT):</b> 26.27 K<br>                 <b>FRP:</b> 3.19 MW (21.03 MW/km²)<br>                 <b>Confianza:</b> Low (30%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-12 18:00:00<br>             </div>             </div>`)[0];
+                popup_2fe9f7ba8289e252cf1dcd69d8d320fb.setContent(html_07bc9a084b46a6d08270bd063ad2403d);
+            
+        
+
+        circle_marker_99ce7dea924fd96c250281d6074ab593.bindPopup(popup_2fe9f7ba8289e252cf1dcd69d8d320fb)
+        ;
+
+        
+    
+    
+            var circle_marker_975edf94222d6fc0a78580f47f8419ac = L.circleMarker(
+                [-33.25365, -65.95475],
+                {"bubblingMouseEvents": true, "color": "#ff5500", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff8800", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c020b57c7f7f80c055cb1fdaf2d9e499);
+        
+    
+        var popup_f13fdce39370ced692068f85ac26be02 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_c25ac1d13819095a25207ba56897533e = $(`<div id="html_c25ac1d13819095a25207ba56897533e" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #ff6600;">🛰️ VIIRS 375m (N21)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #1<br>                 <b>Temp. Brillo (TI4):</b> 307.96 K<br>                 <b>Anomalía Térmica (ΔT):</b> 14.0 K<br>                 <b>FRP:</b> 1.77 MW (11.96 MW/km²)<br>                 <b>Confianza:</b> Nominal (65%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-13 05:18:00<br>             </div>             </div>`)[0];
+                popup_f13fdce39370ced692068f85ac26be02.setContent(html_c25ac1d13819095a25207ba56897533e);
+            
+        
+
+        circle_marker_975edf94222d6fc0a78580f47f8419ac.bindPopup(popup_f13fdce39370ced692068f85ac26be02)
+        ;
+
+        
+    
+    
+            var circle_marker_fac70a357d66568f334e7035003cad11 = L.circleMarker(
+                [-31.66404, -63.83083],
+                {"bubblingMouseEvents": true, "color": "#ff5500", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff8800", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c020b57c7f7f80c055cb1fdaf2d9e499);
+        
+    
+        var popup_5b1919236d402c4601032040668728e8 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_af697f060d60e20d28e6f66ac8808cd0 = $(`<div id="html_af697f060d60e20d28e6f66ac8808cd0" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #ff6600;">🛰️ VIIRS 375m (N21)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #0<br>                 <b>Temp. Brillo (TI4):</b> 306.71 K<br>                 <b>Anomalía Térmica (ΔT):</b> 14.49 K<br>                 <b>FRP:</b> 0.9 MW (6.58 MW/km²)<br>                 <b>Confianza:</b> Nominal (65%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-13 05:18:00<br>             </div>             </div>`)[0];
+                popup_5b1919236d402c4601032040668728e8.setContent(html_af697f060d60e20d28e6f66ac8808cd0);
+            
+        
+
+        circle_marker_fac70a357d66568f334e7035003cad11.bindPopup(popup_5b1919236d402c4601032040668728e8)
+        ;
+
+        
+    
+    
+            var circle_marker_54c7ceb810372ab3055f15028c357c65 = L.circleMarker(
+                [-31.85509, -65.55127],
+                {"bubblingMouseEvents": true, "color": "#ff5500", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff8800", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c020b57c7f7f80c055cb1fdaf2d9e499);
+        
+    
+        var popup_d41dfde79027cbb051ccb41ac8c4f535 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_753f6b4f7860ea25282ecafeb6ca60b2 = $(`<div id="html_753f6b4f7860ea25282ecafeb6ca60b2" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #ff6600;">🛰️ VIIRS 375m (N21)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Foco Aislado<br>                 <b>Temp. Brillo (TI4):</b> 333.67 K<br>                 <b>Anomalía Térmica (ΔT):</b> 27.05 K<br>                 <b>FRP:</b> 9.24 MW (45.65 MW/km²)<br>                 <b>Confianza:</b> Low (30%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-13 17:43:00<br>             </div>             </div>`)[0];
+                popup_d41dfde79027cbb051ccb41ac8c4f535.setContent(html_753f6b4f7860ea25282ecafeb6ca60b2);
+            
+        
+
+        circle_marker_54c7ceb810372ab3055f15028c357c65.bindPopup(popup_d41dfde79027cbb051ccb41ac8c4f535)
+        ;
+
+        
+    
+    
+            var circle_marker_ac1aa79fb919fd9b41bc674aa7d4d7d4 = L.circleMarker(
+                [-31.40291, -64.11656],
+                {"bubblingMouseEvents": true, "color": "#ff5500", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff8800", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c020b57c7f7f80c055cb1fdaf2d9e499);
+        
+    
+        var popup_946e0bf691f5e1603a7bb280f790a775 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_1cb17052f602f7be066e1726c7367ba5 = $(`<div id="html_1cb17052f602f7be066e1726c7367ba5" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #ff6600;">🛰️ VIIRS 375m (N21)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #6<br>                 <b>Temp. Brillo (TI4):</b> 336.62 K<br>                 <b>Anomalía Térmica (ΔT):</b> 34.96 K<br>                 <b>FRP:</b> 4.12 MW (17.84 MW/km²)<br>                 <b>Confianza:</b> Nominal (65%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-13 17:43:00<br>             </div>             </div>`)[0];
+                popup_946e0bf691f5e1603a7bb280f790a775.setContent(html_1cb17052f602f7be066e1726c7367ba5);
+            
+        
+
+        circle_marker_ac1aa79fb919fd9b41bc674aa7d4d7d4.bindPopup(popup_946e0bf691f5e1603a7bb280f790a775)
+        ;
+
+        
+    
+    
+            var circle_marker_f96ffedbb10d354fb0f8ff0dd3ce054d = L.circleMarker(
+                [-31.39897, -64.11707],
+                {"bubblingMouseEvents": true, "color": "#ff5500", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff8800", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c020b57c7f7f80c055cb1fdaf2d9e499);
+        
+    
+        var popup_afa8292be3ce911979adf44bf212eb3d = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_b5357e6dda3dea3150d9182469ef39e7 = $(`<div id="html_b5357e6dda3dea3150d9182469ef39e7" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #ff6600;">🛰️ VIIRS 375m (N21)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #6<br>                 <b>Temp. Brillo (TI4):</b> 335.82 K<br>                 <b>Anomalía Térmica (ΔT):</b> 33.88 K<br>                 <b>FRP:</b> 4.12 MW (17.84 MW/km²)<br>                 <b>Confianza:</b> Nominal (65%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-13 17:43:00<br>             </div>             </div>`)[0];
+                popup_afa8292be3ce911979adf44bf212eb3d.setContent(html_b5357e6dda3dea3150d9182469ef39e7);
+            
+        
+
+        circle_marker_f96ffedbb10d354fb0f8ff0dd3ce054d.bindPopup(popup_afa8292be3ce911979adf44bf212eb3d)
+        ;
+
+        
+    
+    
+            feature_group_c020b57c7f7f80c055cb1fdaf2d9e499.addTo(map_1ac0a43de120862db5e2af401882d584);
+        
+    
+            var feature_group_3a66a3434682038acd530f8df75f9a6f = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_4a24004201b695c7f9f9ec00ea88e2f4 = L.circleMarker(
+                [-33.25496, -65.95249],
+                {"bubblingMouseEvents": true, "color": "#cc0000", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff2222", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1.5}
+            ).addTo(feature_group_3a66a3434682038acd530f8df75f9a6f);
+        
+    
+        var popup_04c585e87536155e1d3ec8393f02c15a = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_748111624ea38162d8eaf27e565ca26f = $(`<div id="html_748111624ea38162d8eaf27e565ca26f" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #cc0000;">🛰️ MODIS 1km (Aqua)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #1<br>                 <b>Temp. Brillo (CH21/22):</b> 317.29 K<br>                 <b>Anomalía Térmica (ΔT):</b> 16.35 K<br>                 <b>FRP:</b> 14.84 MW (7.42 MW/km²)<br>                 <b>Confianza:</b> Nominal (52%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-12 20:57:00<br>             </div>             </div>`)[0];
+                popup_04c585e87536155e1d3ec8393f02c15a.setContent(html_748111624ea38162d8eaf27e565ca26f);
+            
+        
+
+        circle_marker_4a24004201b695c7f9f9ec00ea88e2f4.bindPopup(popup_04c585e87536155e1d3ec8393f02c15a)
+        ;
+
+        
+    
+    
+            var circle_marker_4ace6b68317c1c36ae3eaa39466ef9c9 = L.circleMarker(
+                [-32.11662, -65.74206],
+                {"bubblingMouseEvents": true, "color": "#cc0000", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff2222", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1.5}
+            ).addTo(feature_group_3a66a3434682038acd530f8df75f9a6f);
+        
+    
+        var popup_254284747ff12f59cd862609d91701da = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_201339c615506364f6bb12865dba4ef3 = $(`<div id="html_201339c615506364f6bb12865dba4ef3" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #cc0000;">🛰️ MODIS 1km (Aqua)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #7<br>                 <b>Temp. Brillo (CH21/22):</b> 316.98 K<br>                 <b>Anomalía Térmica (ΔT):</b> 16.08 K<br>                 <b>FRP:</b> 11.12 MW (4.89 MW/km²)<br>                 <b>Confianza:</b> Nominal (50%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-12 20:57:00<br>             </div>             </div>`)[0];
+                popup_254284747ff12f59cd862609d91701da.setContent(html_201339c615506364f6bb12865dba4ef3);
+            
+        
+
+        circle_marker_4ace6b68317c1c36ae3eaa39466ef9c9.bindPopup(popup_254284747ff12f59cd862609d91701da)
+        ;
+
+        
+    
+    
+            var circle_marker_a9782b5a2a22e6890963d71e2272e255 = L.circleMarker(
+                [-32.11768, -65.74111],
+                {"bubblingMouseEvents": true, "color": "#cc0000", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff2222", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1.5}
+            ).addTo(feature_group_3a66a3434682038acd530f8df75f9a6f);
+        
+    
+        var popup_835585b8c0836bdae4f42f6d1d7f1b31 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_fb0a848c5fe32912d37da10ce18c5f7e = $(`<div id="html_fb0a848c5fe32912d37da10ce18c5f7e" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; font-size: 12px; width: 220px;">                 <b style="color: #cc0000;">🛰️ MODIS 1km (Terra)</b><br>                 <hr style="margin: 4px 0;">                 <b>Estado:</b> Cluster #7<br>                 <b>Temp. Brillo (CH21/22):</b> 318.32 K<br>                 <b>Anomalía Térmica (ΔT):</b> 16.95 K<br>                 <b>FRP:</b> 11.73 MW (6.65 MW/km²)<br>                 <b>Confianza:</b> Nominal (44%)<br>                 <b>Fecha/Hora UTC:</b> 2026-11-13 12:55:00<br>             </div>             </div>`)[0];
+                popup_835585b8c0836bdae4f42f6d1d7f1b31.setContent(html_fb0a848c5fe32912d37da10ce18c5f7e);
+            
+        
+
+        circle_marker_a9782b5a2a22e6890963d71e2272e255.bindPopup(popup_835585b8c0836bdae4f42f6d1d7f1b31)
+        ;
+
+        
+    
+    
+            feature_group_3a66a3434682038acd530f8df75f9a6f.addTo(map_1ac0a43de120862db5e2af401882d584);
+        
+    
+            var feature_group_513c170019510eb492cc8e6617026a9b = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var polygon_7521ef9d506795024dc816cbeff6aa91 = L.polygon(
+                [[-33.25633, -65.94402], [-33.25388, -65.94758], [-33.25238, -65.953], [-33.25226, -65.95634], [-33.25298, -65.9576], [-33.25679, -65.95911], [-33.25656, -65.95151], [-33.25633, -65.94402]],
+                {"bubblingMouseEvents": true, "color": "#f46d43", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f46d43", "fillOpacity": 0.25, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_513c170019510eb492cc8e6617026a9b);
+        
+    
+        var popup_fdb446dd81fd8cf26e30c731c79eb599 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_02f8164ed62efb0b6f85953acdd97256 = $(`<div id="html_02f8164ed62efb0b6f85953acdd97256" style="width: 100.0%; height: 100.0%;">                 <div style="font-family: Arial; font-size: 12px; width: 275px;">                     <b style="font-size: 14px; color: #f46d43;">🚨 FIRE_CLUSTER_001</b><br>                     <b>Zona / Localidad:</b> Sierras de San Luis (El Trapiche / La Florida)<br>                     <b>Nivel de Severidad:</b> Severidad Alta<br>                     <hr style="margin: 4px 0;">                     <b>Confirmación:</b> ✅ MODIS + VIIRS<br>                     <b>Detecciones:</b> 12 (11 VIIRS, 1 MODIS)<br>                     <b>FRP Pico de Pasada:</b> 374.55 MW (Máx píxel: 127.37 MW)<br>                     <b>Energía Radiativa (FRE):</b> 2,036,545.2 MJ<br>                     <b>Temp. Máxima:</b> 367.0 K<br>                     <b>Superficie Estimada:</b> 47.1 ha (0.471 km²)<br>                     <b>Duración Observada:</b> 12.05 h<br>                     <b>Dirección de Avance:</b> N (0.237 km a 0.077 km/h)<br>                 </div>                 </div>`)[0];
+                popup_fdb446dd81fd8cf26e30c731c79eb599.setContent(html_02f8164ed62efb0b6f85953acdd97256);
+            
+        
+
+        polygon_7521ef9d506795024dc816cbeff6aa91.bindPopup(popup_fdb446dd81fd8cf26e30c731c79eb599)
+        ;
+
+        
+    
+    
+            var marker_f009bb781f538e13fccefa6bb13af02c = L.marker(
+                [-33.2548, -65.95332],
+                {
+}
+            ).addTo(feature_group_513c170019510eb492cc8e6617026a9b);
+        
+    
+            var icon_0f8ccdf350aa51ba150ab035d313001e = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "fire",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_3be81f72949608905fe364bd90b15b48 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_a3fd0307ec2b6d8aad06d87fc1d8a855 = $(`<div id="html_a3fd0307ec2b6d8aad06d87fc1d8a855" style="width: 100.0%; height: 100.0%;">                 <div style="font-family: Arial; font-size: 12px; width: 275px;">                     <b style="font-size: 14px; color: #f46d43;">🚨 FIRE_CLUSTER_001</b><br>                     <b>Zona / Localidad:</b> Sierras de San Luis (El Trapiche / La Florida)<br>                     <b>Nivel de Severidad:</b> Severidad Alta<br>                     <hr style="margin: 4px 0;">                     <b>Confirmación:</b> ✅ MODIS + VIIRS<br>                     <b>Detecciones:</b> 12 (11 VIIRS, 1 MODIS)<br>                     <b>FRP Pico de Pasada:</b> 374.55 MW (Máx píxel: 127.37 MW)<br>                     <b>Energía Radiativa (FRE):</b> 2,036,545.2 MJ<br>                     <b>Temp. Máxima:</b> 367.0 K<br>                     <b>Superficie Estimada:</b> 47.1 ha (0.471 km²)<br>                     <b>Duración Observada:</b> 12.05 h<br>                     <b>Dirección de Avance:</b> N (0.237 km a 0.077 km/h)<br>                 </div>                 </div>`)[0];
+                popup_3be81f72949608905fe364bd90b15b48.setContent(html_a3fd0307ec2b6d8aad06d87fc1d8a855);
+            
+        
+
+        marker_f009bb781f538e13fccefa6bb13af02c.bindPopup(popup_3be81f72949608905fe364bd90b15b48)
+        ;
+
+        
+    
+    
+                marker_f009bb781f538e13fccefa6bb13af02c.setIcon(icon_0f8ccdf350aa51ba150ab035d313001e);
+            
+    
+            var polygon_b37c6c83f926de3c81323b616d5aef83 = L.polygon(
+                [[-31.72383, -65.03474], [-31.72699, -65.02927], [-31.72295, -65.03046], [-31.72383, -65.03474]],
+                {"bubblingMouseEvents": true, "color": "#fee08b", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fee08b", "fillOpacity": 0.25, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_513c170019510eb492cc8e6617026a9b);
+        
+    
+        var popup_d1f20ac546b1d7628e5d227e4c8a4209 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_09fdd29f3b2ea6a33ce0e4d753d63d6a = $(`<div id="html_09fdd29f3b2ea6a33ce0e4d753d63d6a" style="width: 100.0%; height: 100.0%;">                 <div style="font-family: Arial; font-size: 12px; width: 275px;">                     <b style="font-size: 14px; color: #fee08b;">🚨 FIRE_CLUSTER_005</b><br>                     <b>Zona / Localidad:</b> Valle de Traslasierra (Mina Clavero / Cura Brochero, Córdoba)<br>                     <b>Nivel de Severidad:</b> Severidad Baja<br>                     <hr style="margin: 4px 0;">                     <b>Confirmación:</b> 1 Solo Sensor<br>                     <b>Detecciones:</b> 3 (3 VIIRS, 0 MODIS)<br>                     <b>FRP Pico de Pasada:</b> 22.77 MW (Máx píxel: 14.46 MW)<br>                     <b>Energía Radiativa (FRE):</b> 81,972.0 MJ<br>                     <b>Temp. Máxima:</b> 356.48 K<br>                     <b>Superficie Estimada:</b> 9.7 ha (0.097 km²)<br>                     <b>Duración Observada:</b> 0.0 h<br>                     <b>Dirección de Avance:</b> Estacionario (0.0 km a 0.0 km/h)<br>                 </div>                 </div>`)[0];
+                popup_d1f20ac546b1d7628e5d227e4c8a4209.setContent(html_09fdd29f3b2ea6a33ce0e4d753d63d6a);
+            
+        
+
+        polygon_b37c6c83f926de3c81323b616d5aef83.bindPopup(popup_d1f20ac546b1d7628e5d227e4c8a4209)
+        ;
+
+        
+    
+    
+            var marker_30440f2824acd1439655f7e8b3b42ebf = L.marker(
+                [-31.72459, -65.03149],
+                {
+}
+            ).addTo(feature_group_513c170019510eb492cc8e6617026a9b);
+        
+    
+            var icon_b314027aa834112e18c6309889987e44 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "fire",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_69b5e8b44933064405c9960123b43c0f = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_674fa81c70c78f63c5329d76630e5c73 = $(`<div id="html_674fa81c70c78f63c5329d76630e5c73" style="width: 100.0%; height: 100.0%;">                 <div style="font-family: Arial; font-size: 12px; width: 275px;">                     <b style="font-size: 14px; color: #fee08b;">🚨 FIRE_CLUSTER_005</b><br>                     <b>Zona / Localidad:</b> Valle de Traslasierra (Mina Clavero / Cura Brochero, Córdoba)<br>                     <b>Nivel de Severidad:</b> Severidad Baja<br>                     <hr style="margin: 4px 0;">                     <b>Confirmación:</b> 1 Solo Sensor<br>                     <b>Detecciones:</b> 3 (3 VIIRS, 0 MODIS)<br>                     <b>FRP Pico de Pasada:</b> 22.77 MW (Máx píxel: 14.46 MW)<br>                     <b>Energía Radiativa (FRE):</b> 81,972.0 MJ<br>                     <b>Temp. Máxima:</b> 356.48 K<br>                     <b>Superficie Estimada:</b> 9.7 ha (0.097 km²)<br>                     <b>Duración Observada:</b> 0.0 h<br>                     <b>Dirección de Avance:</b> Estacionario (0.0 km a 0.0 km/h)<br>                 </div>                 </div>`)[0];
+                popup_69b5e8b44933064405c9960123b43c0f.setContent(html_674fa81c70c78f63c5329d76630e5c73);
+            
+        
+
+        marker_30440f2824acd1439655f7e8b3b42ebf.bindPopup(popup_69b5e8b44933064405c9960123b43c0f)
+        ;
+
+        
+    
+    
+                marker_30440f2824acd1439655f7e8b3b42ebf.setIcon(icon_b314027aa834112e18c6309889987e44);
+            
+    
+            var polygon_de3a6dde966d4789f095ceb9cd9d93c5 = L.polygon(
+                [[-31.39897, -64.11707], [-31.41113, -64.13239], [-31.40291, -64.11656], [-31.40072, -64.11296], [-31.39897, -64.11707]],
+                {"bubblingMouseEvents": true, "color": "#fee08b", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fee08b", "fillOpacity": 0.25, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_513c170019510eb492cc8e6617026a9b);
+        
+    
+        var popup_f0bea9c355731172fc48ffa40f8d63c3 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_c0467227bd0fa463216c212e8aef88a5 = $(`<div id="html_c0467227bd0fa463216c212e8aef88a5" style="width: 100.0%; height: 100.0%;">                 <div style="font-family: Arial; font-size: 12px; width: 275px;">                     <b style="font-size: 14px; color: #fee08b;">🚨 FIRE_CLUSTER_006</b><br>                     <b>Zona / Localidad:</b> Sierras Chicas / Gran Córdoba (Córdoba)<br>                     <b>Nivel de Severidad:</b> Severidad Baja<br>                     <hr style="margin: 4px 0;">                     <b>Confirmación:</b> 1 Solo Sensor<br>                     <b>Detecciones:</b> 5 (5 VIIRS, 0 MODIS)<br>                     <b>FRP Pico de Pasada:</b> 12.63 MW (Máx píxel: 6.96 MW)<br>                     <b>Energía Radiativa (FRE):</b> 34,435.5 MJ<br>                     <b>Temp. Máxima:</b> 343.5 K<br>                     <b>Superficie Estimada:</b> 43.3 ha (0.433 km²)<br>                     <b>Duración Observada:</b> 37.02 h<br>                     <b>Dirección de Avance:</b> NE (1.133 km a 0.061 km/h)<br>                 </div>                 </div>`)[0];
+                popup_f0bea9c355731172fc48ffa40f8d63c3.setContent(html_c0467227bd0fa463216c212e8aef88a5);
+            
+        
+
+        polygon_de3a6dde966d4789f095ceb9cd9d93c5.bindPopup(popup_f0bea9c355731172fc48ffa40f8d63c3)
+        ;
+
+        
+    
+    
+            var marker_47c87f567cfe94838a24ad1815686916 = L.marker(
+                [-31.40288, -64.11921],
+                {
+}
+            ).addTo(feature_group_513c170019510eb492cc8e6617026a9b);
+        
+    
+            var icon_826f223e5c701108ecae21e82ed43e8d = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "fire",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_109fd2b50394647bd8e19c7a5c4eb553 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_d7f96ded084482b12cca64e68f18bdd7 = $(`<div id="html_d7f96ded084482b12cca64e68f18bdd7" style="width: 100.0%; height: 100.0%;">                 <div style="font-family: Arial; font-size: 12px; width: 275px;">                     <b style="font-size: 14px; color: #fee08b;">🚨 FIRE_CLUSTER_006</b><br>                     <b>Zona / Localidad:</b> Sierras Chicas / Gran Córdoba (Córdoba)<br>                     <b>Nivel de Severidad:</b> Severidad Baja<br>                     <hr style="margin: 4px 0;">                     <b>Confirmación:</b> 1 Solo Sensor<br>                     <b>Detecciones:</b> 5 (5 VIIRS, 0 MODIS)<br>                     <b>FRP Pico de Pasada:</b> 12.63 MW (Máx píxel: 6.96 MW)<br>                     <b>Energía Radiativa (FRE):</b> 34,435.5 MJ<br>                     <b>Temp. Máxima:</b> 343.5 K<br>                     <b>Superficie Estimada:</b> 43.3 ha (0.433 km²)<br>                     <b>Duración Observada:</b> 37.02 h<br>                     <b>Dirección de Avance:</b> NE (1.133 km a 0.061 km/h)<br>                 </div>                 </div>`)[0];
+                popup_109fd2b50394647bd8e19c7a5c4eb553.setContent(html_d7f96ded084482b12cca64e68f18bdd7);
+            
+        
+
+        marker_47c87f567cfe94838a24ad1815686916.bindPopup(popup_109fd2b50394647bd8e19c7a5c4eb553)
+        ;
+
+        
+    
+    
+                marker_47c87f567cfe94838a24ad1815686916.setIcon(icon_826f223e5c701108ecae21e82ed43e8d);
+            
+    
+            var polygon_77cc583ec4732207aaa36992955fdcb1 = L.polygon(
+                [[-32.10696, -65.74159], [-32.10833, -65.73557], [-32.11206, -65.73117], [-32.11715, -65.72956], [-32.12224, -65.73117], [-32.12597, -65.73557], [-32.12734, -65.74159], [-32.12597, -65.7476], [-32.12224, -65.752], [-32.11715, -65.75361], [-32.11206, -65.752], [-32.10833, -65.7476], [-32.10696, -65.74159]],
+                {"bubblingMouseEvents": true, "color": "#fee08b", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fee08b", "fillOpacity": 0.25, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_513c170019510eb492cc8e6617026a9b);
+        
+    
+        var popup_3ab4cb02e094c50f1f31c696a79b356e = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_cd910cf6553df2dfedf923f9a6813b70 = $(`<div id="html_cd910cf6553df2dfedf923f9a6813b70" style="width: 100.0%; height: 100.0%;">                 <div style="font-family: Arial; font-size: 12px; width: 275px;">                     <b style="font-size: 14px; color: #fee08b;">🚨 FIRE_CLUSTER_007</b><br>                     <b>Zona / Localidad:</b> Norte Puntano (Quines / Candelaria, San Luis)<br>                     <b>Nivel de Severidad:</b> Severidad Baja<br>                     <hr style="margin: 4px 0;">                     <b>Confirmación:</b> 1 Solo Sensor<br>                     <b>Detecciones:</b> 2 (0 VIIRS, 2 MODIS)<br>                     <b>FRP Pico de Pasada:</b> 11.73 MW (Máx píxel: 11.73 MW)<br>                     <b>Energía Radiativa (FRE):</b> 656,709.0 MJ<br>                     <b>Temp. Máxima:</b> 318.32 K<br>                     <b>Superficie Estimada:</b> 403.9 ha (4.039 km²)<br>                     <b>Duración Observada:</b> 15.97 h<br>                     <b>Dirección de Avance:</b> Estacionario (0.0 km a 0.0 km/h)<br>                 </div>                 </div>`)[0];
+                popup_3ab4cb02e094c50f1f31c696a79b356e.setContent(html_cd910cf6553df2dfedf923f9a6813b70);
+            
+        
+
+        polygon_77cc583ec4732207aaa36992955fdcb1.bindPopup(popup_3ab4cb02e094c50f1f31c696a79b356e)
+        ;
+
+        
+    
+    
+            var marker_3005253661e347a5cdc673efb29c0b05 = L.marker(
+                [-32.11715, -65.74159],
+                {
+}
+            ).addTo(feature_group_513c170019510eb492cc8e6617026a9b);
+        
+    
+            var icon_bee1f2cebd6347d528ff369179fe3fe0 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "fire",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_36fa17f046f1e8cbe77d1a7f0ecd6b4b = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_763f94ce85c7431334c800f80f27f73e = $(`<div id="html_763f94ce85c7431334c800f80f27f73e" style="width: 100.0%; height: 100.0%;">                 <div style="font-family: Arial; font-size: 12px; width: 275px;">                     <b style="font-size: 14px; color: #fee08b;">🚨 FIRE_CLUSTER_007</b><br>                     <b>Zona / Localidad:</b> Norte Puntano (Quines / Candelaria, San Luis)<br>                     <b>Nivel de Severidad:</b> Severidad Baja<br>                     <hr style="margin: 4px 0;">                     <b>Confirmación:</b> 1 Solo Sensor<br>                     <b>Detecciones:</b> 2 (0 VIIRS, 2 MODIS)<br>                     <b>FRP Pico de Pasada:</b> 11.73 MW (Máx píxel: 11.73 MW)<br>                     <b>Energía Radiativa (FRE):</b> 656,709.0 MJ<br>                     <b>Temp. Máxima:</b> 318.32 K<br>                     <b>Superficie Estimada:</b> 403.9 ha (4.039 km²)<br>                     <b>Duración Observada:</b> 15.97 h<br>                     <b>Dirección de Avance:</b> Estacionario (0.0 km a 0.0 km/h)<br>                 </div>                 </div>`)[0];
+                popup_36fa17f046f1e8cbe77d1a7f0ecd6b4b.setContent(html_763f94ce85c7431334c800f80f27f73e);
+            
+        
+
+        marker_3005253661e347a5cdc673efb29c0b05.bindPopup(popup_36fa17f046f1e8cbe77d1a7f0ecd6b4b)
+        ;
+
+        
+    
+    
+                marker_3005253661e347a5cdc673efb29c0b05.setIcon(icon_bee1f2cebd6347d528ff369179fe3fe0);
+            
+    
+            var polygon_327a67f9c4bab114d25b4a2403f5dc15 = L.polygon(
+                [[-32.18369, -65.65928], [-32.18416, -65.65723], [-32.18544, -65.65572], [-32.18718, -65.65517], [-32.18892, -65.65572], [-32.1902, -65.65723], [-32.19067, -65.65928], [-32.1902, -65.66134], [-32.18892, -65.66285], [-32.18718, -65.6634], [-32.18544, -65.66285], [-32.18416, -65.66134], [-32.18369, -65.65928]],
+                {"bubblingMouseEvents": true, "color": "#fee08b", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fee08b", "fillOpacity": 0.25, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_513c170019510eb492cc8e6617026a9b);
+        
+    
+        var popup_4a3bd95216794ad13d2f0d0a5496c719 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_081e9656ab0aadd4cba42c902c35b9b6 = $(`<div id="html_081e9656ab0aadd4cba42c902c35b9b6" style="width: 100.0%; height: 100.0%;">                 <div style="font-family: Arial; font-size: 12px; width: 275px;">                     <b style="font-size: 14px; color: #fee08b;">🚨 FIRE_CLUSTER_003</b><br>                     <b>Zona / Localidad:</b> Sierra de las Quijadas / Luján (San Luis)<br>                     <b>Nivel de Severidad:</b> Severidad Baja<br>                     <hr style="margin: 4px 0;">                     <b>Confirmación:</b> 1 Solo Sensor<br>                     <b>Detecciones:</b> 2 (2 VIIRS, 0 MODIS)<br>                     <b>FRP Pico de Pasada:</b> 11.06 MW (Máx píxel: 5.53 MW)<br>                     <b>Energía Radiativa (FRE):</b> 39,816.0 MJ<br>                     <b>Temp. Máxima:</b> 345.21 K<br>                     <b>Superficie Estimada:</b> 47.3 ha (0.473 km²)<br>                     <b>Duración Observada:</b> 0.0 h<br>                     <b>Dirección de Avance:</b> Estacionario (0.0 km a 0.0 km/h)<br>                 </div>                 </div>`)[0];
+                popup_4a3bd95216794ad13d2f0d0a5496c719.setContent(html_081e9656ab0aadd4cba42c902c35b9b6);
+            
+        
+
+        polygon_327a67f9c4bab114d25b4a2403f5dc15.bindPopup(popup_4a3bd95216794ad13d2f0d0a5496c719)
+        ;
+
+        
+    
+    
+            var marker_c622207af945a427db2eb82cd6f886d1 = L.marker(
+                [-32.18718, -65.65928],
+                {
+}
+            ).addTo(feature_group_513c170019510eb492cc8e6617026a9b);
+        
+    
+            var icon_fa73f1672049c789fc2f8e9844471768 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "fire",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_42660571948995e7480999eb7b9ea594 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_8c04cc0e022d659dfc2dbba36116f555 = $(`<div id="html_8c04cc0e022d659dfc2dbba36116f555" style="width: 100.0%; height: 100.0%;">                 <div style="font-family: Arial; font-size: 12px; width: 275px;">                     <b style="font-size: 14px; color: #fee08b;">🚨 FIRE_CLUSTER_003</b><br>                     <b>Zona / Localidad:</b> Sierra de las Quijadas / Luján (San Luis)<br>                     <b>Nivel de Severidad:</b> Severidad Baja<br>                     <hr style="margin: 4px 0;">                     <b>Confirmación:</b> 1 Solo Sensor<br>                     <b>Detecciones:</b> 2 (2 VIIRS, 0 MODIS)<br>                     <b>FRP Pico de Pasada:</b> 11.06 MW (Máx píxel: 5.53 MW)<br>                     <b>Energía Radiativa (FRE):</b> 39,816.0 MJ<br>                     <b>Temp. Máxima:</b> 345.21 K<br>                     <b>Superficie Estimada:</b> 47.3 ha (0.473 km²)<br>                     <b>Duración Observada:</b> 0.0 h<br>                     <b>Dirección de Avance:</b> Estacionario (0.0 km a 0.0 km/h)<br>                 </div>                 </div>`)[0];
+                popup_42660571948995e7480999eb7b9ea594.setContent(html_8c04cc0e022d659dfc2dbba36116f555);
+            
+        
+
+        marker_c622207af945a427db2eb82cd6f886d1.bindPopup(popup_42660571948995e7480999eb7b9ea594)
+        ;
+
+        
+    
+    
+                marker_c622207af945a427db2eb82cd6f886d1.setIcon(icon_fa73f1672049c789fc2f8e9844471768);
+            
+    
+            var polygon_52aa756e7a6024c168d74078cd73b30f = L.polygon(
+                [[-32.04888, -65.1694], [-32.04927, -65.16765], [-32.05036, -65.16637], [-32.05185, -65.1659], [-32.05333, -65.16637], [-32.05442, -65.16765], [-32.05481, -65.1694], [-32.05442, -65.17116], [-32.05333, -65.17244], [-32.05185, -65.17291], [-32.05036, -65.17244], [-32.04927, -65.17116], [-32.04888, -65.1694]],
+                {"bubblingMouseEvents": true, "color": "#fee08b", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fee08b", "fillOpacity": 0.25, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_513c170019510eb492cc8e6617026a9b);
+        
+    
+        var popup_27e7fd6e87f784efa608cf5fd63358d2 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_9c6a3a69919ff854928c211e3da81c61 = $(`<div id="html_9c6a3a69919ff854928c211e3da81c61" style="width: 100.0%; height: 100.0%;">                 <div style="font-family: Arial; font-size: 12px; width: 275px;">                     <b style="font-size: 14px; color: #fee08b;">🚨 FIRE_CLUSTER_004</b><br>                     <b>Zona / Localidad:</b> Traslasierra Sur (San Javier / Yacanto, Córdoba)<br>                     <b>Nivel de Severidad:</b> Severidad Baja<br>                     <hr style="margin: 4px 0;">                     <b>Confirmación:</b> 1 Solo Sensor<br>                     <b>Detecciones:</b> 2 (2 VIIRS, 0 MODIS)<br>                     <b>FRP Pico de Pasada:</b> 5.23 MW (Máx píxel: 2.84 MW)<br>                     <b>Energía Radiativa (FRE):</b> 18,828.0 MJ<br>                     <b>Temp. Máxima:</b> 342.37 K<br>                     <b>Superficie Estimada:</b> 34.3 ha (0.343 km²)<br>                     <b>Duración Observada:</b> 0.0 h<br>                     <b>Dirección de Avance:</b> Estacionario (0.0 km a 0.0 km/h)<br>                 </div>                 </div>`)[0];
+                popup_27e7fd6e87f784efa608cf5fd63358d2.setContent(html_9c6a3a69919ff854928c211e3da81c61);
+            
+        
+
+        polygon_52aa756e7a6024c168d74078cd73b30f.bindPopup(popup_27e7fd6e87f784efa608cf5fd63358d2)
+        ;
+
+        
+    
+    
+            var marker_12670278b0f6d3bcfc5b8ca6a96caba1 = L.marker(
+                [-32.05185, -65.1694],
+                {
+}
+            ).addTo(feature_group_513c170019510eb492cc8e6617026a9b);
+        
+    
+            var icon_739d1ad1b03522ce644052cdb2a575a2 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "fire",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_ffae39e9f5005d8e4fbb0f007ecdb685 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_fbccc142029624f1f58b1cce54513cc1 = $(`<div id="html_fbccc142029624f1f58b1cce54513cc1" style="width: 100.0%; height: 100.0%;">                 <div style="font-family: Arial; font-size: 12px; width: 275px;">                     <b style="font-size: 14px; color: #fee08b;">🚨 FIRE_CLUSTER_004</b><br>                     <b>Zona / Localidad:</b> Traslasierra Sur (San Javier / Yacanto, Córdoba)<br>                     <b>Nivel de Severidad:</b> Severidad Baja<br>                     <hr style="margin: 4px 0;">                     <b>Confirmación:</b> 1 Solo Sensor<br>                     <b>Detecciones:</b> 2 (2 VIIRS, 0 MODIS)<br>                     <b>FRP Pico de Pasada:</b> 5.23 MW (Máx píxel: 2.84 MW)<br>                     <b>Energía Radiativa (FRE):</b> 18,828.0 MJ<br>                     <b>Temp. Máxima:</b> 342.37 K<br>                     <b>Superficie Estimada:</b> 34.3 ha (0.343 km²)<br>                     <b>Duración Observada:</b> 0.0 h<br>                     <b>Dirección de Avance:</b> Estacionario (0.0 km a 0.0 km/h)<br>                 </div>                 </div>`)[0];
+                popup_ffae39e9f5005d8e4fbb0f007ecdb685.setContent(html_fbccc142029624f1f58b1cce54513cc1);
+            
+        
+
+        marker_12670278b0f6d3bcfc5b8ca6a96caba1.bindPopup(popup_ffae39e9f5005d8e4fbb0f007ecdb685)
+        ;
+
+        
+    
+    
+                marker_12670278b0f6d3bcfc5b8ca6a96caba1.setIcon(icon_739d1ad1b03522ce644052cdb2a575a2);
+            
+    
+            var polygon_68889a0fa59cfca195ca74349f364615 = L.polygon(
+                [[-32.90773, -65.42809], [-32.90812, -65.42634], [-32.90919, -65.42507], [-32.91066, -65.4246], [-32.91212, -65.42507], [-32.91319, -65.42634], [-32.91358, -65.42809], [-32.91319, -65.42983], [-32.91212, -65.4311], [-32.91066, -65.43157], [-32.90919, -65.4311], [-32.90812, -65.42983], [-32.90773, -65.42809]],
+                {"bubblingMouseEvents": true, "color": "#fee08b", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fee08b", "fillOpacity": 0.25, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_513c170019510eb492cc8e6617026a9b);
+        
+    
+        var popup_91b2f2ad595fa88710f5101e05270edc = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_c7e4f73013b537637590044d36100ad9 = $(`<div id="html_c7e4f73013b537637590044d36100ad9" style="width: 100.0%; height: 100.0%;">                 <div style="font-family: Arial; font-size: 12px; width: 275px;">                     <b style="font-size: 14px; color: #fee08b;">🚨 FIRE_CLUSTER_002</b><br>                     <b>Zona / Localidad:</b> Valle del Conlara / El Morro (San Luis)<br>                     <b>Nivel de Severidad:</b> Severidad Baja<br>                     <hr style="margin: 4px 0;">                     <b>Confirmación:</b> 1 Solo Sensor<br>                     <b>Detecciones:</b> 2 (2 VIIRS, 0 MODIS)<br>                     <b>FRP Pico de Pasada:</b> 3.19 MW (Máx píxel: 3.19 MW)<br>                     <b>Energía Radiativa (FRE):</b> 9,302.4 MJ<br>                     <b>Temp. Máxima:</b> 342.47 K<br>                     <b>Superficie Estimada:</b> 33.3 ha (0.333 km²)<br>                     <b>Duración Observada:</b> 0.95 h<br>                     <b>Dirección de Avance:</b> Estacionario (0.0 km a 0.0 km/h)<br>                 </div>                 </div>`)[0];
+                popup_91b2f2ad595fa88710f5101e05270edc.setContent(html_c7e4f73013b537637590044d36100ad9);
+            
+        
+
+        polygon_68889a0fa59cfca195ca74349f364615.bindPopup(popup_91b2f2ad595fa88710f5101e05270edc)
+        ;
+
+        
+    
+    
+            var marker_db4975752f2da334d4854cf31c777ad5 = L.marker(
+                [-32.91066, -65.42809],
+                {
+}
+            ).addTo(feature_group_513c170019510eb492cc8e6617026a9b);
+        
+    
+            var icon_0cc119bec16ca5d6b2c9d7ec1df460c1 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "fire",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_edd60059cbaa8d2eb0b650c95334ef37 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b8fb601f44676d8986a530277218009b = $(`<div id="html_b8fb601f44676d8986a530277218009b" style="width: 100.0%; height: 100.0%;">                 <div style="font-family: Arial; font-size: 12px; width: 275px;">                     <b style="font-size: 14px; color: #fee08b;">🚨 FIRE_CLUSTER_002</b><br>                     <b>Zona / Localidad:</b> Valle del Conlara / El Morro (San Luis)<br>                     <b>Nivel de Severidad:</b> Severidad Baja<br>                     <hr style="margin: 4px 0;">                     <b>Confirmación:</b> 1 Solo Sensor<br>                     <b>Detecciones:</b> 2 (2 VIIRS, 0 MODIS)<br>                     <b>FRP Pico de Pasada:</b> 3.19 MW (Máx píxel: 3.19 MW)<br>                     <b>Energía Radiativa (FRE):</b> 9,302.4 MJ<br>                     <b>Temp. Máxima:</b> 342.47 K<br>                     <b>Superficie Estimada:</b> 33.3 ha (0.333 km²)<br>                     <b>Duración Observada:</b> 0.95 h<br>                     <b>Dirección de Avance:</b> Estacionario (0.0 km a 0.0 km/h)<br>                 </div>                 </div>`)[0];
+                popup_edd60059cbaa8d2eb0b650c95334ef37.setContent(html_b8fb601f44676d8986a530277218009b);
+            
+        
+
+        marker_db4975752f2da334d4854cf31c777ad5.bindPopup(popup_edd60059cbaa8d2eb0b650c95334ef37)
+        ;
+
+        
+    
+    
+                marker_db4975752f2da334d4854cf31c777ad5.setIcon(icon_0cc119bec16ca5d6b2c9d7ec1df460c1);
+            
+    
+            var polygon_b4a71e75d5c4c65189c0424f88c382ed = L.polygon(
+                [[-31.66027, -63.83293], [-31.66065, -63.83126], [-31.66169, -63.83004], [-31.66311, -63.8296], [-31.66452, -63.83004], [-31.66556, -63.83126], [-31.66594, -63.83293], [-31.66556, -63.83459], [-31.66452, -63.83581], [-31.66311, -63.83625], [-31.66169, -63.83581], [-31.66065, -63.83459], [-31.66027, -63.83293]],
+                {"bubblingMouseEvents": true, "color": "#fee08b", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fee08b", "fillOpacity": 0.25, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_513c170019510eb492cc8e6617026a9b);
+        
+    
+        var popup_ac6517f9d9042a4f4cb7123a0e178a5c = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_0425e4bf52af7803e3b66c2e4de2094e = $(`<div id="html_0425e4bf52af7803e3b66c2e4de2094e" style="width: 100.0%; height: 100.0%;">                 <div style="font-family: Arial; font-size: 12px; width: 275px;">                     <b style="font-size: 14px; color: #fee08b;">🚨 FIRE_CLUSTER_000</b><br>                     <b>Zona / Localidad:</b> Pilar / Río Segundo (Córdoba)<br>                     <b>Nivel de Severidad:</b> Severidad Baja<br>                     <hr style="margin: 4px 0;">                     <b>Confirmación:</b> 1 Solo Sensor<br>                     <b>Detecciones:</b> 2 (2 VIIRS, 0 MODIS)<br>                     <b>FRP Pico de Pasada:</b> 1.15 MW (Máx píxel: 1.15 MW)<br>                     <b>Energía Radiativa (FRE):</b> 4,140.0 MJ<br>                     <b>Temp. Máxima:</b> 306.71 K<br>                     <b>Superficie Estimada:</b> 31.2 ha (0.312 km²)<br>                     <b>Duración Observada:</b> 48.1 h<br>                     <b>Dirección de Avance:</b> Estacionario (0.0 km a 0.0 km/h)<br>                 </div>                 </div>`)[0];
+                popup_ac6517f9d9042a4f4cb7123a0e178a5c.setContent(html_0425e4bf52af7803e3b66c2e4de2094e);
+            
+        
+
+        polygon_b4a71e75d5c4c65189c0424f88c382ed.bindPopup(popup_ac6517f9d9042a4f4cb7123a0e178a5c)
+        ;
+
+        
+    
+    
+            var marker_6c6df741d5f7396cb741f2f47b02ac49 = L.marker(
+                [-31.66311, -63.83293],
+                {
+}
+            ).addTo(feature_group_513c170019510eb492cc8e6617026a9b);
+        
+    
+            var icon_50bbb27e7ca455e6c6155c7b4f2c3fb8 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "fire",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_8bdf56db60653b28ac69f33e352f22a5 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_9f7ae9f4424172daf49aa2b65210b426 = $(`<div id="html_9f7ae9f4424172daf49aa2b65210b426" style="width: 100.0%; height: 100.0%;">                 <div style="font-family: Arial; font-size: 12px; width: 275px;">                     <b style="font-size: 14px; color: #fee08b;">🚨 FIRE_CLUSTER_000</b><br>                     <b>Zona / Localidad:</b> Pilar / Río Segundo (Córdoba)<br>                     <b>Nivel de Severidad:</b> Severidad Baja<br>                     <hr style="margin: 4px 0;">                     <b>Confirmación:</b> 1 Solo Sensor<br>                     <b>Detecciones:</b> 2 (2 VIIRS, 0 MODIS)<br>                     <b>FRP Pico de Pasada:</b> 1.15 MW (Máx píxel: 1.15 MW)<br>                     <b>Energía Radiativa (FRE):</b> 4,140.0 MJ<br>                     <b>Temp. Máxima:</b> 306.71 K<br>                     <b>Superficie Estimada:</b> 31.2 ha (0.312 km²)<br>                     <b>Duración Observada:</b> 48.1 h<br>                     <b>Dirección de Avance:</b> Estacionario (0.0 km a 0.0 km/h)<br>                 </div>                 </div>`)[0];
+                popup_8bdf56db60653b28ac69f33e352f22a5.setContent(html_9f7ae9f4424172daf49aa2b65210b426);
+            
+        
+
+        marker_6c6df741d5f7396cb741f2f47b02ac49.bindPopup(popup_8bdf56db60653b28ac69f33e352f22a5)
+        ;
+
+        
+    
+    
+                marker_6c6df741d5f7396cb741f2f47b02ac49.setIcon(icon_50bbb27e7ca455e6c6155c7b4f2c3fb8);
+            
+    
+            feature_group_513c170019510eb492cc8e6617026a9b.addTo(map_1ac0a43de120862db5e2af401882d584);
+        
+    
+            L.control.fullscreen(
+                {
+  "position": "topleft",
+  "title": "Full Screen",
+  "titleCancel": "Exit Full Screen",
+  "forceSeparateButton": false,
+}
+            ).addTo(map_1ac0a43de120862db5e2af401882d584);
+        
+    
+            var layer_control_9f28932cfeeca1d22f2eb65cb23f4341_layers = {
+                base_layers : {
+                    "cartodbdarkmatter" : tile_layer_9855e507f6dff382383c53e7ab72e858,
+                    "\ud83d\udef0\ufe0f Imagen Satelital Esri" : tile_layer_687f508464a12348b5a44059a8e1bc7d,
+                    "\ud83d\uddfa\ufe0f OpenStreetMap" : tile_layer_88bb2369eb9d620e5c18211b628e3adf,
+                },
+                overlays :  {
+                    "\ud83d\udd25 Mapa de Calor Radiativo (FRP)" : heat_map_1d5700123f8d7853a3c2aa12b87628b3,
+                    "\ud83d\udfe0 Focos VIIRS (Alta Res. 375m)" : feature_group_c020b57c7f7f80c055cb1fdaf2d9e499,
+                    "\ud83d\udd34 Focos MODIS (Res. Media 1km)" : feature_group_3a66a3434682038acd530f8df75f9a6f,
+                    "\ud83d\udcd0 Per\u00edmetros de Incendio Consolidados" : feature_group_513c170019510eb492cc8e6617026a9b,
+                },
+            };
+            let layer_control_9f28932cfeeca1d22f2eb65cb23f4341 = L.control.layers(
+                layer_control_9f28932cfeeca1d22f2eb65cb23f4341_layers.base_layers,
+                layer_control_9f28932cfeeca1d22f2eb65cb23f4341_layers.overlays,
+                {
+  "position": "topleft",
+  "collapsed": false,
+  "autoZIndex": true,
+}
+            ).addTo(map_1ac0a43de120862db5e2af401882d584);
+
+        
+</script>
+</html>

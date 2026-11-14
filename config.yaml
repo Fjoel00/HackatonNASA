@@ -1,0 +1,40 @@
+# =============================================================================
+# NASA Space Apps Challenge 2026 - MODIS & VIIRS Hot Spots Analytics
+# Configuración Centralizada del Pipeline
+# =============================================================================
+
+project:
+  name: "Sistema Unificado de Detección, Armonización y Cinemática de Incendios Activos"
+  challenge: "MODIS and VIIRS Hot Spots"
+  version: "1.0.0-rc1"
+
+# Región de Estudio por Defecto (Argentina - Sierras de Córdoba y San Luis)
+# BBOX formato: "min_lon,min_lat,max_lon,max_lat"
+region:
+  name: "Sierras_Cordoba_SanLuis"
+  country: "Argentina"
+  bbox: "-66.0,-33.5,-63.5,-31.0"
+  default_days: 5
+
+# Parámetros de la API NASA FIRMS
+firms_api:
+  base_url: "https://firms.modaps.eosdis.nasa.gov/api/area/csv"
+  timeout_seconds: 30
+  rate_limit_delay_seconds: 1.2
+  sources:
+    - "VIIRS_NOAA20_NRT"
+    - "VIIRS_SNPP_NRT"
+    - "VIIRS_NOAA21_NRT"
+    - "MODIS_NRT"
+
+# Parámetros Científicos de Clustering Espaciotemporal
+clustering:
+  eps_km: 2.5
+  min_samples: 2
+  temporal_window_hours: 24.0
+
+# Rutas de almacenamiento
+paths:
+  raw_cache_dir: "data/raw"
+  output_dir: "output"
+  dashboard_data: "output/dashboard_data.json"
