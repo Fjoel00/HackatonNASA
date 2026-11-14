@@ -14,36 +14,52 @@
         "coordinates": [
           [
             [
-              -65.94402,
-              -33.25633
+              -64.52489,
+              -31.72917
             ],
             [
-              -65.94758,
-              -33.25388
+              -64.53439,
+              -31.74404
             ],
             [
-              -65.953,
-              -33.25238
+              -64.51917,
+              -31.76197
             ],
             [
-              -65.95634,
-              -33.25226
+              -64.50716,
+              -31.77026
             ],
             [
-              -65.9576,
-              -33.25298
+              -64.48469,
+              -31.78312
             ],
             [
-              -65.95911,
-              -33.25679
+              -64.46714,
+              -31.7849
             ],
             [
-              -65.95151,
-              -33.25656
+              -64.45703,
+              -31.77505
             ],
             [
-              -65.94402,
-              -33.25633
+              -64.45891,
+              -31.75845
+            ],
+            [
+              -64.469,
+              -31.72227
+            ],
+            [
+              -64.47224,
+              -31.71873
+            ],
+            [
+              -64.50042,
+              -31.71378
+            ],
+            [
+              -64.52489,
+              -31.72917
             ]
           ]
         ]
@@ -51,33 +67,33 @@
       "properties": {
         "event_id": "FIRE_CLUSTER_001",
         "event_type": "Frente Activo",
-        "location_name": "Sierras de San Luis (El Trapiche / La Florida)",
+        "location_name": "Valle de Calamuchita (Córdoba)",
         "severity": "Severidad Alta",
         "severity_level": "Severidad Alta",
         "cluster_numeric_id": 1,
-        "centroid_lat": -33.2548,
-        "centroid_lon": -65.95332,
-        "frp_peak_mw": 374.55,
-        "frp_total_mw": 601.13,
-        "frp_max_mw": 127.37,
-        "fre_est_mj": 2036545.2,
-        "detection_area_ha": 47.1,
-        "est_area_ha": 47.1,
-        "est_area_km2": 0.471,
-        "detections_count": 12,
-        "viirs_count": 11,
-        "modis_count": 1,
+        "centroid_lat": -31.75119,
+        "centroid_lon": -64.49039,
+        "frp_peak_mw": 150.62,
+        "frp_total_mw": 1626.05,
+        "frp_max_mw": 150.62,
+        "fre_est_mj": 939604.2,
+        "detection_area_ha": 3874.0,
+        "est_area_ha": 3874.0,
+        "est_area_km2": 38.74,
+        "detections_count": 64,
+        "viirs_count": 55,
+        "modis_count": 9,
         "multisensor_confirmed": true,
-        "satellites_involved": "Aqua, NOAA-20, NOAA-21",
-        "first_detected": "2026-11-12 17:15:00",
-        "last_detected": "2026-11-13 05:18:00",
-        "duration_hours": 12.05,
-        "spread_vector_km": 0.237,
-        "spread_speed_kmh": 0.077,
-        "spread_azimuth_deg": 12.6,
+        "satellites_involved": "Aqua, NOAA-20",
+        "first_detected": "2026-11-14 10:04:00",
+        "last_detected": "2026-11-14 21:49:00",
+        "duration_hours": 11.75,
+        "spread_vector_km": 0.871,
+        "spread_speed_kmh": 0.132,
+        "spread_azimuth_deg": 349.5,
         "spread_cardinal": "N",
-        "temp_brightness_max_k": 367.0,
-        "mean_delta_temp_k": 32.99
+        "temp_brightness_max_k": 479.52,
+        "mean_delta_temp_k": 33.8
       }
     },
     {
@@ -87,546 +103,44 @@
         "coordinates": [
           [
             [
-              -65.03474,
-              -31.72383
+              -65.50808,
+              -32.28369
             ],
             [
-              -65.02927,
-              -31.72699
+              -65.46324,
+              -32.2588
             ],
             [
-              -65.03046,
-              -31.72295
+              -65.46489,
+              -32.24246
             ],
             [
-              -65.03474,
-              -31.72383
-            ]
-          ]
-        ]
-      },
-      "properties": {
-        "event_id": "FIRE_CLUSTER_005",
-        "event_type": "Frente Activo",
-        "location_name": "Valle de Traslasierra (Mina Clavero / Cura Brochero, Córdoba)",
-        "severity": "Severidad Baja",
-        "severity_level": "Severidad Baja",
-        "cluster_numeric_id": 5,
-        "centroid_lat": -31.72459,
-        "centroid_lon": -65.03149,
-        "frp_peak_mw": 22.77,
-        "frp_total_mw": 22.77,
-        "frp_max_mw": 14.46,
-        "fre_est_mj": 81972.0,
-        "detection_area_ha": 9.7,
-        "est_area_ha": 9.7,
-        "est_area_km2": 0.097,
-        "detections_count": 3,
-        "viirs_count": 3,
-        "modis_count": 0,
-        "multisensor_confirmed": false,
-        "satellites_involved": "NOAA-20",
-        "first_detected": "2026-11-13 18:38:00",
-        "last_detected": "2026-11-13 18:38:00",
-        "duration_hours": 0.0,
-        "spread_vector_km": 0.0,
-        "spread_speed_kmh": 0.0,
-        "spread_azimuth_deg": null,
-        "spread_cardinal": "Estacionario",
-        "temp_brightness_max_k": 356.48,
-        "mean_delta_temp_k": 44.64
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -64.11707,
-              -31.39897
-            ],
-            [
-              -64.13239,
-              -31.41113
-            ],
-            [
-              -64.11656,
-              -31.40291
-            ],
-            [
-              -64.11296,
-              -31.40072
-            ],
-            [
-              -64.11707,
-              -31.39897
-            ]
-          ]
-        ]
-      },
-      "properties": {
-        "event_id": "FIRE_CLUSTER_006",
-        "event_type": "Frente Activo",
-        "location_name": "Sierras Chicas / Gran Córdoba (Córdoba)",
-        "severity": "Severidad Baja",
-        "severity_level": "Severidad Baja",
-        "cluster_numeric_id": 6,
-        "centroid_lat": -31.40288,
-        "centroid_lon": -64.11921,
-        "frp_peak_mw": 12.63,
-        "frp_total_mw": 21.88,
-        "frp_max_mw": 6.96,
-        "fre_est_mj": 34435.5,
-        "detection_area_ha": 43.3,
-        "est_area_ha": 43.3,
-        "est_area_km2": 0.433,
-        "detections_count": 5,
-        "viirs_count": 5,
-        "modis_count": 0,
-        "multisensor_confirmed": false,
-        "satellites_involved": "NOAA-20, NOAA-21",
-        "first_detected": "2026-11-12 05:37:00",
-        "last_detected": "2026-11-13 18:38:00",
-        "duration_hours": 37.02,
-        "spread_vector_km": 1.133,
-        "spread_speed_kmh": 0.061,
-        "spread_azimuth_deg": 47.3,
-        "spread_cardinal": "NE",
-        "temp_brightness_max_k": 343.5,
-        "mean_delta_temp_k": 33.26
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -65.74159,
-              -32.10696
-            ],
-            [
-              -65.73557,
-              -32.10833
-            ],
-            [
-              -65.73117,
-              -32.11206
-            ],
-            [
-              -65.72956,
-              -32.11715
-            ],
-            [
-              -65.73117,
-              -32.12224
-            ],
-            [
-              -65.73557,
-              -32.12597
-            ],
-            [
-              -65.74159,
-              -32.12734
-            ],
-            [
-              -65.7476,
-              -32.12597
-            ],
-            [
-              -65.752,
-              -32.12224
-            ],
-            [
-              -65.75361,
-              -32.11715
-            ],
-            [
-              -65.752,
-              -32.11206
-            ],
-            [
-              -65.7476,
-              -32.10833
-            ],
-            [
-              -65.74159,
-              -32.10696
-            ]
-          ]
-        ]
-      },
-      "properties": {
-        "event_id": "FIRE_CLUSTER_007",
-        "event_type": "Frente Activo",
-        "location_name": "Norte Puntano (Quines / Candelaria, San Luis)",
-        "severity": "Severidad Baja",
-        "severity_level": "Severidad Baja",
-        "cluster_numeric_id": 7,
-        "centroid_lat": -32.11715,
-        "centroid_lon": -65.74159,
-        "frp_peak_mw": 11.73,
-        "frp_total_mw": 22.85,
-        "frp_max_mw": 11.73,
-        "fre_est_mj": 656709.0,
-        "detection_area_ha": 403.9,
-        "est_area_ha": 403.9,
-        "est_area_km2": 4.039,
-        "detections_count": 2,
-        "viirs_count": 0,
-        "modis_count": 2,
-        "multisensor_confirmed": false,
-        "satellites_involved": "Aqua, Terra",
-        "first_detected": "2026-11-12 20:57:00",
-        "last_detected": "2026-11-13 12:55:00",
-        "duration_hours": 15.97,
-        "spread_vector_km": 0.0,
-        "spread_speed_kmh": 0.0,
-        "spread_azimuth_deg": null,
-        "spread_cardinal": "Estacionario",
-        "temp_brightness_max_k": 318.32,
-        "mean_delta_temp_k": 16.52
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -65.65928,
-              -32.18369
-            ],
-            [
-              -65.65723,
-              -32.18416
-            ],
-            [
-              -65.65572,
-              -32.18544
-            ],
-            [
-              -65.65517,
-              -32.18718
-            ],
-            [
-              -65.65572,
-              -32.18892
-            ],
-            [
-              -65.65723,
-              -32.1902
-            ],
-            [
-              -65.65928,
-              -32.19067
-            ],
-            [
-              -65.66134,
-              -32.1902
-            ],
-            [
-              -65.66285,
-              -32.18892
-            ],
-            [
-              -65.6634,
-              -32.18718
-            ],
-            [
-              -65.66285,
-              -32.18544
-            ],
-            [
-              -65.66134,
-              -32.18416
-            ],
-            [
-              -65.65928,
-              -32.18369
-            ]
-          ]
-        ]
-      },
-      "properties": {
-        "event_id": "FIRE_CLUSTER_003",
-        "event_type": "Frente Activo",
-        "location_name": "Sierra de las Quijadas / Luján (San Luis)",
-        "severity": "Severidad Baja",
-        "severity_level": "Severidad Baja",
-        "cluster_numeric_id": 3,
-        "centroid_lat": -32.18718,
-        "centroid_lon": -65.65928,
-        "frp_peak_mw": 11.06,
-        "frp_total_mw": 11.06,
-        "frp_max_mw": 5.53,
-        "fre_est_mj": 39816.0,
-        "detection_area_ha": 47.3,
-        "est_area_ha": 47.3,
-        "est_area_km2": 0.473,
-        "detections_count": 2,
-        "viirs_count": 2,
-        "modis_count": 0,
-        "multisensor_confirmed": false,
-        "satellites_involved": "NOAA-20",
-        "first_detected": "2026-11-13 18:38:00",
-        "last_detected": "2026-11-13 18:38:00",
-        "duration_hours": 0.0,
-        "spread_vector_km": 0.0,
-        "spread_speed_kmh": 0.0,
-        "spread_azimuth_deg": null,
-        "spread_cardinal": "Estacionario",
-        "temp_brightness_max_k": 345.21,
-        "mean_delta_temp_k": 32.49
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -65.55127,
-              -31.85281
-            ],
-            [
-              -65.54993,
-              -31.85312
-            ],
-            [
-              -65.54895,
-              -31.85395
-            ],
-            [
-              -65.54859,
-              -31.85509
-            ],
-            [
-              -65.54895,
-              -31.85623
-            ],
-            [
-              -65.54993,
-              -31.85706
-            ],
-            [
-              -65.55127,
-              -31.85737
-            ],
-            [
-              -65.55261,
-              -31.85706
-            ],
-            [
-              -65.55359,
-              -31.85623
-            ],
-            [
-              -65.55395,
-              -31.85509
-            ],
-            [
-              -65.55359,
-              -31.85395
-            ],
-            [
-              -65.55261,
-              -31.85312
-            ],
-            [
-              -65.55127,
-              -31.85281
-            ]
-          ]
-        ]
-      },
-      "properties": {
-        "event_id": "ISO_25",
-        "event_type": "Foco Aislado",
-        "location_name": "Reserva Chancaní / Oeste Traslasierra (Córdoba)",
-        "severity": "Severidad Baja",
-        "severity_level": "Severidad Baja",
-        "cluster_numeric_id": -1,
-        "centroid_lat": -31.85509,
-        "centroid_lon": -65.55127,
-        "frp_peak_mw": 9.24,
-        "frp_total_mw": 9.24,
-        "frp_max_mw": 9.24,
-        "fre_est_mj": 33264.0,
-        "detection_area_ha": 20.24,
-        "est_area_ha": 20.24,
-        "est_area_km2": 0.2024,
-        "detections_count": 1,
-        "viirs_count": 1,
-        "modis_count": 0,
-        "multisensor_confirmed": false,
-        "satellites_involved": "NOAA-21",
-        "first_detected": "2026-11-13 17:43:00",
-        "last_detected": "2026-11-13 17:43:00",
-        "duration_hours": 0.0,
-        "spread_vector_km": 0.0,
-        "spread_speed_kmh": 0.0,
-        "spread_azimuth_deg": null,
-        "spread_cardinal": "Estacionario",
-        "temp_brightness_max_k": 333.67,
-        "mean_delta_temp_k": 27.05
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -65.1694,
-              -32.04888
-            ],
-            [
-              -65.16765,
-              -32.04927
-            ],
-            [
-              -65.16637,
-              -32.05036
-            ],
-            [
-              -65.1659,
-              -32.05185
-            ],
-            [
-              -65.16637,
-              -32.05333
-            ],
-            [
-              -65.16765,
-              -32.05442
-            ],
-            [
-              -65.1694,
-              -32.05481
-            ],
-            [
-              -65.17116,
-              -32.05442
-            ],
-            [
-              -65.17244,
-              -32.05333
-            ],
-            [
-              -65.17291,
-              -32.05185
-            ],
-            [
-              -65.17244,
-              -32.05036
-            ],
-            [
-              -65.17116,
-              -32.04927
-            ],
-            [
-              -65.1694,
-              -32.04888
-            ]
-          ]
-        ]
-      },
-      "properties": {
-        "event_id": "FIRE_CLUSTER_004",
-        "event_type": "Frente Activo",
-        "location_name": "Traslasierra Sur (San Javier / Yacanto, Córdoba)",
-        "severity": "Severidad Baja",
-        "severity_level": "Severidad Baja",
-        "cluster_numeric_id": 4,
-        "centroid_lat": -32.05185,
-        "centroid_lon": -65.1694,
-        "frp_peak_mw": 5.23,
-        "frp_total_mw": 5.23,
-        "frp_max_mw": 2.84,
-        "fre_est_mj": 18828.0,
-        "detection_area_ha": 34.3,
-        "est_area_ha": 34.3,
-        "est_area_km2": 0.343,
-        "detections_count": 2,
-        "viirs_count": 2,
-        "modis_count": 0,
-        "multisensor_confirmed": false,
-        "satellites_involved": "NOAA-20",
-        "first_detected": "2026-11-13 18:38:00",
-        "last_detected": "2026-11-13 18:38:00",
-        "duration_hours": 0.0,
-        "spread_vector_km": 0.0,
-        "spread_speed_kmh": 0.0,
-        "spread_azimuth_deg": null,
-        "spread_cardinal": "Estacionario",
-        "temp_brightness_max_k": 342.37,
-        "mean_delta_temp_k": 34.45
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -65.42809,
-              -32.90773
-            ],
-            [
-              -65.42634,
-              -32.90812
-            ],
-            [
-              -65.42507,
-              -32.90919
-            ],
-            [
-              -65.4246,
-              -32.91066
-            ],
-            [
-              -65.42507,
-              -32.91212
-            ],
-            [
-              -65.42634,
-              -32.91319
-            ],
-            [
-              -65.42809,
-              -32.91358
+              -65.47042,
+              -32.23487
             ],
             [
-              -65.42983,
-              -32.91319
+              -65.49017,
+              -32.22502
             ],
             [
-              -65.4311,
-              -32.91212
+              -65.52119,
+              -32.24021
             ],
             [
-              -65.43157,
-              -32.91066
+              -65.52862,
+              -32.2508
             ],
             [
-              -65.4311,
-              -32.90919
+              -65.52293,
+              -32.26219
             ],
             [
-              -65.42983,
-              -32.90812
+              -65.51451,
+              -32.27901
             ],
             [
-              -65.42809,
-              -32.90773
+              -65.50808,
+              -32.28369
             ]
           ]
         ]
@@ -634,33 +148,33 @@
       "properties": {
         "event_id": "FIRE_CLUSTER_002",
         "event_type": "Frente Activo",
-        "location_name": "Valle del Conlara / El Morro (San Luis)",
-        "severity": "Severidad Baja",
-        "severity_level": "Severidad Baja",
+        "location_name": "Sierra de las Quijadas / Luján (San Luis)",
+        "severity": "Severidad Moderada",
+        "severity_level": "Severidad Moderada",
         "cluster_numeric_id": 2,
-        "centroid_lat": -32.91066,
-        "centroid_lon": -65.42809,
-        "frp_peak_mw": 3.19,
-        "frp_total_mw": 5.44,
-        "frp_max_mw": 3.19,
-        "fre_est_mj": 9302.4,
-        "detection_area_ha": 33.3,
-        "est_area_ha": 33.3,
-        "est_area_km2": 0.333,
-        "detections_count": 2,
-        "viirs_count": 2,
-        "modis_count": 0,
-        "multisensor_confirmed": false,
-        "satellites_involved": "NOAA-20, NOAA-21",
-        "first_detected": "2026-11-12 18:00:00",
-        "last_detected": "2026-11-12 18:57:00",
-        "duration_hours": 0.95,
-        "spread_vector_km": 0.0,
-        "spread_speed_kmh": 0.0,
-        "spread_azimuth_deg": null,
-        "spread_cardinal": "Estacionario",
-        "temp_brightness_max_k": 342.47,
-        "mean_delta_temp_k": 25.81
+        "centroid_lat": -32.24819,
+        "centroid_lon": -65.49675,
+        "frp_peak_mw": 133.69,
+        "frp_total_mw": 663.04,
+        "frp_max_mw": 133.69,
+        "fre_est_mj": 881539.2,
+        "detection_area_ha": 2510.0,
+        "est_area_ha": 2510.0,
+        "est_area_km2": 25.1,
+        "detections_count": 38,
+        "viirs_count": 33,
+        "modis_count": 5,
+        "multisensor_confirmed": true,
+        "satellites_involved": "Aqua, NOAA-20",
+        "first_detected": "2026-11-14 10:05:00",
+        "last_detected": "2026-11-14 21:57:00",
+        "duration_hours": 11.87,
+        "spread_vector_km": 1.142,
+        "spread_speed_kmh": 0.196,
+        "spread_azimuth_deg": 219.8,
+        "spread_cardinal": "SW",
+        "temp_brightness_max_k": 479.9,
+        "mean_delta_temp_k": 35.62
       }
     },
     {
@@ -670,56 +184,113 @@
         "coordinates": [
           [
             [
-              -63.83293,
-              -31.66027
+              -64.03774,
+              -31.48503
             ],
             [
-              -63.83126,
-              -31.66065
+              -64.00589,
+              -31.52449
             ],
             [
-              -63.83004,
-              -31.66169
+              -63.97925,
+              -31.52435
             ],
             [
-              -63.8296,
-              -31.66311
+              -63.97913,
+              -31.5242
             ],
             [
-              -63.83004,
-              -31.66452
+              -63.97036,
+              -31.51322
             ],
             [
-              -63.83126,
-              -31.66556
+              -63.95341,
+              -31.48572
             ],
             [
-              -63.83293,
-              -31.66594
+              -63.98042,
+              -31.46507
             ],
             [
-              -63.83459,
-              -31.66556
+              -64.03774,
+              -31.48503
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "event_id": "FIRE_CLUSTER_003",
+        "event_type": "Frente Activo",
+        "location_name": "Sierras Chicas / Gran Córdoba (Córdoba)",
+        "severity": "Severidad Moderada",
+        "severity_level": "Severidad Moderada",
+        "cluster_numeric_id": 3,
+        "centroid_lat": -31.4996,
+        "centroid_lon": -63.992,
+        "frp_peak_mw": 94.73,
+        "frp_total_mw": 1057.24,
+        "frp_max_mw": 79.25,
+        "fre_est_mj": 722680.8,
+        "detection_area_ha": 3228.0,
+        "est_area_ha": 3228.0,
+        "est_area_km2": 32.28,
+        "detections_count": 62,
+        "viirs_count": 53,
+        "modis_count": 9,
+        "multisensor_confirmed": true,
+        "satellites_involved": "Aqua, NOAA-20",
+        "first_detected": "2026-11-14 10:10:00",
+        "last_detected": "2026-11-14 21:57:00",
+        "duration_hours": 11.78,
+        "spread_vector_km": 0.812,
+        "spread_speed_kmh": 0.133,
+        "spread_azimuth_deg": 178.4,
+        "spread_cardinal": "S",
+        "temp_brightness_max_k": 478.83,
+        "mean_delta_temp_k": 36.24
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.03015,
+              -32.74358
             ],
             [
-              -63.83581,
-              -31.66452
+              -65.01356,
+              -32.78268
             ],
             [
-              -63.83625,
-              -31.66311
+              -65.00217,
+              -32.79862
             ],
             [
-              -63.83581,
-              -31.66169
+              -64.95423,
+              -32.75923
             ],
             [
-              -63.83459,
-              -31.66065
+              -64.94538,
+              -32.74049
             ],
             [
-              -63.83293,
-              -31.66027
+              -64.95714,
+              -32.72753
+            ],
+            [
+              -64.99191,
+              -32.71373
+            ],
+            [
+              -65.0231,
+              -32.72052
+            ],
+            [
+              -65.03015,
+              -32.74358
             ]
           ]
         ]
@@ -727,33 +298,312 @@
       "properties": {
         "event_id": "FIRE_CLUSTER_000",
         "event_type": "Frente Activo",
-        "location_name": "Pilar / Río Segundo (Córdoba)",
-        "severity": "Severidad Baja",
-        "severity_level": "Severidad Baja",
+        "location_name": "Valle del Conlara / El Morro (San Luis)",
+        "severity": "Severidad Moderada",
+        "severity_level": "Severidad Moderada",
         "cluster_numeric_id": 0,
-        "centroid_lat": -31.66311,
-        "centroid_lon": -63.83293,
-        "frp_peak_mw": 1.15,
-        "frp_total_mw": 2.05,
-        "frp_max_mw": 1.15,
-        "fre_est_mj": 4140.0,
-        "detection_area_ha": 31.2,
-        "est_area_ha": 31.2,
-        "est_area_km2": 0.312,
-        "detections_count": 2,
-        "viirs_count": 2,
+        "centroid_lat": -32.74752,
+        "centroid_lon": -64.99136,
+        "frp_peak_mw": 88.39,
+        "frp_total_mw": 1563.58,
+        "frp_max_mw": 88.39,
+        "fre_est_mj": 1071461.7,
+        "detection_area_ha": 4614.2,
+        "est_area_ha": 4614.2,
+        "est_area_km2": 46.142,
+        "detections_count": 60,
+        "viirs_count": 52,
+        "modis_count": 8,
+        "multisensor_confirmed": true,
+        "satellites_involved": "Aqua, NOAA-20",
+        "first_detected": "2026-11-14 10:02:00",
+        "last_detected": "2026-11-14 21:56:00",
+        "duration_hours": 11.9,
+        "spread_vector_km": 0.258,
+        "spread_speed_kmh": 0.046,
+        "spread_azimuth_deg": 176.6,
+        "spread_cardinal": "S",
+        "temp_brightness_max_k": 478.46,
+        "mean_delta_temp_k": 35.68
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -64.50132,
+              -31.80027
+            ],
+            [
+              -64.5002,
+              -31.80052
+            ],
+            [
+              -64.49938,
+              -31.80122
+            ],
+            [
+              -64.49908,
+              -31.80217
+            ],
+            [
+              -64.49938,
+              -31.80312
+            ],
+            [
+              -64.5002,
+              -31.80382
+            ],
+            [
+              -64.50132,
+              -31.80407
+            ],
+            [
+              -64.50244,
+              -31.80382
+            ],
+            [
+              -64.50326,
+              -31.80312
+            ],
+            [
+              -64.50356,
+              -31.80217
+            ],
+            [
+              -64.50326,
+              -31.80122
+            ],
+            [
+              -64.50244,
+              -31.80052
+            ],
+            [
+              -64.50132,
+              -31.80027
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "event_id": "ISO_70",
+        "event_type": "Foco Aislado",
+        "location_name": "Valle de Calamuchita (Córdoba)",
+        "severity": "Severidad Moderada",
+        "severity_level": "Severidad Moderada",
+        "cluster_numeric_id": -1,
+        "centroid_lat": -31.80217,
+        "centroid_lon": -64.50132,
+        "frp_peak_mw": 32.01,
+        "frp_total_mw": 32.01,
+        "frp_max_mw": 32.01,
+        "fre_est_mj": 115236.0,
+        "detection_area_ha": 14.06,
+        "est_area_ha": 14.06,
+        "est_area_km2": 0.1406,
+        "detections_count": 1,
+        "viirs_count": 1,
         "modis_count": 0,
         "multisensor_confirmed": false,
-        "satellites_involved": "NOAA-20, NOAA-21",
-        "first_detected": "2026-11-11 05:12:00",
-        "last_detected": "2026-11-13 05:18:00",
-        "duration_hours": 48.1,
+        "satellites_involved": "NOAA-20",
+        "first_detected": "2026-11-14 20:56:00",
+        "last_detected": "2026-11-14 20:56:00",
+        "duration_hours": 0.0,
         "spread_vector_km": 0.0,
         "spread_speed_kmh": 0.0,
         "spread_azimuth_deg": null,
         "spread_cardinal": "Estacionario",
-        "temp_brightness_max_k": 306.71,
-        "mean_delta_temp_k": 14.88
+        "temp_brightness_max_k": 453.86,
+        "mean_delta_temp_k": 28.85
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -64.96416,
+              -32.78135
+            ],
+            [
+              -64.96303,
+              -32.7816
+            ],
+            [
+              -64.9622,
+              -32.7823
+            ],
+            [
+              -64.9619,
+              -32.78325
+            ],
+            [
+              -64.9622,
+              -32.7842
+            ],
+            [
+              -64.96303,
+              -32.7849
+            ],
+            [
+              -64.96416,
+              -32.78515
+            ],
+            [
+              -64.96529,
+              -32.7849
+            ],
+            [
+              -64.96612,
+              -32.7842
+            ],
+            [
+              -64.96642,
+              -32.78325
+            ],
+            [
+              -64.96612,
+              -32.7823
+            ],
+            [
+              -64.96529,
+              -32.7816
+            ],
+            [
+              -64.96416,
+              -32.78135
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "event_id": "ISO_50",
+        "event_type": "Foco Aislado",
+        "location_name": "Valle del Conlara / El Morro (San Luis)",
+        "severity": "Severidad Baja",
+        "severity_level": "Severidad Baja",
+        "cluster_numeric_id": -1,
+        "centroid_lat": -32.78325,
+        "centroid_lon": -64.96416,
+        "frp_peak_mw": 25.18,
+        "frp_total_mw": 25.18,
+        "frp_max_mw": 25.18,
+        "fre_est_mj": 90648.0,
+        "detection_area_ha": 14.06,
+        "est_area_ha": 14.06,
+        "est_area_km2": 0.1406,
+        "detections_count": 1,
+        "viirs_count": 1,
+        "modis_count": 0,
+        "multisensor_confirmed": false,
+        "satellites_involved": "NOAA-20",
+        "first_detected": "2026-11-14 10:38:00",
+        "last_detected": "2026-11-14 10:38:00",
+        "duration_hours": 0.0,
+        "spread_vector_km": 0.0,
+        "spread_speed_kmh": 0.0,
+        "spread_azimuth_deg": null,
+        "spread_cardinal": "Estacionario",
+        "temp_brightness_max_k": 413.12,
+        "mean_delta_temp_k": 40.92
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -63.95724,
+              -31.53559
+            ],
+            [
+              -63.95613,
+              -31.53584
+            ],
+            [
+              -63.95531,
+              -31.53654
+            ],
+            [
+              -63.95501,
+              -31.53749
+            ],
+            [
+              -63.95531,
+              -31.53844
+            ],
+            [
+              -63.95613,
+              -31.53914
+            ],
+            [
+              -63.95724,
+              -31.53939
+            ],
+            [
+              -63.95835,
+              -31.53914
+            ],
+            [
+              -63.95917,
+              -31.53844
+            ],
+            [
+              -63.95947,
+              -31.53749
+            ],
+            [
+              -63.95917,
+              -31.53654
+            ],
+            [
+              -63.95835,
+              -31.53584
+            ],
+            [
+              -63.95724,
+              -31.53559
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "event_id": "ISO_192",
+        "event_type": "Foco Aislado",
+        "location_name": "Pilar / Río Segundo (Córdoba)",
+        "severity": "Severidad Baja",
+        "severity_level": "Severidad Baja",
+        "cluster_numeric_id": -1,
+        "centroid_lat": -31.53749,
+        "centroid_lon": -63.95724,
+        "frp_peak_mw": 10.11,
+        "frp_total_mw": 10.11,
+        "frp_max_mw": 10.11,
+        "fre_est_mj": 36396.0,
+        "detection_area_ha": 14.06,
+        "est_area_ha": 14.06,
+        "est_area_km2": 0.1406,
+        "detections_count": 1,
+        "viirs_count": 1,
+        "modis_count": 0,
+        "multisensor_confirmed": false,
+        "satellites_involved": "NOAA-20",
+        "first_detected": "2026-11-14 14:14:00",
+        "last_detected": "2026-11-14 14:14:00",
+        "duration_hours": 0.0,
+        "spread_vector_km": 0.0,
+        "spread_speed_kmh": 0.0,
+        "spread_azimuth_deg": null,
+        "spread_cardinal": "Estacionario",
+        "temp_brightness_max_k": 328.97,
+        "mean_delta_temp_k": 30.35
       }
     }
   ]
