@@ -181,7 +181,16 @@ def get_template():
       </nav>
 
       <!-- Selector de Región de Estudio -->
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2 flex-wrap">
+        <div class="flex items-center gap-1.5 text-[10px] font-mono bg-tactical-950 border border-tactical-800 rounded-xl px-2 py-1">
+          <span>Datos:</span>
+          <select id="data-source-select" class="bg-tactical-850 text-slate-200 rounded px-1.5 py-1 outline-none">
+            <option value="synthetic">Demo sintética</option>
+            <option value="firms">NASA FIRMS real</option>
+          </select>
+          <button id="data-source-run" onclick="runDataSource()" class="bg-tactical-accent hover:bg-orange-500 text-white font-bold rounded-lg px-2 py-1 transition-all">Aplicar</button>
+        </div>
+        <span id="data-source-status" role="status" aria-live="polite" class="text-[10px] font-mono text-slate-400">Consultando estado…</span>
         <select id="select-region" onchange="changeRegion(this.value)"
                 class="bg-tactical-850 hover:bg-tactical-800 text-slate-200 text-xs font-mono py-1.5 px-2.5 rounded-xl border border-tactical-700 outline-none cursor-pointer transition-all">
           <option value="Sierras_Cordoba_SanLuis" selected>📍 Vista Regional: Córdoba y San Luis</option>
@@ -686,10 +695,69 @@ def get_template():
       renderCalendar();
       initMap();
       loadActiveFireData();
+      refreshDataSourceStatus();
       await fetchRealWeather();
       recalculatePredictiveEngine();
       switchMainTab('calendar');
     });
+
+    async function refreshDataSourceStatus() {
+      const label = document.getElementById('data-source-status');
+      try {
+        const response = await fetch('/api/status');
+        const status = await response.json();
+        document.getElementById('data-source-select').value = status.mode || 'synthetic';
+        if (status.running) {
+          label.innerText = 'Procesando datos…';
+          label.className = 'text-[10px] font-mono text-amber-300';
+          setTimeout(refreshDataSourceStatus, 2000);
+        } else {
+          label.innerText = status.error ? `Error: ${status.error}` : (status.mode === 'firms' ? 'NASA FIRMS' : 'Modo demo');
+          label.className = `text-[10px] font-mono ${status.error ? 'text-red-400' : 'text-emerald-400'}`;
+        }
+      } catch (error) {
+        label.innerText = 'Servidor de análisis no disponible';
+        label.className = 'text-[10px] font-mono text-red-400';
+      }
+    }
+
+    async function runDataSource() {
+      const button = document.getElementById('data-source-run');
+      const label = document.getElementById('data-source-status');
+      const mode = document.getElementById('data-source-select').value;
+      button.disabled = true;
+      button.innerText = 'Procesando…';
+      label.innerText = 'Generando datos; puede tardar unos segundos…';
+      label.className = 'text-[10px] font-mono text-amber-300';
+      try {
+        const response = await fetch('/api/run', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ mode })
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'No se pudo iniciar el análisis');
+        const poll = async () => {
+          const statusResponse = await fetch('/api/status');
+          const status = await statusResponse.json();
+          if (status.running) {
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            return poll();
+          }
+          if (status.error) throw new Error(status.error);
+          label.innerText = 'Datos actualizados';
+          button.disabled = false;
+          button.innerText = 'Aplicar';
+          window.location.reload();
+        };
+        await poll();
+      } catch (error) {
+        label.innerText = error.message;
+        label.className = 'text-[10px] font-mono text-red-400';
+        button.disabled = false;
+        button.innerText = 'Aplicar';
+      }
+    }
 
     // Conmutador de Pestañas Principales
     function switchMainTab(tabName) {

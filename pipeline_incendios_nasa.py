@@ -51,7 +51,7 @@ except ImportError:
 # =============================================================================
 # CONSTANTES Y CONFIGURACIÓN PREDETERMINADA
 # =============================================================================
-DEFAULT_MAP_KEY = os.getenv("FIRMS_MAP_KEY", "35607fe3f0cf2c7a2a3e5a45fc011873")
+DEFAULT_MAP_KEY = os.getenv("FIRMS_MAP_KEY", "")
 DEFAULT_ARGENTINA_BBOX = "-66.0,-33.5,-63.5,-31.0"
 
 

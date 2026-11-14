@@ -47,6 +47,28 @@ flowchart LR
 
 ## 💻 3. Instalación y Uso Rápido
 
+### Ejecutar la aplicación completa con Docker
+
+Con Docker y el plugin Docker Compose instalados, desde la carpeta del proyecto:
+
+```bash
+docker compose up --build
+```
+
+Al terminar de generar los datos, abrir **http://localhost:8080**. Por defecto inicia en modo demo con detecciones sintéticas, sin necesitar una clave de NASA FIRMS. En la barra superior se puede elegir **Demo sintética** o **NASA FIRMS real** y pulsar **Aplicar**; la página muestra el progreso y se actualiza al completar el análisis. Las salidas se guardan en `output/` y la caché de FIRMS en `data/raw/`.
+
+Para detenerla, pulsar `Ctrl+C` (o ejecutar `docker compose down` en otra terminal).
+
+La clave de NASA FIRMS queda configurada localmente en `.env`, que Docker Compose carga automáticamente. Para nuevas instalaciones, copiar `.env.example` como `.env` y completar `FIRMS_MAP_KEY`; después el selector de datos reales estará disponible cada vez que levantes la app, sin pasar la clave en el comando.
+
+```bash
+cp .env.example .env
+# Editar .env y colocar la clave en FIRMS_MAP_KEY
+docker compose up --build
+```
+
+La aplicación inicia en demo y luego permite cambiar a datos reales desde el selector. La clave se mantiene en el contenedor y no se envía al navegador. Para iniciar directamente con datos reales, configurar `USE_SYNTHETIC_DATA=false` en `.env`.
+
 ### Requisitos Previos
 Tener instalado Python 3.10 o superior.
 

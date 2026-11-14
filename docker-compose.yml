@@ -1,0 +1,12 @@
+services:
+  aura-fire:
+    build: .
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      USE_SYNTHETIC_DATA: ${USE_SYNTHETIC_DATA:-true}
+      FIRMS_MAP_KEY: ${FIRMS_MAP_KEY:-}
+    volumes:
+      - ./output:/app/output
+      - ./data/raw:/app/data/raw
+    restart: unless-stopped
