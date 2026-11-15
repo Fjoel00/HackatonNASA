@@ -156,14 +156,12 @@ HackatonNASA/
 
 ## 👥 6. Team: Maxwell Crew
 
-| Member | Role & Key Contributions |
-| :--- | :--- |
-| **Joel Figueroa** | Lead Software Architecture, Web Application Development, Vercel Deployment & System Integration |
-| **Juan Ibañez** | Scientific Data Analysis, Sensor Footprint Calculations & Statistical Modeling |
-| **Marcos Moleker** | Satellite Data Ingestion, FIRMS API Integration & Historical Time Series Harmonization |
-| **Nicolas Calderon** | Geospatial Engine, Geodetic Haversine DBSCAN Clustering & Kinematic Algorithms |
-| **Juan Nicolas Muñoz** | UI/UX Tactical Design, Interactive Leaflet Mapping & Turf.js Propagation Cones |
-| **Vale Gregorio** | Emergency Routing Systems, OSRM Road Evacuation Logic & Disaster Preparedness Documentation |
+- **Juan Ibañez**
+- **Marcos Moleker**
+- **Nicolas Calderon**
+- **Joel Figueroa**
+- **Juan Nicolas Muñoz**
+- **Vale Gregorio**
 
 ---
 

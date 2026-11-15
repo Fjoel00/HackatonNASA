@@ -203,20 +203,21 @@ Running the pipeline on real cached NASA FIRMS NRT data (`-66.0, -33.5, -63.5, -
 
 ---
 
-## 7. 👥 Asignación de Roles y Checklist Final para el Cierre — Maxwell Crew
+## 7. 👥 Integrantes del Equipo — Maxwell Crew
 
-- **Joel Figueroa (Arquitectura y Desarrollo Web):** Integración general de la arquitectura, compilación del portal web autónomo y despliegue en Vercel.
-- **Juan Ibañez (Pitcher / Orador):** Practicar el guion de la Sección 4 cronometrando entre **3:20 y 3:45 minutos**. Memorizar el dato clave de **El Trapiche, San Luis (`367.0 K` saturación VIIRS + `374.55 MW` pico confirmados por Aqua, NOAA-20 y NOAA-21)**.
-- **Marcos Moleker (Diseñador de Slides):** Crear las 6 diapositivas usando el gráfico real `output/analisis_estadistico_sensores.png` y capturas limpias de `output/index.html` y `output/mapa_interactivo_nasa.html`.
-- **Nicolas Calderon (Geodatos y Algoritmos):** Verificación de envolventes DBSCAN y cálculo de cinemática de avance.
-- **Juan Nicolas Muñoz (Video Demo):** Grabar 60–90 s abriendo `https://hackaton-nasa-k2cr.vercel.app/`, cambiando entre las pestañas, activando/desactivando capas VIIRS/MODIS y ejecutando la simulación hasta abrir el modal SOS.
-- **Vale Gregorio (Carga en Plataforma NASA & Rutas):** Copiar los textos de la Sección 5 en el formulario oficial de NASA Space Apps y adjuntar el enlace al repositorio y al video.
+- **Juan Ibañez**
+- **Marcos Moleker**
+- **Nicolas Calderon**
+- **Joel Figueroa**
+- **Juan Nicolas Muñoz**
+- **Vale Gregorio**
 
 ### Checklist Técnico Verificado
 - [x] Pipeline ejecutado con datos reales de Córdoba y San Luis (`is_synthetic: false`).
 - [x] Toponimia local serrana integrada en eventos, GeoJSON, CSV y Portal Web.
 - [x] Capas individuales de `VIIRS 375m` y `MODIS 1km` conmutables en `output/index.html`.
 - [x] Suite de pruebas unitarias: **8/8 tests OK**.
+- [x] Despliegue en vivo en Vercel activo: **https://hackaton-nasa-k2cr.vercel.app/**.
 - [ ] Diapositivas de pitch completadas (6 slides).
 - [ ] Video screencast de demo grabado y enlazado.
 - [ ] Formulario oficial de NASA Space Apps enviado.
