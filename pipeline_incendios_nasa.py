@@ -833,7 +833,8 @@ class FireAnalyticsVisualizer:
         m = folium.Map(
             location=[center_lat, center_lon],
             zoom_start=8,
-            tiles="CartoDB dark_matter",
+            tiles="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+            attr="&copy; OpenStreetMap contributors &copy; CARTO",
             control_scale=True
         )
 

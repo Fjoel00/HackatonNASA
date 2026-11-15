@@ -3,17 +3,21 @@ set -eu
 
 mkdir -p output data/raw
 
+echo "Procesando cuadrícula de riesgo histórico de NASA FIRMS..."
+python procesar_historico_firms.py || true
+
 if [ "${USE_SYNTHETIC_DATA:-true}" = "true" ]; then
-    echo "Iniciando demo con datos sintéticos..."
-    python pipeline_incendios_nasa.py --offline
+    echo "Iniciando pipeline con datos disponibles..."
+    python pipeline_incendios_nasa.py --offline || true
 else
-    if [ -z "${FIRMS_MAP_KEY:-}" ]; then
-        echo "Falta FIRMS_MAP_KEY para iniciar con datos reales." >&2
-        exit 1
+    if [ -n "${FIRMS_MAP_KEY:-}" ]; then
+        echo "Consultando NASA FIRMS en tiempo real..."
+        python pipeline_incendios_nasa.py || true
     fi
-    echo "Consultando NASA FIRMS..."
-    python pipeline_incendios_nasa.py
 fi
 
-echo "Aplicación disponible en http://localhost:8080"
+echo "Compilando interfaz SeMF oficial en output/index.html..."
+python generar_app_tactica.py
+
+echo "Aplicación SeMF disponible en http://localhost:8080"
 exec python app_server.py

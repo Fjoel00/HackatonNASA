@@ -8,7 +8,8 @@ WORKDIR /app
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY pipeline_incendios_nasa.py generar_app_tactica.py app_server.py ./
+COPY *.py ./
+COPY config.yaml ./
 COPY docker-entrypoint.sh ./
 RUN chmod +x docker-entrypoint.sh
 
