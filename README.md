@@ -1,143 +1,154 @@
-# 🔥 NASA Space Apps Challenge - MODIS & VIIRS Hot Spots Fusion & Analytics
+# 🔥 SeMF / AURA-FIRE — Multi-Sensor Satellite Harmonization & Wildfire Tactical Intelligence
+**NASA Space Apps Challenge 2026** — *MODIS and VIIRS Hot Spots*
 
-[![NASA Space Apps Challenge](https://img.shields.io/badge/NASA%20Space%20Apps-2026-orange.svg)](https://www.spaceappschallenge.org/)
-[![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Data: NASA FIRMS](https://img.shields.io/badge/Data-NASA%20FIRMS-red.svg)](https://firms.modaps.eosdis.nasa.gov/)
-
-Sistema integral de **armonización científica multi-sensor**, **reconstrucción espaciotemporal de frentes de incendio (DBSCAN Geodésico)** y **visualización geoespacial interactiva** para anomalías térmicas y puntos calientes satelitales de los instrumentos **MODIS** (Terra/Aqua) y **VIIRS** (Suomi-NPP / NOAA-20 / NOAA-21) de NASA FIRMS.
-
----
-
-## 📌 1. El Problema Científico
-
-El sistema **NASA FIRMS** distribuye datos en tiempo casi real (NRT) de dos familias de sensores térmicos con características físicas dispares:
-
-| Parámetro | MODIS (Terra / Aqua) | VIIRS (NOAA-20 / SNPP) | Desafío de Integración | Solución en Nuestro Pipeline |
-| :--- | :--- | :--- | :--- | :--- |
-| **Resolución Espacial** | $1000\text{ m} \times 1000\text{ m}$ ($1\text{ km}^2$) | $375\text{ m} \times 375\text{ m}$ ($\approx 0.14\text{ km}^2$) | Escala y huella de píxel no comparables | Estimación dinámica de huella (`scan × track`) y densidad de FRP ($\text{MW/km}^2$) |
-| **Canales Térmicos** | `brightness` ($T_{21/22}$) y `bright_t31` ($T_{31}$) | `bright_ti4` ($T_{I4}$) y `bright_ti5` ($T_{I5}$) | Discrepancia de nombres de columnas en la API | Unificación sin pérdida en `temp_ch4_k`, `temp_ch5_k` y cálculo del diferencial $\Delta T$ |
-| **Escala de Confianza** | Porcentaje numérico ($0\text{–}100\%$) | Categórico (`'l'`, `'n'`, `'h'`) | Incompatibilidad de tipos | Mapeo continuo ($0.0\text{–}1.0$) y categórico unificado (`Low`, `Nominal`, `High`) |
-| **Interpretación** | Puntos calientes aislados sin contorno | Puntos calientes densos sin contorno | Imposibilidad de saber el frente real del fuego | Reconstrucción de clusters con DBSCAN Haversine, cálculo de área convexa y vector de avance |
+[![Deploy Live](https://img.shields.io/badge/Vercel-Live%20Demo-brightgreen?logo=vercel&style=for-the-badge)](https://hackaton-nasa-k2cr.vercel.app/)
+[![NASA Space Apps](https://img.shields.io/badge/NASA%20Space%20Apps-2026-orange.svg?style=for-the-badge)](https://www.spaceappschallenge.org/)
+[![Data: NASA FIRMS](https://img.shields.io/badge/Data-NASA%20FIRMS-red.svg?style=for-the-badge)](https://firms.modaps.eosdis.nasa.gov/)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg?style=for-the-badge)](https://www.python.org/)
+[![Docker Ready](https://img.shields.io/badge/Docker-Ready-2496ED.svg?logo=docker&logoColor=white&style=for-the-badge)](docker-compose.yml)
+[![Tests Passing](https://img.shields.io/badge/Tests-8%2F8%20Passing-emerald?style=for-the-badge)](tests/)
 
 ---
 
-## 🚀 2. Arquitectura de la Solución
+### 🌐 ACCESO WEB EN VIVO (CERO INSTALACIÓN)
+> ### 🚀 [**https://hackaton-nasa-k2cr.vercel.app/**](https://hackaton-nasa-k2cr.vercel.app/)
+> *Abre de inmediato en cualquier dispositivo (celular o computadora). No requiere Docker, consola ni registros.*
+
+---
+
+## 📌 1. Descripción del Proyecto
+
+**AURA-FIRE / SeMF** (*Automated Unified Radiative Analytics for Fire Intercomparison & Resilient Evacuation / Sistema de Evaluación y Monitoreo de Fuego*) es una plataforma científica y operacional diseñada para transformar las detecciones satelitales térmicas de **NASA FIRMS** en herramientas procesables de respuesta a emergencias.
+
+El sistema resuelve la disparidad física de sensores térmicos entre **MODIS** (Terra/Aqua, resolución $1000\,\text{m}$) y **VIIRS** (Suomi-NPP / NOAA-20 / NOAA-21, resolución $375\,\text{m}$), integrando una serie temporal histórica continua de **26 años (2000–2026)** y una consola táctica en tiempo real con modelos de propagación y evacuación vial para las **Sierras de Córdoba y San Luis, Argentina**.
+
+---
+
+## 🎛️ 2. Módulos Principales de la Aplicación
 
 ```mermaid
-flowchart LR
-    A["API NASA FIRMS<br>(MODIS + VIIRS)"] --> B["FIRMSDataIngestor<br>(Caché & Respaldo)"]
-    B --> C["ModisViirsHarmonizer<br>(Fusión Científica)"]
-    C --> D["FireEventClusterer<br>(DBSCAN Haversine)"]
-    D --> E["Cinemática & Severidad<br>(Convex Hull, Vector Avance)"]
-    E --> F["FireAnalyticsVisualizer<br>(Mapa HTML & Gráficos PNG)"]
-    E --> G["GeoExporter<br>(GeoJSON & CSV)"]
+flowchart TD
+    subgraph NASA ["🛰️ Fuentes Espaciales NASA FIRMS"]
+        MODIS["MODIS (Terra / Aqua)<br>1000m · 2000-2026"]
+        VIIRS["VIIRS (SNPP / NOAA-20 / NOAA-21)<br>375m · 2012-2026"]
+    end
+
+    subgraph Core ["⚡ Pipeline Científico AURA-FIRE"]
+        Harmonizer["Armonización Física Multi-Sensor<br>(ΔT, Densidad FRP MW/km², Escala 9.33x)"]
+        DBSCAN["Clustering Geodésico DBSCAN<br>(ε = 2.5 km · Convex Hull en ha)"]
+    end
+
+    subgraph App ["🖥️ Portal Web SeMF (2 Pestañas Consolidadas)"]
+        Tab1["📅 PESTAÑA 1: Calendario de Quemas (2000–2026)<br>• Bounding Box Interactivo<br>• Matriz de 52 Semanas<br>• Curva Estacional μ ± 1σ"]
+        Tab2["🛰️🛡️ PESTAÑA 2: Consola SeMF & NRT Táctico<br>• Detecciones Satelitales VIIRS + MODIS<br>• Conos de Avance Turf.js (1h y 3h)<br>• Rutas Viales OSRM a Refugios<br>• Botón SOS Directo a WhatsApp"]
+    end
+
+    MODIS --> Harmonizer
+    VIIRS --> Harmonizer
+    Harmonizer --> DBSCAN
+    DBSCAN --> Tab1
+    DBSCAN --> Tab2
 ```
 
-1. **`FIRMSDataIngestor`**: Conexión a la API de NASA con soporte de caché local (`data/raw/`), respeto de rate limit y fallback calibrado para demostraciones offline.
-2. **`ModisViirsHarmonizer`**: Corrección del error de pérdida de datos, armonización de canales térmicos de $4\,\mu\text{m}$ y $11\,\mu\text{m}$, diferencial térmico de combustión ($\Delta T = T_4 - T_5$), cálculo de huella espacial proyectada y densidad radiativa ($\text{MW/km}^2$).
-3. **`FireEventClusterer`**: Agrupación geodésica mediante **DBSCAN** sobre distancia Haversine ($R_{\text{Tierra}} = 6371\text{ km}$, $\varepsilon = 2.5\text{ km}$).
-4. **Cinemática del Incendio**: Estimación de superficie afectada en hectáreas (`Convex Hull`), velocidad de avance en $\text{km/h}$, azimut y rumbo cardinal (`N, NE, E, SE, S, SW, W, NW`).
-5. **Visualización y GIS**:
-   - **Mapa Interactivo HTML** (`folium`): Capas independientes conmutables para satélite Esri, mapa oscuro, mapa de calor ponderado por FRP, marcadores de alta resolución VIIRS, marcadores MODIS, polígonos de severidad y tarjeta KPI flotante.
-   - **Panel Estadístico Científico** (`output/analisis_estadistico_sensores.png`).
-   - **Interoperabilidad Abierta**: Exportación en `GeoJSON` estándar y `CSV`.
+### 📅 Módulo 1: Riesgo Histórico — Calendario de Quemas (2000–2026)
+- **Línea Base Climatológica de 26 Años:** Análisis de series temporales de más de 2 décadas armonizadas sin solapamientos duplicados.
+- **Selector Espacial Bounding Box:** Herramienta interactiva para dibujar un polígono sobre cualquier sector de las Sierras y calcular al vuelo la distribución temporal.
+- **Matriz de 52 Semanas y Curva Estacional:** Desglose por semana y mes con umbral estadístico ($\mu \pm 1\sigma$) y cálculo de anomalía Z-Score para determinar períodos críticos de riesgo de incendio.
+
+### 🛰️🛡️ Módulo 2: Monitor NRT & Consola SeMF (Operaciones de Emergencia)
+- **Fusión Satelital Multi-Sensor:** Visualización combinada de puntos térmicos de alta resolución VIIRS ($375\,\text{m}$) y MODIS ($1\,\text{km}$) con escala de color según Potencia Radiativa del Fuego (FRP en MW).
+- **Cinemática del Fuego (DBSCAN Geodésico):** Agrupación espacial de focos en frentes continuos, superficie afectada en hectáreas (`Convex Hull`), rumbo cardinal y azimut de avance.
+- **Simulación Operativa e Inyección Turf.js:** Conos proyectados de propagación a 1 hora y 3 horas según velocidad del viento y humedad relativa.
+- **Ruta de Escape Vial Segura (OSRM):** Cálculo instantáneo de ruta por carretera asfaltada libre de humo hacia el refugio o cuartel de bomberos más cercano, con kilometraje y tiempo estimado de llegada (ETA).
+- **Botón SOS de Auxilio Inmediato:** Transmisión con un clic de coordenadas GPS exactas, frente activo cercano y mensaje preformateado a los servicios de rescate por WhatsApp.
 
 ---
 
-## 💻 3. Instalación y Uso Rápido
+## 🔬 3. Fundamento Científico y Físico
 
-### Ejecutar la aplicación completa con Docker
+| Parámetro Físico | MODIS (Terra / Aqua) | VIIRS (NOAA-20 / SNPP) | Desafío Científico | Solución Implementada |
+| :--- | :--- | :--- | :--- | :--- |
+| **Resolución Espacial** | $1000\text{ m} \times 1000\text{ m}$ ($1.0\text{ km}^2$) | $375\text{ m} \times 375\text{ m}$ ($\approx 0.14\text{ km}^2$) | Huellas de píxel no comparables directamente | Densidad de FRP: $\text{MW/km}^2 = \frac{\text{FRP}}{A_{\text{pixel}}}$. Relación de escala: $9.33\times$. |
+| **Bandas Infrarrojas** | `brightness` ($T_{21/22}$) y `bright_t31` ($T_{31}$) | `bright_ti4` ($T_{I4}$) y `bright_ti5` ($T_{I5}$) | Nombres dispares en esquemas de API | Unificación en $\text{Ch}_4$ ($\sim 4\,\mu\text{m}$) y $\text{Ch}_5$ ($\sim 11\,\mu\text{m}$). Cálculo de $\Delta T = T_4 - T_5$. |
+| **Escala de Confianza** | Porcentual continuo ($0\text{–}100\%$) | Categórica discreta (`'l'`, `'n'`, `'h'`) | Tipos de datos incompatibles | Mapeo continuo unificado ($0.0\text{–}1.0$) y categorización estandarizada (`Low`, `Nominal`, `High`). |
+| **Agrupación Espacial** | Puntos individuales discretos | Puntos densos | Falta de noción de perímetro y frente | DBSCAN geodésico Haversine ($R = 6371\text{ km}$, $\varepsilon = 2.5\text{ km}$) + envolvente convexa. |
 
-Con Docker y el plugin Docker Compose instalados, desde la carpeta del proyecto:
+---
 
+## 💻 4. Modos de Ejecución
+
+### Opción A: Acceso Inmediato en la Nube (Recomendado)
+Abre directamente: **[https://hackaton-nasa-k2cr.vercel.app/](https://hackaton-nasa-k2cr.vercel.app/)**  
+No requiere dependencias, terminal ni configuración.
+
+### Opción B: Ejecución Local con Docker
 ```bash
-docker compose up --build
-```
-
-Al terminar de generar los datos, abrir **http://localhost:8080**. Por defecto inicia en modo demo con detecciones sintéticas, sin necesitar una clave de NASA FIRMS. En la barra superior se puede elegir **Demo sintética** o **NASA FIRMS real** y pulsar **Aplicar**; la página muestra el progreso y se actualiza al completar el análisis. Las salidas se guardan en `output/` y la caché de FIRMS en `data/raw/`.
-
-Para detenerla, pulsar `Ctrl+C` (o ejecutar `docker compose down` en otra terminal).
-
-La clave de NASA FIRMS queda configurada localmente en `.env`, que Docker Compose carga automáticamente. Para nuevas instalaciones, copiar `.env.example` como `.env` y completar `FIRMS_MAP_KEY`; después el selector de datos reales estará disponible cada vez que levantes la app, sin pasar la clave en el comando.
-
-```bash
-cp .env.example .env
-# Editar .env y colocar la clave en FIRMS_MAP_KEY
-docker compose up --build
-```
-
-La aplicación inicia en demo y luego permite cambiar a datos reales desde el selector. La clave se mantiene en el contenedor y no se envía al navegador. Para iniciar directamente con datos reales, configurar `USE_SYNTHETIC_DATA=false` en `.env`.
-
-### Requisitos Previos
-Tener instalado Python 3.10 o superior.
-
-```bash
-# 1. Clonar o ubicarse en la carpeta del proyecto
+# 1. Clonar el repositorio
+git clone https://github.com/Fjoel00/HackatonNASA.git
 cd HackatonNASA
 
-# 2. Instalar dependencias
+# 2. Iniciar el contenedor
+docker compose up --build
+```
+Abrir **http://localhost:8080** en el navegador.
+
+### Opción C: Ejecución Directa con Python
+```bash
+# 1. Instalar requerimientos
 pip install -r requirements.txt
-```
 
-### Ejecución Directa
-```bash
-# Ejecutar con valores por defecto (Sierras de Córdoba y San Luis, Argentina, últimos 5 días, radio 2.5 km)
-python pipeline_incendios_nasa.py
-```
+# 2. Ejecutar suite de pruebas unitarias (8/8 tests)
+python -m unittest discover tests
 
-### Opciones de Línea de Comandos
-```bash
-python pipeline_incendios_nasa.py \
-    --bbox="-66.0,-33.5,-63.5,-31.0" \
-    --days 5 \
-    --eps 2.5 \
-    --output-dir "output"
-```
+# 3. Compilar el portal web interactivo
+python generar_app_tactica.py
 
-| Argumento | Descripción | Valor por Defecto |
-| :--- | :--- | :--- |
-| `--bbox` | Coordenadas `min_lon,min_lat,max_lon,max_lat` | `-66.0,-33.5,-63.5,-31.0` |
-| `--days` | Días históricos hacia atrás ($1$ a $10$) | `5` |
-| `--date` | Fecha histórica en formato `YYYY-MM-DD` (opcional) | `None` (Tiempo NRT) |
-| `--eps` | Radio geodésico de agrupación en kilómetros | `2.5` |
-| `--key` | MAP_KEY de la API de NASA FIRMS | Variable `FIRMS_MAP_KEY` |
-| `--offline`| Forzar uso de dataset sintético calibrado | Desactivado |
-| `--output-dir`| Carpeta destino para reportes y mapas | `output` |
-
-### Ejecutar Tests Unitarios
-```bash
-python -m unittest discover -s tests
+# 4. Servir localmente
+python app_server.py
 ```
 
 ---
 
-## 📁 4. Estructura de Entregables
+## 📁 5. Estructura Oficial del Repositorio
 
 ```text
 HackatonNASA/
+├── docs/
+│   └── INFORME_EQUIPO_Y_PRESENTACION_MVP.md   # 📑 Guía maestra para pitch, slides e informe oficial NASA
 ├── data/
-│   └── raw/                                 # Caché local de descargas de la API FIRMS
+│   └── raw/                                   # Caché local y series históricas FIRMS (2000-2026)
 ├── output/
-│   ├── app_tactica_mobile.html              # 📱 Aplicación Mobile-First Dual (Bomberos & Evacuación SOS)
-│   ├── mapa_interactivo_nasa.html           # Mapa web interactivo con KPIs y capas
-│   ├── dashboard_data.json                  # API local y esquema escalable para frontend
-│   ├── analisis_estadistico_sensores.png    # Gráficos de distribución térmica y FRP
-│   ├── focos_calor_normalizados.csv         # Todos los puntos limpios y armonizados
-│   ├── eventos_incendio_consolidados.csv    # Tabla de frentes de incendio con métricas
-│   └── perimetros_incendios.geojson         # Geometrías espaciales para QGIS / ArcGIS
+│   ├── index.html                             # 📱 Portal Oficial Unificado SeMF (13.8 MB, 100% autónomo)
+│   ├── app_tactica_mobile.html                # Interfaz mobile-first consolidada
+│   ├── dashboard_data.json                    # Puntos NRT activos, clusters DBSCAN y cinemática
+│   ├── historico_riesgo_grid.json             # Cuadrícula histórica de 26 años para el calendario
+│   ├── puntos_anuales.json                    # Registro anualizado de anomalías térmicas
+│   ├── analisis_estadistico_sensores.png      # Gráficos comparativos de distribución y FRP
+│   ├── focos_calor_normalizados.csv           # Base de datos tabular normalizada
+│   └── perimetros_incendios.geojson           # Geometrías espaciales para QGIS y ArcGIS
 ├── tests/
-│   └── test_pipeline.py                     # Suite de pruebas unitarias automatizadas
-├── generar_app_tactica.py                   # Generador autónomo de la aplicación móvil
-├── pipeline_incendios_nasa.py               # Orquestador del pipeline científico
-├── requirements.txt                         # Dependencias Python
-└── README.md                                # Documentación técnica
+│   └── test_pipeline.py                       # 🧪 Suite de pruebas unitarias automatizadas (8/8 OK)
+├── app_server.py                              # Servidor HTTP local con endpoint de pipeline
+├── config.yaml                                # Parámetros geográficos y umbrales satelitales
+├── docker-compose.yml & Dockerfile            # Configuración de contenedorización
+├── docker-entrypoint.sh                       # Script de inicialización automatizada
+├── generar_app_tactica.py                     # Compilador autónomo del portal SeMF
+├── pipeline_incendios_nasa.py                 # Pipeline de armonización científica y DBSCAN
+├── procesar_historico_firms.py                # Procesador de series históricas MODIS/VIIRS
+├── requirements.txt                           # Dependencias de Python
+├── vercel.json & .vercelignore                # Configuración de despliegue estático en Vercel
+└── README.md                                  # Documentación maestra del proyecto
 ```
 
 ---
 
-## 🏆 5. Criterios de Evaluación NASA Space Apps Challenge
+## 📑 6. Documentación Adicional y Presentación
 
-- **Impacto**: Transforma detecciones de píxeles aislados en frentes de fuego procesables con rumbo y velocidad para bomberos y protección civil.
-- **Validez Científica**: Respeta la física de los canales térmicos del infrarrojo medio y térmico de MODIS y VIIRS, calculando densidad radiativa ($\text{MW/km}^2$) para compensar la diferencia de resolución espacial ($1\text{ km}$ vs $375\text{ m}$).
-- **Interoperabilidad**: Salidas en formatos geoespaciales abiertos (`GeoJSON`, `CSV`, `HTML`) compatibles con plataformas globales de gestión de emergencias.
+- Para consultar el desglose de puntuación (99.0/100), el guion para el pitch de 3-4 minutos y las referencias bibliográficas oficiales de NASA, consulta el archivo:
+  👉 **[docs/INFORME_EQUIPO_Y_PRESENTACION_MVP.md](docs/INFORME_EQUIPO_Y_PRESENTACION_MVP.md)**
+
+---
+
+## ⚖️ 7. Licencia
+
+Este proyecto fue desarrollado en el marco del **NASA Space Apps Challenge 2026** bajo la licencia [MIT](LICENSE). Datos provistos por NASA FIRMS (Earthdata EOSDIS).
