@@ -123,7 +123,7 @@ def classify_cell_location(clat: float, clon: float):
     return None, None
 
 
-def parse_dbf_stream(f_stream, source_name: str, seen_keys: set, date_cache: dict, cell_cache: dict):
+def parse_dbf_stream(f_stream, source_name: str, seen_keys: set, date_cache: dict, cell_cache: dict, viirs_day_cells: set):
     """
     Lee un archivo binario dBASE III+ (.dbf) oficial de NASA FIRMS directamente desde disco o ZIP.
     Retorna una lista de tuplas agregables y estadísticas del archivo.
@@ -217,7 +217,19 @@ def parse_dbf_stream(f_stream, source_name: str, seen_keys: set, date_cache: dic
             continue
 
         acq_time = rec[time_slice[0]:time_slice[1]].decode("ascii", "ignore").strip() if time_slice else "0000"
-        dedup_key = (round(lat, 3), round(lon, 3), acq_str, acq_time)
+        inst = rec[inst_slice[0]:inst_slice[1]].decode("ascii", "ignore").strip().upper() if inst_slice else "VIIRS"
+        sat = rec[sat_slice[0]:sat_slice[1]].decode("ascii", "ignore").strip().upper() if sat_slice else "SNPP"
+        is_modis = "MODIS" in inst or sat in ("TERRA", "AQUA", "M")
+
+        # Deduplicación inter-sensor en transición (2012):
+        # Si ya existe observación de alta resolución de VIIRS (375m) o VIIRS ya está activo, omitir MODIS redundante
+        if is_modis and yr >= 2012:
+            if acq_str >= "20120120" or (round(lat, 2), round(lon, 2), acq_str) in viirs_day_cells:
+                continue
+        elif not is_modis:
+            viirs_day_cells.add((round(lat, 2), round(lon, 2), acq_str))
+
+        dedup_key = (sat, round(lat, 3), round(lon, 3), acq_str, acq_time)
         if dedup_key in seen_keys:
             continue
         seen_keys.add(dedup_key)
@@ -227,9 +239,8 @@ def parse_dbf_stream(f_stream, source_name: str, seen_keys: set, date_cache: dic
         except ValueError:
             frp = 0.0
 
-        inst = rec[inst_slice[0]:inst_slice[1]].decode("ascii", "ignore").strip().upper() if inst_slice else "VIIRS"
-        sat = rec[sat_slice[0]:sat_slice[1]].decode("ascii", "ignore").strip().upper() if sat_slice else "SNPP"
-        is_modis = "MODIS" in inst or sat in ("TERRA", "AQUA", "M")
+        if is_modis:
+            frp = round(frp * 0.92, 1)
 
         records_out.append((glat, glon, province, zone_name, yr, wk, iso_date, lat, lon, frp, is_modis, sat))
         accepted += 1
@@ -245,11 +256,15 @@ def load_all_real_firms_records():
     seen_keys = set()
     date_cache = {}
     cell_cache = {}
+    viirs_day_cells = set()
     all_records = []
     total_scanned = 0
 
-    # 1. Archivos ZIP en data/raw/ (ej. data/raw/historico/DL_FIRE_SV-C2_850297.zip)
+    # 1. Archivos ZIP en data/raw/
+    # Procesar primero los archivos VIIRS para registrar cobertura 2012-2026 y evitar dobles conteos
     zip_files = sorted(glob.glob(os.path.join(DATA_RAW, "**", "*.zip"), recursive=True))
+    zip_files = sorted(zip_files, key=lambda p: 0 if ("SV-C2" in p or "VIIRS" in p.upper()) else 1)
+
     for zpath in zip_files:
         try:
             with zipfile.ZipFile(zpath, "r") as zf:
@@ -257,7 +272,7 @@ def load_all_real_firms_records():
                 for dbf_name in dbf_names:
                     with zf.open(dbf_name) as stream:
                         recs, scanned, acc = parse_dbf_stream(
-                            stream, f"{os.path.basename(zpath)}:{dbf_name}", seen_keys, date_cache, cell_cache
+                            stream, f"{os.path.basename(zpath)}:{dbf_name}", seen_keys, date_cache, cell_cache, viirs_day_cells
                         )
                         total_scanned += scanned
                         all_records.extend(recs)
@@ -271,7 +286,7 @@ def load_all_real_firms_records():
         try:
             with open(dpath, "rb") as stream:
                 recs, scanned, acc = parse_dbf_stream(
-                    stream, os.path.basename(dpath), seen_keys, date_cache, cell_cache
+                    stream, os.path.basename(dpath), seen_keys, date_cache, cell_cache, viirs_day_cells
                 )
                 total_scanned += scanned
                 all_records.extend(recs)
@@ -356,6 +371,16 @@ def load_all_real_firms_records():
                 sat = str(row[cols["satellite"]]).upper() if "satellite" in cols else "SNPP"
                 is_modis = "MODIS" in inst or sat in ("TERRA", "AQUA", "M")
 
+                # Deduplicación inter-sensor en transición (2012)
+                if is_modis and yr >= 2012:
+                    if acq_raw >= "20120120" or (round(lat, 2), round(lon, 2), acq_raw) in viirs_day_cells:
+                        continue
+                elif not is_modis:
+                    viirs_day_cells.add((round(lat, 2), round(lon, 2), acq_raw))
+
+                if is_modis:
+                    frp = round(frp * 0.92, 1)
+
                 all_records.append((glat, glon, province, zone_name, yr, wk, iso_date, lat, lon, frp, is_modis, sat))
                 acc_csv += 1
 
@@ -387,6 +412,7 @@ def build_historical_grid() -> dict:
     max_year = 0
 
     recent_nrt_points = []
+    points_by_year = collections.defaultdict(list)
 
     for glat, glon, province, zone_name, yr, wk, iso_date, lat, lon, frp, is_modis, sat in records:
         ckey = (glat, glon)
@@ -409,6 +435,9 @@ def build_historical_grid() -> dict:
         regional_week_year[wk][yr] += eq
         province_counts[province] += 1
         yearly_counts[yr] += 1
+
+        # Almacenar punto individual compacto para visualización anual [lat, lon, frp, wk, iso_date]
+        points_by_year[str(yr)].append([round(lat, 3), round(lon, 3), round(max(0.0, frp), 1), int(wk), iso_date])
 
         if iso_date < min_date_str:
             min_date_str = iso_date
@@ -494,7 +523,7 @@ def build_historical_grid() -> dict:
 
     payload = {
         "metadata": {
-            "title": "Riesgo histórico de fuego - Archivo Oficial NASA FIRMS VIIRS S-NPP (2012–2026)",
+            "title": "Riesgo histórico de fuego - Serie Oficial NASA FIRMS MODIS + VIIRS (2000–2026)",
             "region": "Provincias de Córdoba y San Luis, Argentina",
             "bbox": BBOX_CORDOBA_SANLUIS,
             "grid_resolution_deg": GRID_RESOLUTION_DEG,
@@ -516,15 +545,22 @@ def build_historical_grid() -> dict:
         },
         "regional_baseline": regional_baseline,
         "cells": cells_list,
-        "nrt_points": recent_nrt_points
+        "nrt_points": recent_nrt_points,
+        "points_by_year": dict(points_by_year)
     }
 
     out_path = os.path.join(OUTPUT_DIR, "historico_riesgo_grid.json")
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, separators=(",", ":"))
 
+    puntos_path = os.path.join(OUTPUT_DIR, "puntos_anuales.json")
+    with open(puntos_path, "w", encoding="utf-8") as f:
+        json.dump(dict(points_by_year), f, ensure_ascii=False, separators=(",", ":"))
+
     size_kb = os.path.getsize(out_path) / 1024.0
+    puntos_kb = os.path.getsize(puntos_path) / 1024.0
     print(f"✅ Grilla histórica 100% REAL exportada en: {out_path} ({size_kb:.1f} KB)")
+    print(f"✅ Puntos anuales individuales exportados en: {puntos_path} ({puntos_kb:.1f} KB)")
     print(f"   - Registros totales escaneados del archivo NASA FIRMS: {total_scanned:,}")
     print(f"   - Focos de vegetación en Córdoba y San Luis: {len(records):,} (Córdoba: {province_counts['Córdoba']:,} | San Luis: {province_counts['San Luis']:,})")
     print(f"   - Rango temporal exacto: {min_date_str} a {max_date_str} (Corte 2026: Semana {max_week_in_max_year})")

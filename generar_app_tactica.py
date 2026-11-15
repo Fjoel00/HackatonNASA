@@ -151,6 +151,47 @@ def get_template():
       background: #cbd5e1;
       border-radius: 4px;
     }
+    /* Slider de punto único sin barra acumuladora a la izquierda */
+    input[type="range"].year-point-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      background: #e2e8f0;
+      height: 6px;
+      border-radius: 9999px;
+      outline: none;
+    }
+    input[type="range"].year-point-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #dc2626;
+      cursor: pointer;
+      border: 2px solid #ffffff;
+      box-shadow: 0 1px 4px rgba(220, 38, 38, 0.45);
+      transition: transform 0.15s ease;
+    }
+    input[type="range"].year-point-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+    input[type="range"].year-point-slider::-moz-range-track {
+      background: #e2e8f0;
+      height: 6px;
+      border-radius: 9999px;
+    }
+    input[type="range"].year-point-slider::-moz-range-progress {
+      background: transparent;
+    }
+    input[type="range"].year-point-slider::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #dc2626;
+      cursor: pointer;
+      border: 2px solid #ffffff;
+      box-shadow: 0 1px 4px rgba(220, 38, 38, 0.45);
+    }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 h-full flex flex-col overflow-hidden select-none">
@@ -218,39 +259,86 @@ def get_template():
         <div class="bg-white border border-slate-200/80 rounded-3xl p-5 shadow-sm space-y-4">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <span class="text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-red-50 text-red-600 border border-red-100 inline-block">
-                Riesgo histórico de fuego • Archivo Real NASA FIRMS (2012–2026)
-              </span>
-              <h1 class="text-xl sm:text-2xl font-black text-slate-900 mt-2">
+              <h1 class="text-xl sm:text-2xl font-black text-slate-900">
                 Calendario de Quemas y Línea Base
               </h1>
               <p class="text-xs text-slate-500 mt-1 max-w-xl">
-                Base oficial de <b>156,241 detecciones satelitales reales</b> (VIIRS S-NPP 375m) en <b>Córdoba (95,359) y San Luis (60,882)</b>. Cero datos simulados.
+                Base oficial de 218518 detecciones satelitales
               </p>
             </div>
 
-            <!-- Selector de Año -->
-            <div class="bg-slate-50 px-4 py-3 rounded-2xl border border-slate-200/80 shrink-0 space-y-2 min-w-[220px]">
-              <div class="flex items-center justify-between text-xs text-slate-500 font-medium">
-                <span>Año de Análisis:</span>
-                <span id="cal-year-badge" class="px-2.5 py-0.5 rounded-full bg-red-600 text-white font-black text-xs shadow-sm">2025</span>
+            <!-- Selector de Control Temporal (Radio Buttons + Controles Dinámicos) -->
+            <div class="bg-slate-50 px-4 py-3 rounded-2xl border border-slate-200/80 shrink-0 space-y-2.5 min-w-[270px]">
+              <!-- Radio Buttons de Modo -->
+              <div class="flex items-center justify-between text-xs font-semibold text-slate-600 border-b border-slate-200/70 pb-2">
+                <span>Modo Temporal:</span>
+                <div class="flex items-center gap-3 text-[11px]">
+                  <label class="flex items-center gap-1.5 cursor-pointer font-bold text-red-600">
+                    <input type="radio" name="cal-mode" value="annual" checked onchange="onCalendarModeChange('annual')"
+                           class="accent-red-600 cursor-pointer" />
+                    <span>Anual (Focos)</span>
+                  </label>
+                  <label class="flex items-center gap-1.5 cursor-pointer font-medium text-slate-500 hover:text-slate-800">
+                    <input type="radio" name="cal-mode" value="interval" onchange="onCalendarModeChange('interval')"
+                           class="accent-red-600 cursor-pointer" />
+                    <span>Intervalo (Grilla)</span>
+                  </label>
+                </div>
               </div>
-              <div class="flex items-center gap-2">
-                <input id="cal-year-slider" type="range" min="2012" max="2026" value="2025" step="1"
-                       oninput="onCalendarYearChange(this.value)"
-                       class="w-full accent-red-600 cursor-pointer h-2 bg-slate-200 rounded-lg" />
-                <select id="cal-year-select" onchange="onCalendarYearChange(this.value)"
-                        class="bg-white border border-slate-200 rounded-xl px-2.5 py-1 text-xs font-semibold text-slate-800 outline-none shadow-sm cursor-pointer">
-                  <option value="ALL">Promedio 2012–2026</option>
-                </select>
+
+              <!-- Vista Modo Anual (Focos Reales) -->
+              <div id="cal-ctrl-annual" class="space-y-2">
+                <div class="flex items-center justify-between text-xs text-slate-500 font-medium">
+                  <span>Año analizado:</span>
+                  <span id="cal-year-badge" class="px-2.5 py-0.5 rounded-full bg-red-600 text-white font-black text-xs shadow-sm">2025</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <input id="cal-year-slider" type="range" min="2000" max="2026" value="2025" step="1"
+                         oninput="onCalendarYearChange(this.value)"
+                         class="w-full year-point-slider cursor-pointer" />
+                  <select id="cal-year-select" onchange="onCalendarYearChange(this.value)"
+                          class="bg-white border border-slate-200 rounded-xl px-2.5 py-1 text-xs font-semibold text-slate-800 outline-none shadow-sm cursor-pointer">
+                  </select>
+                </div>
+                <div class="text-[10px] text-slate-500 flex items-center justify-between">
+                  <span class="text-emerald-700 font-semibold flex items-center gap-1">🔥 Focos satelitales reales</span>
+                  <span id="cal-annual-pts-count" class="font-bold text-slate-700">6,690 focos</span>
+                </div>
               </div>
-              <div id="cal-kpi-risk-index" class="text-[11px] text-emerald-700 font-semibold flex items-center gap-1">
-                <span>✓</span> Serie histórica multianual (15 años)
+
+              <!-- Vista Modo Intervalo (Círculos 15 km) -->
+              <div id="cal-ctrl-interval" class="hidden space-y-2">
+                <div class="flex items-center justify-between text-xs text-slate-500 font-medium">
+                  <span>Rango multianual:</span>
+                  <span id="cal-interval-badge" class="px-2.5 py-0.5 rounded-full bg-amber-600 text-white font-black text-xs shadow-sm">2003–2025</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="text-[10px] text-slate-400 font-bold block mb-0.5">Desde:</label>
+                    <select id="cal-range-from" onchange="onCalendarIntervalChange()"
+                            class="w-full bg-white border border-slate-200 rounded-xl px-2 py-1 text-xs font-semibold text-slate-800 outline-none shadow-sm cursor-pointer">
+                    </select>
+                  </div>
+                  <div>
+                    <label class="text-[10px] text-slate-400 font-bold block mb-0.5">Hasta:</label>
+                    <select id="cal-range-to" onchange="onCalendarIntervalChange()"
+                            class="w-full bg-white border border-slate-200 rounded-xl px-2 py-1 text-xs font-semibold text-slate-800 outline-none shadow-sm cursor-pointer">
+                    </select>
+                  </div>
+                </div>
+                <div class="text-[10px] text-slate-500 flex items-center justify-between">
+                  <span class="text-amber-700 font-semibold flex items-center gap-1">⭕ Grilla ponderada (15 km)</span>
+                  <span id="cal-interval-years-count" class="font-bold text-slate-700">23 años</span>
+                </div>
+              </div>
+
+              <div id="cal-kpi-risk-index" class="text-[11px] text-emerald-700 font-semibold flex items-center gap-1 border-t border-slate-200/50 pt-1.5">
+                <span>✓</span> Serie NASA 26 Años (2000–2026)
               </div>
             </div>
           </div>
 
-          <!-- Barra de Búsqueda / Parcela Activa (Inspirada en la referencia) -->
+          <!-- Barra de Búsqueda / Parcela Activa -->
           <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200/70 flex items-center justify-between gap-3">
             <div class="flex items-center gap-2.5 min-w-0">
               <div class="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center shrink-0 text-sm font-bold">
@@ -270,41 +358,9 @@ def get_template():
           </div>
         </div>
 
-        <!-- 4 Tarjetas KPI Redondeadas (Estilo Reference App) -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
-          <!-- KPI 1 -->
-          <div class="bg-white border border-slate-200/70 rounded-3xl p-4 shadow-sm hover:shadow-md transition-all">
-            <div class="flex items-center justify-between">
-              <span class="text-xs text-slate-500 font-medium">Semana</span>
-              <div class="w-8 h-8 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center text-sm font-bold">
-                📅
-              </div>
-            </div>
-            <div id="cal-stat-current-week" class="text-2xl font-black text-slate-900 mt-1">
-              Semana 36
-            </div>
-            <div id="cal-stat-current-month" class="text-[11px] text-slate-500 mt-0.5">
-              Ciclo Anual (1–52)
-            </div>
-          </div>
-
-          <!-- KPI 2: Z-Score -->
-          <div class="bg-white border border-slate-200/70 rounded-3xl p-4 shadow-sm hover:shadow-md transition-all">
-            <div class="flex items-center justify-between">
-              <span class="text-xs text-slate-500 font-medium">Anomalía Z-Score</span>
-              <div class="w-8 h-8 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-sm font-bold">
-                📊
-              </div>
-            </div>
-            <div id="cal-stat-zscore" class="text-2xl font-black text-emerald-600 mt-1">
-              0.00 σ
-            </div>
-            <div id="cal-stat-zscore-desc" class="text-[11px] text-slate-500 mt-0.5">
-              Vs. media histórica
-            </div>
-          </div>
-
-          <!-- KPI 3: Focos -->
+        <!-- 2 Tarjetas KPI Superiores (Focos Armonizados + Energía Térmica) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <!-- KPI Focos Armonizados -->
           <div class="bg-white border border-slate-200/70 rounded-3xl p-4 shadow-sm hover:shadow-md transition-all">
             <div class="flex items-center justify-between">
               <span class="text-xs text-slate-500 font-medium">Focos Armonizados</span>
@@ -320,7 +376,7 @@ def get_template():
             </div>
           </div>
 
-          <!-- KPI 4: FRP Acumulado -->
+          <!-- KPI Energía Térmica -->
           <div class="bg-white border border-slate-200/70 rounded-3xl p-4 shadow-sm hover:shadow-md transition-all">
             <div class="flex items-center justify-between">
               <span class="text-xs text-slate-500 font-medium">Energía Térmica</span>
@@ -344,11 +400,8 @@ def get_template():
               <h2 class="text-base font-black text-slate-900 flex items-center gap-2">
                 <span>🔥</span> Riesgo histórico de fuego (52 Semanas)
               </h2>
-              <p class="text-xs text-slate-500 mt-0.5">
-                Evaluación ecológica por semana según desviación estándar estacional ($\sigma$). Haga clic en una semana para ver su desglose.
-              </p>
             </div>
-            <!-- Leyenda Limpia -->
+            <!-- Glosario de Colores -->
             <div class="flex items-center gap-1.5 flex-wrap text-[10px] font-semibold">
               <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">Bajo / Óptimo</span>
               <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">Moderado</span>
@@ -361,74 +414,42 @@ def get_template():
           <!-- Grilla de 12 Meses -->
           <div id="cal-weeks-grid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-12 gap-2"></div>
 
-          <!-- Card de Detalle de Semana Seleccionada -->
-          <div id="cal-week-detail-panel" class="bg-slate-50 border border-slate-200/70 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div class="space-y-1">
-              <div class="flex items-center gap-2">
-                <span id="detail-week-badge" class="px-2.5 py-0.5 rounded-full bg-slate-900 text-white font-black text-xs">
-                  Semana 36
-                </span>
-                <span id="detail-month-label" class="text-xs font-semibold text-slate-700">Mes de Septiembre</span>
-                <span id="detail-status-pill" class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-800">
-                  Riesgo Histórico Alto
-                </span>
+          <!-- Recuadros "Semana" (con FRP Térmico semanal) y "Anomalía Z-Score" debajo del calendario semanal -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
+            <!-- Recuadro 1: Semana + FRP Térmico de la semana elegida -->
+            <div class="bg-slate-50 border border-slate-200/70 rounded-3xl p-4 shadow-sm hover:shadow-md transition-all">
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-slate-500 font-medium">Semana</span>
+                <div class="w-8 h-8 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center text-sm font-bold">
+                  📅
+                </div>
               </div>
-              <p id="detail-summary-text" class="text-xs text-slate-600">
-                Línea base histórica: 14.2 ± 3.8 focos eq. Desvío observado: +1.8σ.
-              </p>
-            </div>
-            <div class="flex items-center gap-4 text-xs font-mono shrink-0">
-              <div>
-                <div class="text-[10px] text-slate-400 uppercase font-sans">Observado</div>
-                <div id="detail-observed-val" class="text-sm font-bold text-slate-900">-- eq</div>
+              <div id="cal-stat-current-week" class="text-2xl font-black text-slate-900 mt-1">
+                Semana 36
               </div>
-              <div class="h-7 w-px bg-slate-200"></div>
-              <div>
-                <div class="text-[10px] text-slate-400 uppercase font-sans">Media Histórica</div>
-                <div id="detail-baseline-val" class="text-sm font-bold text-slate-700">-- eq</div>
+              <div id="cal-stat-current-month" class="text-[11px] text-slate-500 mt-0.5">
+                Ciclo Anual (1–52)
               </div>
-              <div class="h-7 w-px bg-slate-200"></div>
-              <div>
-                <div class="text-[10px] text-slate-400 uppercase font-sans">FRP Térmico</div>
-                <div id="detail-frp-val" class="text-sm font-bold text-red-600">-- MW</div>
+              <div class="mt-2 pt-2 border-t border-slate-200/70 flex items-center justify-between text-xs">
+                <span class="text-slate-500 font-medium">FRP Térmico Semanal:</span>
+                <span id="cal-stat-week-frp" class="font-black text-red-600">-- MW</span>
               </div>
             </div>
-          </div>
-        </div>
 
-        <!-- Curva Climatológica SVG -->
-        <div class="bg-white border border-slate-200/80 rounded-3xl p-5 shadow-sm space-y-3">
-          <div class="flex items-center justify-between border-b border-slate-100 pb-3 flex-wrap gap-2">
-            <div>
-              <h2 class="text-sm font-black text-slate-900 flex items-center gap-2">
-                <span>📈</span> Curva Climatológica: Banda Histórica ($\mu \pm 1\sigma$) vs Año Seleccionado
-              </h2>
-              <p class="text-xs text-slate-500">
-                Se recalcula automáticamente al delimitar cualquier parcela en Córdoba o San Luis.
-              </p>
-            </div>
-            <div class="flex items-center gap-3 text-xs">
-              <span class="flex items-center gap-1.5 text-slate-600"><span class="w-3 h-0.5 bg-sky-500 inline-block"></span> Media ($\mu$)</span>
-              <span class="flex items-center gap-1.5 text-slate-600"><span class="w-2.5 h-2.5 rounded-full bg-red-600 inline-block"></span> Observado</span>
-            </div>
-          </div>
-
-          <div class="relative w-full h-52 bg-slate-50 rounded-2xl p-2 border border-slate-200/60">
-            <svg id="cal-seasonal-chart" class="w-full h-full" viewBox="0 0 800 220" preserveAspectRatio="none"></svg>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-            <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200/60">
-              <span class="text-slate-400 text-[10px] uppercase font-bold block">Ventana Crítica:</span>
-              <div class="text-red-600 font-bold text-xs mt-0.5" id="cal-info-peak-period">Agosto – Octubre (Semanas 31 a 44)</div>
-            </div>
-            <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200/60">
-              <span class="text-slate-400 text-[10px] uppercase font-bold block">Fusión de Sensores:</span>
-              <div class="text-slate-700 font-semibold text-xs mt-0.5">MODIS (1km) calibrado a VIIRS (375m)</div>
-            </div>
-            <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200/60">
-              <span class="text-slate-400 text-[10px] uppercase font-bold block">Cuadrículas en Parcela:</span>
-              <div class="text-emerald-700 font-bold text-xs mt-0.5" id="cal-info-ratio">60 cuadrículas activas</div>
+            <!-- Recuadro 2: Anomalía Z-Score -->
+            <div class="bg-slate-50 border border-slate-200/70 rounded-3xl p-4 shadow-sm hover:shadow-md transition-all">
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-slate-500 font-medium">Anomalía Z-Score</span>
+                <div class="w-8 h-8 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-sm font-bold">
+                  📊
+                </div>
+              </div>
+              <div id="cal-stat-zscore" class="text-2xl font-black text-emerald-600 mt-1">
+                0.00 σ
+              </div>
+              <div id="cal-stat-zscore-desc" class="text-[11px] text-slate-500 mt-0.5">
+                Vs. media histórica
+              </div>
             </div>
           </div>
         </div>
@@ -440,11 +461,9 @@ def get_template():
         <div class="p-4 bg-white border-b border-slate-100 flex items-center justify-between gap-3 flex-wrap">
           <div>
             <div class="text-sm font-black text-slate-900 flex items-center gap-2">
-              <span>🗺️</span> Delimitador de Parcela (Córdoba y San Luis)
+              <span>🗺️</span> Área de interés
             </div>
-            <div id="cal-box-coords-label" class="text-xs text-slate-500 mt-0.5">
-              Vista actual: Provincias de Córdoba y San Luis completas
-            </div>
+            <div id="cal-box-coords-label" class="text-xs text-slate-500 mt-0.5"></div>
           </div>
           <div class="flex items-center gap-2">
             <!-- Botón de Acción Principal en Rojo Carmesí Redondeado -->
@@ -841,7 +860,10 @@ def get_template():
       historicalGrid: window.PRELOADED_HISTORICAL_GRID || {},
       // Estado exclusivo de la Pestaña 1 (Calendario Histórico)
       calendar: {
+        mode: 'annual', // 'annual' | 'interval'
         selectedYear: '2025',
+        rangeFrom: 2018,
+        rangeTo: 2025,
         selectedBounds: null,
         selectedWeek: 36,
         isDrawingBox: false,
@@ -1029,15 +1051,77 @@ def get_template():
     // SECCIÓN 3: PESTAÑA 1 (APARTADA) — CALENDARIO HISTÓRICO + MÁSCARA + BBOX
     // =========================================================================
     function initCalendarYearControls() {
+      // 1) Selector de Año Individual (2000–2026)
       const sel = document.getElementById('cal-year-select');
-      sel.innerHTML = '<option value="ALL">Promedio 2012–2026</option>';
-      for (let yr = 2026; yr >= 2012; yr--) {
-        const opt = document.createElement('option');
-        opt.value = String(yr);
-        opt.innerText = String(yr);
-        if (yr === 2025) opt.selected = true;
-        sel.appendChild(opt);
+      if (sel) {
+        sel.innerHTML = '<option value="ALL">Promedio 2000–2026</option>';
+        for (let yr = 2026; yr >= 2000; yr--) {
+          const opt = document.createElement('option');
+          opt.value = String(yr);
+          opt.innerText = String(yr);
+          if (yr === 2025) opt.selected = true;
+          sel.appendChild(opt);
+        }
       }
+
+      // 2) Selectores de Intervalo de Años (Desde / Hasta)
+      const selFrom = document.getElementById('cal-range-from');
+      const selTo = document.getElementById('cal-range-to');
+      if (selFrom && selTo) {
+        selFrom.innerHTML = '';
+        selTo.innerHTML = '';
+        for (let yr = 2000; yr <= 2026; yr++) {
+          const optF = document.createElement('option');
+          optF.value = String(yr);
+          optF.innerText = String(yr);
+          if (yr === 2003) optF.selected = true;
+          selFrom.appendChild(optF);
+
+          const optT = document.createElement('option');
+          optT.value = String(yr);
+          optT.innerText = String(yr);
+          if (yr === 2025) optT.selected = true;
+          selTo.appendChild(optT);
+        }
+      }
+    }
+
+    function onCalendarModeChange(mode) {
+      AppState.calendar.mode = mode;
+      const ctrlAnnual = document.getElementById('cal-ctrl-annual');
+      const ctrlInterval = document.getElementById('cal-ctrl-interval');
+
+      if (mode === 'annual') {
+        if (ctrlAnnual) ctrlAnnual.classList.remove('hidden');
+        if (ctrlInterval) ctrlInterval.classList.add('hidden');
+      } else {
+        if (ctrlAnnual) ctrlAnnual.classList.add('hidden');
+        if (ctrlInterval) ctrlInterval.classList.remove('hidden');
+      }
+      renderCalendar();
+    }
+
+    function onCalendarIntervalChange() {
+      const selFrom = document.getElementById('cal-range-from');
+      const selTo = document.getElementById('cal-range-to');
+      let fromY = parseInt(selFrom.value);
+      let toY = parseInt(selTo.value);
+
+      if (fromY > toY) {
+        toY = fromY;
+        selTo.value = String(toY);
+      }
+
+      AppState.calendar.rangeFrom = fromY;
+      AppState.calendar.rangeTo = toY;
+
+      const badge = document.getElementById('cal-interval-badge');
+      if (badge) badge.innerText = `${fromY}–${toY}`;
+
+      const countBadge = document.getElementById('cal-interval-years-count');
+      if (countBadge) countBadge.innerText = `${toY - fromY + 1} años`;
+
+      renderCalendar();
     }
 
     function onCalendarYearChange(val) {
@@ -1047,12 +1131,12 @@ def get_template():
       const select = document.getElementById('cal-year-select');
 
       if (val === 'ALL') {
-        badge.innerText = 'Promedio 2012–2026';
-        select.value = 'ALL';
+        if (badge) badge.innerText = 'Promedio 2012–2026';
+        if (select) select.value = 'ALL';
       } else {
-        badge.innerText = String(val);
-        slider.value = String(val);
-        select.value = String(val);
+        if (badge) badge.innerText = String(val);
+        if (slider) slider.value = String(val);
+        if (select) select.value = String(val);
       }
       renderCalendar();
     }
@@ -1109,13 +1193,6 @@ def get_template():
         maxBoundsViscosity: 1.0
       });
 
-      // Basemap claro Positron por defecto para estilo limpio
-      const lightTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap &copy; CARTO',
-        subdomains: 'abcd',
-        maxZoom: 19
-      }).addTo(calMap);
-
       const esriSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         attribution: '&copy; Esri World Imagery',
         maxZoom: 19
@@ -1124,19 +1201,11 @@ def get_template():
       const osmTiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap',
         maxZoom: 19
-      });
-
-      const darkTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap &copy; CARTO',
-        subdomains: 'abcd',
-        maxZoom: 19
-      });
+      }).addTo(calMap);
 
       L.control.layers({
-        "🗺️ Mapa Claro (Positron)": lightTiles,
         "🛰️ Satélite Esri": esriSat,
-        "🗺️ Calles OSM": osmTiles,
-        "🌑 Modo Oscuro": darkTiles
+        "🗺️ Calles OSM": osmTiles
       }, null, { position: 'bottomright' }).addTo(calMap);
 
       addProvinceMaskToMap(calMap);
@@ -1173,7 +1242,10 @@ def get_template():
 
         const sw = bounds.getSouthWest();
         const ne = bounds.getNorthEast();
-        const coordText = `Parcela: [${sw.lat.toFixed(2)}, ${sw.lng.toFixed(2)}] a [${ne.lat.toFixed(2)}, ${ne.lng.toFixed(2)}]`;
+        const kmLat = Math.abs(ne.lat - sw.lat) * 111.0;
+        const kmLon = Math.abs(ne.lng - sw.lng) * 111.0 * Math.cos(((sw.lat + ne.lat) / 2) * Math.PI / 180);
+        const areaKm2 = Math.max(1, Math.round(kmLat * kmLon));
+        const coordText = `Parcela [${sw.lat.toFixed(2)}, ${sw.lng.toFixed(2)}] a [${ne.lat.toFixed(2)}, ${ne.lng.toFixed(2)}] (~${areaKm2.toLocaleString()} km²)`;
         document.getElementById('cal-box-coords-label').innerText = coordText;
         document.getElementById('cal-stat-parcel-area').innerText = coordText;
         renderCalendar();
@@ -1208,8 +1280,8 @@ def get_template():
         AppState.calendar.rectLayer = null;
       }
       AppState.calendar.selectedBounds = null;
-      document.getElementById('cal-box-coords-label').innerText =
-        'Vista actual: Provincias de Córdoba y San Luis completas';
+      const coordsLabel = document.getElementById('cal-box-coords-label');
+      if (coordsLabel) coordsLabel.innerText = '';
       document.getElementById('cal-stat-parcel-area').innerText =
         'Región: Provincias de Córdoba y San Luis';
       renderCalendar();
@@ -1219,42 +1291,120 @@ def get_template():
       if (!calMap || !AppState.calendar.cellsLayer) return;
       AppState.calendar.cellsLayer.clearLayers();
       const cells = (AppState.historicalGrid && AppState.historicalGrid.cells) || [];
+      const pointsByYear = (AppState.historicalGrid && AppState.historicalGrid.points_by_year) || {};
       const bounds = AppState.calendar.selectedBounds;
+      const isAnnual = (AppState.calendar.mode === 'annual');
       const selYear = AppState.calendar.selectedYear;
 
-      cells.forEach(c => {
-        const inside = !bounds || bounds.contains([c.lat, c.lon]);
-        const eqTotal = Number(c.total_harmonized_eq || 0);
-        let fillColor = '#eab308';
-        let strokeColor = '#ca8a04';
-        let radius = 4.0;
+      if (isAnnual && selYear !== 'ALL') {
+        // MODO 1: DIBUJAR TODOS LOS FOCOS PUNTUALES REALES DE ESE AÑO
+        const points = pointsByYear[selYear] || [];
+        let renderedPoints = 0;
 
-        if (eqTotal >= 350) {
-          fillColor = '#dc2626';
-          strokeColor = '#991b1b';
-          radius = 6.5;
-        } else if (eqTotal >= 120) {
-          fillColor = '#f97316';
-          strokeColor = '#c2410c';
-          radius = 5.5;
-        } else if (eqTotal >= 35) {
-          fillColor = '#f59e0b';
-          strokeColor = '#b45309';
-          radius = 4.5;
+        points.forEach(pt => {
+          const [lat, lon, frp, wk, iso_date] = pt;
+          if (bounds && !bounds.contains([lat, lon])) return;
+          renderedPoints++;
+
+          let fillColor = '#eab308';
+          let strokeColor = '#ca8a04';
+          let radius = 2.8;
+
+          if (frp >= 50) {
+            fillColor = '#dc2626';
+            strokeColor = '#991b1b';
+            radius = 4.6;
+          } else if (frp >= 15) {
+            fillColor = '#f97316';
+            strokeColor = '#c2410c';
+            radius = 3.6;
+          }
+
+          L.circleMarker([lat, lon], {
+            radius: radius,
+            color: strokeColor,
+            fillColor: fillColor,
+            fillOpacity: 0.85,
+            weight: 0.8
+          }).bindPopup(
+            `🔥 <b>Foco Satelital VIIRS (375m)</b><br>` +
+            `Fecha: <b>${iso_date}</b> (Semana ${wk})<br>` +
+            `Potencia FRP: <b>${frp} MW</b><br>` +
+            `Coordenadas: <code>[${lat.toFixed(3)}, ${lon.toFixed(3)}]</code>`
+          ).addTo(AppState.calendar.cellsLayer);
+        });
+
+        const countEl = document.getElementById('cal-annual-pts-count');
+        if (countEl) countEl.innerText = `${renderedPoints.toLocaleString()} focos`;
+
+        const coordsLabel = document.getElementById('cal-box-coords-label');
+        if (coordsLabel && !bounds) {
+          coordsLabel.innerText = '';
         }
+      } else {
+        // MODO 2: INTERVALO DE TIEMPO (O SERIE COMPLETA) CON CUADRÍCULAS DE 15 KM
+        const isInterval = (AppState.calendar.mode === 'interval');
+        const fromY = isInterval ? AppState.calendar.rangeFrom : 2000;
+        const toY = isInterval ? AppState.calendar.rangeTo : 2026;
+        const numYears = Math.max(1, toY - fromY + 1);
 
-        L.circleMarker([c.lat, c.lon], {
-          radius: inside ? radius : 3.0,
-          color: inside ? strokeColor : '#cbd5e1',
-          fillColor: inside ? fillColor : '#e2e8f0',
-          fillOpacity: inside ? 0.85 : 0.25,
-          weight: inside ? 1.2 : 0.8
-        }).bindPopup(
-          `<b>${c.zone_name}</b> (${c.province})<br>` +
-          `Coordenadas grilla: <code>[${c.lat.toFixed(2)}, ${c.lon.toFixed(2)}]</code><br>` +
-          `Acumulado Histórico (2012–2026): <b>${eqTotal.toLocaleString()} focos reales</b>`
-        ).addTo(AppState.calendar.cellsLayer);
-      });
+        cells.forEach(c => {
+          const inside = !bounds || bounds.contains([c.lat, c.lon]);
+          let intervalEq = 0;
+          let intervalFrp = 0;
+
+          if (c.weeks) {
+            for (let w = 1; w <= 52; w++) {
+              const wObj = c.weeks[String(w)];
+              if (wObj && wObj.by_year) {
+                for (let y = fromY; y <= toY; y++) {
+                  if (wObj.by_year[String(y)]) {
+                    intervalEq += wObj.by_year[String(y)].eq || 0;
+                    intervalFrp += wObj.by_year[String(y)].frp_mw || 0;
+                  }
+                }
+              }
+            }
+          }
+          const avgEq = intervalEq / numYears;
+
+          let fillColor = '#eab308';
+          let strokeColor = '#ca8a04';
+          let radius = 3.5;
+
+          if (avgEq >= 25) {
+            fillColor = '#dc2626';
+            strokeColor = '#991b1b';
+            radius = 6.5;
+          } else if (avgEq >= 8) {
+            fillColor = '#f97316';
+            strokeColor = '#c2410c';
+            radius = 5.2;
+          } else if (avgEq >= 2) {
+            fillColor = '#f59e0b';
+            strokeColor = '#b45309';
+            radius = 4.2;
+          }
+
+          L.circleMarker([c.lat, c.lon], {
+            radius: inside ? radius : 3.0,
+            color: inside ? strokeColor : '#cbd5e1',
+            fillColor: inside ? fillColor : '#e2e8f0',
+            fillOpacity: inside ? 0.85 : 0.25,
+            weight: inside ? 1.2 : 0.8
+          }).bindPopup(
+            `<b>${c.zone_name}</b> (${c.province})<br>` +
+            `Intervalo: <b>${fromY}–${toY}</b> (${numYears} años)<br>` +
+            `Focos en intervalo: <b>${Math.round(intervalEq).toLocaleString()} eq</b> (Promedio: <b>${avgEq.toFixed(1)}/año</b>)<br>` +
+            `Coordenadas: <code>[${c.lat.toFixed(2)}, ${c.lon.toFixed(2)}]</code>`
+          ).addTo(AppState.calendar.cellsLayer);
+        });
+
+        const coordsLabel = document.getElementById('cal-box-coords-label');
+        if (coordsLabel && !bounds) {
+          coordsLabel.innerText = '';
+        }
+      }
     }
 
     function renderCalendar() {
@@ -1265,7 +1415,8 @@ def get_template():
       const selYear = AppState.calendar.selectedYear;
 
       const activeCells = bounds ? cells.filter(c => bounds.contains([c.lat, c.lon])) : cells;
-      document.getElementById('cal-info-ratio').innerText = `${activeCells.length} cuadrículas activas`;
+      const ratioEl = document.getElementById('cal-info-ratio');
+      if (ratioEl) ratioEl.innerText = `${activeCells.length} cuadrículas activas`;
 
       // Calcular área de la parcela
       if (bounds) {
@@ -1274,7 +1425,10 @@ def get_template():
         const kmLat = Math.abs(ne.lat - sw.lat) * 111.0;
         const kmLon = Math.abs(ne.lng - sw.lng) * 111.0 * Math.cos(((sw.lat + ne.lat) / 2) * Math.PI / 180);
         const areaKm2 = Math.max(1, Math.round(kmLat * kmLon));
-        document.getElementById('cal-stat-parcel-area').innerText = `Parcela delimitada: ~${areaKm2.toLocaleString()} km²`;
+        const coordText = `Parcela [${sw.lat.toFixed(2)}, ${sw.lng.toFixed(2)}] a [${ne.lat.toFixed(2)}, ${ne.lng.toFixed(2)}] (~${areaKm2.toLocaleString()} km²)`;
+        const coordsLabel = document.getElementById('cal-box-coords-label');
+        if (coordsLabel) coordsLabel.innerText = coordText;
+        document.getElementById('cal-stat-parcel-area').innerText = coordText;
       } else {
         document.getElementById('cal-stat-parcel-area').innerText = `Región: Provincias de Córdoba y San Luis`;
       }
@@ -1289,11 +1443,16 @@ def get_template():
 
       for (let w = 1; w <= 52; w++) {
         const approxMonth = monthNames[Math.min(11, Math.floor((w - 1) / 4.33))];
-        const isPending = (selYear !== 'ALL' && parseInt(selYear) === meta.current_year && w > meta.current_closed_week);
+        const isInterval = (AppState.calendar.mode === 'interval');
+        const fromY = isInterval ? AppState.calendar.rangeFrom : (selYear === 'ALL' ? 2000 : parseInt(selYear));
+        const toY = isInterval ? AppState.calendar.rangeTo : (selYear === 'ALL' ? 2026 : parseInt(selYear));
+        const numYears = Math.max(1, toY - fromY + 1);
 
-        // Calcular serie anual real en las celdas seleccionadas para la semana w
+        const isPending = !isInterval && (selYear !== 'ALL' && parseInt(selYear) === meta.current_year && w > meta.current_closed_week);
+
+        // Calcular serie anual real en las celdas seleccionadas para la semana w (2000 a 2025 años cerrados)
         const yearlyTotals = {};
-        for (let yr = 2012; yr <= 2025; yr++) yearlyTotals[yr] = 0;
+        for (let yr = 2000; yr <= 2025; yr++) yearlyTotals[yr] = 0;
 
         let obsEq = 0;
         let obsViirs = 0;
@@ -1304,19 +1463,33 @@ def get_template():
           const wObj = c.weeks && c.weeks[String(w)];
           if (!wObj || !wObj.by_year) return;
 
-          for (let yr = 2012; yr <= 2025; yr++) {
+          for (let yr = 2000; yr <= 2025; yr++) {
             if (wObj.by_year[String(yr)]) {
               yearlyTotals[yr] += wObj.by_year[String(yr)].eq || 0;
             }
           }
 
-          if (selYear === 'ALL') {
+          if (isInterval) {
+            let wSumEq = 0, wSumV = 0, wSumM = 0, wSumFrp = 0;
+            for (let yr = fromY; yr <= toY; yr++) {
+              if (wObj.by_year[String(yr)]) {
+                wSumEq += wObj.by_year[String(yr)].eq || 0;
+                wSumV += wObj.by_year[String(yr)].viirs || 0;
+                wSumM += wObj.by_year[String(yr)].modis || 0;
+                wSumFrp += wObj.by_year[String(yr)].frp_mw || 0;
+              }
+            }
+            obsEq += wSumEq / numYears;
+            obsViirs += wSumV / numYears;
+            obsModis += wSumM / numYears;
+            obsFrp += wSumFrp / numYears;
+          } else if (selYear === 'ALL') {
             const yrs = Object.keys(wObj.by_year);
             yrs.forEach(yk => {
-              obsEq += (wObj.by_year[yk].eq || 0) / 15.0;
-              obsViirs += (wObj.by_year[yk].viirs || 0) / 15.0;
-              obsModis += (wObj.by_year[yk].modis || 0) / 15.0;
-              obsFrp += (wObj.by_year[yk].frp_mw || 0) / 15.0;
+              obsEq += (wObj.by_year[yk].eq || 0) / 26.0;
+              obsViirs += (wObj.by_year[yk].viirs || 0) / 26.0;
+              obsModis += (wObj.by_year[yk].modis || 0) / 26.0;
+              obsFrp += (wObj.by_year[yk].frp_mw || 0) / 26.0;
             });
           } else if (!isPending && wObj.by_year[selYear]) {
             obsEq += wObj.by_year[selYear].eq || 0;
@@ -1389,15 +1562,24 @@ def get_template():
         });
       }
 
-      document.getElementById('cal-stat-harmonized-hotspots').innerText = `${Math.round(totalObsEq).toLocaleString()} eq`;
-      document.getElementById('cal-stat-raw-breakdown').innerText = `${totalObsViirs.toLocaleString()} VIIRS + ${totalObsModis.toLocaleString()} MODIS eq`;
+      const isIntervalMode = (AppState.calendar.mode === 'interval');
+      document.getElementById('cal-stat-harmonized-hotspots').innerText = isIntervalMode
+        ? `${Math.round(totalObsEq).toLocaleString()} eq/año`
+        : `${Math.round(totalObsEq).toLocaleString()} eq`;
+      document.getElementById('cal-stat-raw-breakdown').innerText = isIntervalMode
+        ? `${Math.round(totalObsViirs).toLocaleString()} VIIRS + ${Math.round(totalObsModis).toLocaleString()} MODIS eq/año`
+        : `${totalObsViirs.toLocaleString()} VIIRS + ${totalObsModis.toLocaleString()} MODIS eq`;
       document.getElementById('cal-stat-fre').innerText = `${Math.round(totalObsFrp).toLocaleString()} MW`;
       const riskIdxEl = document.getElementById('cal-kpi-risk-index');
       if (riskIdxEl) {
-        const totalArchive = (meta && meta.direct_firms_points_count) ? meta.direct_firms_points_count.toLocaleString() : '156,241';
-        riskIdxEl.innerText = selYear === 'ALL'
-          ? `✓ ${totalArchive} focos reales NASA (2012–2026)`
-          : `✓ Año ${selYear}: ${Math.round(totalObsEq).toLocaleString()} focos reales en vista`;
+        const totalArchive = (meta && meta.direct_firms_points_count) ? meta.direct_firms_points_count.toLocaleString() : '218,518';
+        if (isIntervalMode) {
+          riskIdxEl.innerText = `✓ Intervalo ${AppState.calendar.rangeFrom}–${AppState.calendar.rangeTo}: ${Math.round(totalObsEq).toLocaleString()} eq/año prom`;
+        } else if (selYear === 'ALL') {
+          riskIdxEl.innerText = `✓ ${totalArchive} focos reales NASA (2000–2026)`;
+        } else {
+          riskIdxEl.innerText = `✓ Año ${selYear}: ${Math.round(totalObsEq).toLocaleString()} focos reales en vista`;
+        }
       }
 
       // Render de las 12 columnas mensuales
@@ -1416,8 +1598,9 @@ def get_template():
 
         monthWeeks.forEach(w => {
           const cell = document.createElement('button');
+          cell.dataset.week = String(w.week);
           const isSelected = (w.week === AppState.calendar.selectedWeek);
-          cell.className = `w-full py-1.5 px-1.5 rounded-xl text-[10px] font-bold flex items-center justify-between border transition-all ${
+          cell.className = `week-cell-btn w-full py-1.5 px-1.5 rounded-xl text-[10px] font-bold flex items-center justify-between border transition-all ${
             isSelected ? 'border-red-600 ring-2 ring-red-400/50 shadow-sm scale-105' : 'border-slate-200/70 hover:scale-105'
           }`;
           cell.style.backgroundColor = w.color;
@@ -1425,6 +1608,15 @@ def get_template():
           cell.innerHTML = `<span>S${w.week}</span><span>${w.pending ? '⏳' : (w.observed_harmonized > 0 ? Math.round(w.observed_harmonized) + '🔥' : '0')}</span>`;
           cell.onclick = () => {
             AppState.calendar.selectedWeek = w.week;
+            document.querySelectorAll('#cal-weeks-grid .week-cell-btn').forEach(btn => {
+              if (btn.dataset.week === String(w.week)) {
+                btn.classList.remove('border-slate-200/70');
+                btn.classList.add('border-red-600', 'ring-2', 'ring-red-400/50', 'shadow-sm', 'scale-105');
+              } else {
+                btn.classList.remove('border-red-600', 'ring-2', 'ring-red-400/50', 'shadow-sm', 'scale-105');
+                btn.classList.add('border-slate-200/70');
+              }
+            });
             showWeekDetail(w);
           };
           col.appendChild(cell);
@@ -1435,12 +1627,19 @@ def get_template():
 
       const selW = weeksData.find(w => w.week === AppState.calendar.selectedWeek) || weeksData[35];
       if (selW) showWeekDetail(selW);
-      renderSeasonalSvgChart(weeksData);
     }
 
     function showWeekDetail(w) {
       document.getElementById('cal-stat-current-week').innerText = `Semana ${w.week}`;
-      document.getElementById('cal-stat-current-month').innerText = `Mes de ${w.month} (${AppState.calendar.selectedYear})`;
+      const periodLabel = (AppState.calendar.mode === 'interval')
+        ? `${AppState.calendar.rangeFrom}–${AppState.calendar.rangeTo}`
+        : (AppState.calendar.selectedYear === 'ALL' ? '2000–2026' : AppState.calendar.selectedYear);
+      document.getElementById('cal-stat-current-month').innerText = `Mes de ${w.month} (${periodLabel})`;
+
+      const weekFrpEl = document.getElementById('cal-stat-week-frp');
+      if (weekFrpEl) {
+        weekFrpEl.innerText = w.pending ? '-- MW' : `${w.observed_frp_mw.toLocaleString()} MW`;
+      }
 
       const zEl = document.getElementById('cal-stat-zscore');
       const zDesc = document.getElementById('cal-stat-zscore-desc');
@@ -1462,21 +1661,6 @@ def get_template():
           zDesc.innerText = 'En o por debajo de la media histórica';
         }
       }
-
-      document.getElementById('detail-week-badge').innerText = `Semana ${w.week}`;
-      document.getElementById('detail-month-label').innerText = `Mes de ${w.month}`;
-      
-      const pill = document.getElementById('detail-status-pill');
-      pill.innerText = w.status;
-      pill.style.backgroundColor = w.color;
-      pill.style.color = w.textColor || '#0f172a';
-
-      document.getElementById('detail-observed-val').innerText = w.pending ? 'Sin cerrar' : `${w.observed_harmonized} eq`;
-      document.getElementById('detail-baseline-val').innerText = `${w.baseline_mean} ± ${w.baseline_std} eq`;
-      document.getElementById('detail-frp-val').innerText = w.pending ? '--' : `${w.observed_frp_mw} MW`;
-      document.getElementById('detail-summary-text').innerText = w.pending
-        ? `La semana ${w.week} del año en curso aún no ha cerrado cronológicamente.`
-        : `Línea base histórica en esta parcela: ${w.baseline_mean} ± ${w.baseline_std} eq. Desvío observado: ${w.z_score >= 0 ? '+' : ''}${w.z_score}σ.`;
     }
 
     function renderSeasonalSvgChart(weeks) {
