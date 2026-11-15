@@ -4,22 +4,19 @@
 =============================================================================
 SeMF / AURA-FIRE Unified Portal Generator (NASA Space Apps Challenge 2026)
 =============================================================================
-Preserva el 100% de la arquitectura original de 3 pestañas separadas e integra:
-1. 📅 PESTAÑA 1 (APARTADA) — RIESGO HISTÓRICO DE FUEGO (CALENDARIO DE QUEMAS):
+Arquitectura Final Consolidada en 2 Pestañas de Alto Impacto:
+1. 📅 PESTAÑA 1 (INTACTA) — RIESGO HISTÓRICO DE FUEGO (CALENDARIO DE QUEMAS):
    - Layout Split-Screen con Mapa de Selección de Parcela a la derecha.
    - Máscara Geográfica Invertida (oscurece el exterior de Córdoba y San Luis).
-   - Herramienta de Selección por Arrastre (Bounding Box) + Selector de Año (2012–2026).
+   - Herramienta de Selección por Arrastre (Bounding Box) + Selector de Año (2000–2026).
    - Matriz de 52 semanas agrupadas en 12 meses + Curva Estacional SVG (μ ± 1σ).
-   - 100% aislada del simulador: solo consume datos históricos (historico_riesgo_grid.json).
-2. 🛰️ PESTAÑA 2 — MONITOR SATELITAL NRT:
-   - Capas independientes para VIIRS (375m), MODIS (1km) y perímetros DBSCAN.
-3. 🛡️ PESTAÑA 3 — CENTRO TÁCTICO UNIFICADO (PROPAGACIÓN + ESCAPE OSRM + SIMULADOR):
-   - Vista única centralizada (sin dividir en sub-modos Brigadista/Evacuación): combina
-     simultáneamente Superficie del Frente (ha), Velocidad de Propagación (km/h),
-     Conos Predictivos Turf.js (1h y 3h), HUD Open-Meteo (Regla 30-30-30), Banner FSM
-     con ETA en minutos, Ruta de Escape Vial Real (OSRM) y Modal SOS (WhatsApp + SMS).
-   - Incluye el "🧪 Simulador Táctico de Evacuación (Datos Inyectados)" exclusivo de esta
-     pestaña para inyectar focos en el mapa y variar viento/temperatura/humedad en vivo.
+   - 100% aislada de simulaciones: solo consume datos históricos (historico_riesgo_grid.json).
+2. 🛰️🛡️ PESTAÑA 2 — MONITOR NRT & SeMF TÁCTICO (CONSOLA INTEGRADA):
+   - Detecciones Satelitales NASA FIRMS (VIIRS 375m + MODIS 1km + Polígonos DBSCAN).
+   - Cinemática de Frentes Activos (Superficie ha, Avance km/h, Rumbo Cardinal).
+   - Evacuación Vial OSRM (Ruta verde animada, distancia km, ETA minutos, Botón SOS).
+   - Inyección Operativa Única: Simula focos satelitales y calcula al instante
+     conos de avance Turf.js (1h y 3h) y rutas de escape por carretera sin ruido.
 """
 
 import os
@@ -223,22 +220,17 @@ def get_template():
         </div>
       </div>
 
-      <!-- 3 Pestañas de Navegación en Píldoras Limpias -->
+      <!-- 2 Pestañas Unificadas en Píldoras Limpias -->
       <nav class="flex bg-slate-100 p-1 rounded-full border border-slate-200 text-xs font-semibold shadow-inner">
         <button id="tab-btn-calendar" onclick="switchMainTab('calendar')"
                 class="view-tab-btn px-4 py-2 rounded-full transition-all duration-200 flex items-center gap-2 bg-red-600 text-white font-bold shadow-md shadow-red-500/30">
           <span>📅</span>
           <span>Calendario de Quemas</span>
         </button>
-        <button id="tab-btn-monitor" onclick="switchMainTab('monitor')"
-                class="view-tab-btn px-4 py-2 rounded-full transition-all duration-200 flex items-center gap-2 text-slate-600 hover:text-slate-900">
-          <span>🛰️</span>
-          <span>Monitor NRT</span>
-        </button>
         <button id="tab-btn-tactical" onclick="switchMainTab('tactical')"
                 class="view-tab-btn px-4 py-2 rounded-full transition-all duration-200 flex items-center gap-2 text-slate-600 hover:text-slate-900">
-          <span>🛡️</span>
-          <span>SeMF Táctico & Escape</span>
+          <span>🛰️🛡️</span>
+          <span>Monitor NRT & SeMF Táctico</span>
         </button>
       </nav>
 
@@ -260,7 +252,7 @@ def get_template():
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <h1 class="text-xl sm:text-2xl font-black text-slate-900">
-                Calendario de Quemas y Línea Base
+                Calendario de focos de incendio - Línea Temporal
               </h1>
               <p class="text-xs text-slate-500 mt-1 max-w-xl">
                 Base oficial de 218518 detecciones satelitales
@@ -288,10 +280,6 @@ def get_template():
 
               <!-- Vista Modo Anual (Focos Reales) -->
               <div id="cal-ctrl-annual" class="space-y-2">
-                <div class="flex items-center justify-between text-xs text-slate-500 font-medium">
-                  <span>Año analizado:</span>
-                  <span id="cal-year-badge" class="px-2.5 py-0.5 rounded-full bg-red-600 text-white font-black text-xs shadow-sm">2025</span>
-                </div>
                 <div class="flex items-center gap-2">
                   <input id="cal-year-slider" type="range" min="2000" max="2026" value="2025" step="1"
                          oninput="onCalendarYearChange(this.value)"
@@ -308,10 +296,6 @@ def get_template():
 
               <!-- Vista Modo Intervalo (Círculos 15 km) -->
               <div id="cal-ctrl-interval" class="hidden space-y-2">
-                <div class="flex items-center justify-between text-xs text-slate-500 font-medium">
-                  <span>Rango multianual:</span>
-                  <span id="cal-interval-badge" class="px-2.5 py-0.5 rounded-full bg-amber-600 text-white font-black text-xs shadow-sm">2003–2025</span>
-                </div>
                 <div class="grid grid-cols-2 gap-2">
                   <div>
                     <label class="text-[10px] text-slate-400 font-bold block mb-0.5">Desde:</label>
@@ -336,25 +320,6 @@ def get_template():
                 <span>✓</span> Serie NASA 26 Años (2000–2026)
               </div>
             </div>
-          </div>
-
-          <!-- Barra de Búsqueda / Parcela Activa -->
-          <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200/70 flex items-center justify-between gap-3">
-            <div class="flex items-center gap-2.5 min-w-0">
-              <div class="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center shrink-0 text-sm font-bold">
-                📍
-              </div>
-              <div class="min-w-0">
-                <div class="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Delimitación Espacial Activa</div>
-                <div id="cal-stat-parcel-area" class="text-xs font-bold text-slate-800 truncate">
-                  Región: Provincias de Córdoba y San Luis
-                </div>
-              </div>
-            </div>
-            <button onclick="clearCalendarBox()"
-                    class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-sm transition active:scale-95 shrink-0">
-              🔄 Restablecer a Todo
-            </button>
           </div>
         </div>
 
@@ -470,7 +435,7 @@ def get_template():
             <button id="btn-cal-draw-box" onclick="toggleCalendarBoxTool()"
                     class="px-4 py-2 rounded-full text-xs font-bold bg-red-600 hover:bg-red-700 text-white shadow-md shadow-red-500/25 transition-all flex items-center gap-1.5 active:scale-95">
               <span>📐</span>
-              <span id="btn-cal-draw-text">Delimitar Parcela</span>
+              <span id="btn-cal-draw-text">Seleccionar área</span>
             </button>
             <button onclick="clearCalendarBox()"
                     class="px-3 py-2 rounded-full text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
@@ -482,7 +447,7 @@ def get_template():
         <div class="flex-1 relative min-h-[460px]">
           <div id="cal-map" style="position:absolute; inset:0;"></div>
           <div id="cal-drag-hint" class="hidden absolute top-3 left-1/2 -translate-x-1/2 z-[1000] bg-red-600 text-white px-4 py-2 rounded-full text-xs font-bold shadow-xl pointer-events-none animate-pulse">
-            🖱️ Arrastre el cursor sobre el mapa para delimitar su parcela
+            🖱️ Arrastre el cursor sobre el mapa para seleccionar el área
           </div>
         </div>
       </div>
@@ -557,115 +522,92 @@ def get_template():
       <div id="map"></div>
 
       <!-- =================================================================== -->
-      <!-- OVERLAYS PARA LA PESTAÑA 2: MONITOR NRT                             -->
+      <!-- OVERLAYS: CONSOLA OPERATIVA (MONITOR NRT & SeMF TÁCTICO)            -->
       <!-- =================================================================== -->
-      <div id="monitor-overlays" class="hidden absolute top-3 right-3 w-80 z-20 pointer-events-none">
-        <div class="bg-white/95 backdrop-blur-xl rounded-3xl border border-slate-200/80 p-4 shadow-xl pointer-events-auto space-y-3 text-slate-800">
-          <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
-            <span class="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-              <span>🛰️</span> Focos NRT NASA FIRMS
-            </span>
-            <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold">
-              Armonizado
-            </span>
-          </div>
-
-          <!-- Selector de Fuente NRT exclusivo de la Pestaña 2 -->
-          <div class="flex items-center gap-1.5 text-[11px] bg-slate-50 border border-slate-200/80 rounded-2xl px-2.5 py-1.5 justify-between">
-            <span class="text-slate-500 font-semibold">Fuente NRT:</span>
-            <select id="data-source-select" class="bg-white border border-slate-200 text-slate-800 font-semibold rounded-lg px-1.5 py-0.5 outline-none">
-              <option value="firms" selected>NASA FIRMS real</option>
-              <option value="synthetic">Demo sintética</option>
-            </select>
-            <button id="data-source-run" onclick="runDataSource()" class="bg-red-600 hover:bg-red-700 text-white font-bold rounded-full px-2.5 py-0.5 transition-all">OK</button>
-            <span id="data-source-status" role="status" aria-live="polite" class="text-[10px] font-semibold text-slate-500">Listo</span>
-          </div>
-
-          <div class="space-y-1.5 text-xs">
-            <div class="flex justify-between">
-              <span class="text-slate-500">Detecciones VIIRS (375m):</span>
-              <b id="mon-kpi-viirs" class="text-orange-600 font-black">--</b>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-slate-500">Detecciones MODIS (1km):</span>
-              <b id="mon-kpi-modis" class="text-red-600 font-black">--</b>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-slate-500">Frentes Activos (DBSCAN):</span>
-              <b id="mon-kpi-fronts" class="text-emerald-700 font-black">-- frentes</b>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-slate-500">Potencia Máxima (FRP):</span>
-              <b id="mon-kpi-peak-frp" class="text-red-600 font-black">-- MW</b>
-            </div>
-          </div>
-
-          <div class="border-t border-slate-100 pt-2.5 space-y-1.5">
-            <div class="text-[11px] text-slate-500 font-bold">Frentes de Fuego Consolidados:</div>
-            <div id="monitor-cluster-list" class="max-h-44 overflow-y-auto space-y-1.5 pr-1"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- =================================================================== -->
-      <!-- OVERLAYS PARA LA PESTAÑA 3: INTERFAZ TÁCTICA UNIFICADA + SIMULADOR  -->
-      <!-- (Combina Velocidad de Propagación + Ruta de Escape OSRM + Simulador)-->
-      <!-- =================================================================== -->
-      <div id="tactical-overlays" class="hidden absolute top-3 left-3 bottom-3 w-[360px] sm:w-[400px] z-20 pointer-events-none flex flex-col">
+      <div id="tactical-overlays" class="hidden absolute top-3 left-3 bottom-3 w-[370px] sm:w-[410px] z-20 pointer-events-none flex flex-col">
         <div class="bg-white/95 backdrop-blur-xl rounded-3xl border border-slate-200/80 p-4 shadow-xl pointer-events-auto overflow-y-auto space-y-3.5 max-h-full text-slate-800">
 
-          <!-- BLOQUE 1: TELEMETRÍA CRÍTICA DEL FRENTE Y VELOCIDAD DE PROPAGACIÓN -->
+          <!-- BLOQUE 1: TELEMETRÍA NRT SATELITAL (NASA FIRMS MODIS & VIIRS) -->
           <div class="space-y-2.5">
             <div class="flex items-center justify-between border-b border-slate-100 pb-2">
-              <div class="flex items-center gap-2">
-                <span class="text-xs font-black text-slate-900 uppercase tracking-wider">🔥 Cinemática & Propagación</span>
-                <span id="brigade-selected-cluster" class="text-[10px] px-2.5 py-0.5 rounded-full bg-red-50 text-red-700 font-bold border border-red-200">
-                  FIRE_CLUSTER_001
-                </span>
+              <span class="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                <span>🛰️</span> Detección Satelital NRT
+              </span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold">
+                NASA FIRMS Armonizado
+              </span>
+            </div>
+
+            <!-- KPIs de Fusión Multi-Sensor -->
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <div class="bg-slate-50 p-2 rounded-2xl border border-slate-200/70 flex items-center justify-between">
+                <span class="text-slate-500 text-[11px]">VIIRS (375m):</span>
+                <b id="mon-kpi-viirs" class="text-orange-600 font-black">--</b>
+              </div>
+              <div class="bg-slate-50 p-2 rounded-2xl border border-slate-200/70 flex items-center justify-between">
+                <span class="text-slate-500 text-[11px]">MODIS (1km):</span>
+                <b id="mon-kpi-modis" class="text-red-600 font-black">--</b>
+              </div>
+              <div class="bg-slate-50 p-2 rounded-2xl border border-slate-200/70 flex items-center justify-between">
+                <span class="text-slate-500 text-[11px]">Frentes Activos:</span>
+                <b id="mon-kpi-fronts" class="text-emerald-700 font-black">-- frentes</b>
+              </div>
+              <div class="bg-slate-50 p-2 rounded-2xl border border-slate-200/70 flex items-center justify-between">
+                <span class="text-slate-500 text-[11px]">FRP Pico:</span>
+                <b id="mon-kpi-peak-frp" class="text-red-600 font-black">-- MW</b>
               </div>
             </div>
 
-            <!-- Selector de Foco Táctico y Demo Crítica exclusivo de la Pestaña 3 -->
+            <!-- Selector de Región / Foco -->
             <div class="flex items-center gap-2">
               <select id="select-region" onchange="changeRegion(this.value)"
-                      class="flex-1 bg-slate-50 hover:bg-slate-100 text-slate-800 text-xs font-semibold py-1.5 px-2.5 rounded-xl border border-slate-200 outline-none cursor-pointer transition-all">
+                      class="w-full bg-slate-50 hover:bg-slate-100 text-slate-800 text-xs font-semibold py-1.5 px-2.5 rounded-xl border border-slate-200 outline-none cursor-pointer transition-all">
                 <option value="Sierras_Cordoba_SanLuis" selected>📍 Región: Córdoba y San Luis</option>
                 <option value="Trapiche_SanLuis">🔥 Foco: El Trapiche / San Luis</option>
                 <option value="Traslasierra_Cordoba">🔥 Foco: Mina Clavero (Cba)</option>
                 <option value="Cordoba_SierrasChicas">🔥 Foco: Sierras Chicas / Punilla</option>
               </select>
-              <button onclick="triggerDemoScenario()" title="Activar escenario crítico simulado de evacuación"
-                      class="flex items-center gap-1 text-[11px] bg-red-600 hover:bg-red-700 text-white font-bold px-3 py-1.5 rounded-full shadow-md shadow-red-500/25 transition-all active:scale-95 shrink-0">
-                <span>🎬</span> Demo Crítica
-              </button>
             </div>
 
-            <div id="brigade-location-name" class="text-xs text-slate-500 font-semibold">
-              Sierras de Córdoba y San Luis
-            </div>
-
-            <div class="grid grid-cols-3 gap-2 text-xs">
-              <div class="bg-slate-50 p-2.5 rounded-2xl border border-slate-200/70">
-                <span class="text-slate-400 text-[10px] font-medium block">Superficie</span>
-                <div id="brigade-area" class="text-slate-900 font-black text-sm">-- ha</div>
-              </div>
-              <div class="bg-slate-50 p-2.5 rounded-2xl border border-slate-200/70">
-                <span class="text-slate-400 text-[10px] font-medium block">Propagación</span>
-                <div id="brigade-sat-speed" class="text-red-600 font-black text-sm">-- km/h</div>
-              </div>
-              <div class="bg-slate-50 p-2.5 rounded-2xl border border-slate-200/70">
-                <span class="text-slate-400 text-[10px] font-medium block">Avance Vector</span>
-                <div id="brigade-spread-dir" class="text-slate-900 font-black text-sm">--</div>
-              </div>
-            </div>
-
+            <!-- Píldoras de Frentes Consolidados -->
             <div class="space-y-1">
-              <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Frentes Activos en Escena:</span>
+              <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Frentes en Escena:</span>
               <div id="brigade-cluster-pills" class="flex items-center gap-1.5 overflow-x-auto pb-1"></div>
             </div>
           </div>
 
-          <!-- BLOQUE 2: RUTA DE ESCAPE VIAL REAL (OSRM) Y SUPERVIVENCIA -->
+          <!-- BLOQUE 2: CINEMÁTICA Y PROPAGACIÓN DEL FRENTE -->
+          <div class="space-y-2 border-t border-slate-100 pt-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                <span>🔥</span> Cinemática & Avance
+              </span>
+              <span id="brigade-selected-cluster" class="text-[10px] px-2.5 py-0.5 rounded-full bg-red-50 text-red-700 font-bold border border-red-200">
+                FIRE_CLUSTER_001
+              </span>
+            </div>
+
+            <div id="brigade-location-name" class="text-[11px] text-slate-500 font-semibold truncate">
+              Sierras de Córdoba y San Luis
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 text-xs">
+              <div class="bg-slate-50 p-2.5 rounded-2xl border border-slate-200/70 text-center">
+                <span class="text-slate-400 text-[10px] font-medium block">Superficie</span>
+                <div id="brigade-area" class="text-slate-900 font-black text-sm">-- ha</div>
+              </div>
+              <div class="bg-slate-50 p-2.5 rounded-2xl border border-slate-200/70 text-center">
+                <span class="text-slate-400 text-[10px] font-medium block">Propagación</span>
+                <div id="brigade-sat-speed" class="text-red-600 font-black text-sm">-- km/h</div>
+              </div>
+              <div class="bg-slate-50 p-2.5 rounded-2xl border border-slate-200/70 text-center">
+                <span class="text-slate-400 text-[10px] font-medium block">Avance</span>
+                <div id="brigade-spread-dir" class="text-slate-900 font-black text-sm">--</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BLOQUE 3: RUTA DE ESCAPE VIAL REAL (OSRM) Y SUPERVIVENCIA -->
           <div class="space-y-2.5 border-t border-slate-100 pt-3">
             <div class="flex items-center justify-between">
               <span class="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
@@ -712,18 +654,18 @@ def get_template():
             </div>
           </div>
 
-          <!-- BLOQUE 3: 🧪 SIMULADOR TÁCTICO DE DATOS INYECTADOS (EXCLUSIVO PARA ESCAPE/PROPAGACIÓN) -->
+          <!-- BLOQUE 4: INYECCIÓN OPERATIVA ÚNICA (INCIDENTE SATELITAL Y RESPUESTA TÁCTICA) -->
           <div class="space-y-2.5 border-t border-slate-100 pt-3">
             <div class="flex items-center justify-between">
               <span class="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                <span>🧪</span> Simulador de Datos Inyectados
+                <span>🧪</span> Inyección Operativa
               </span>
               <span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
-                Solo Escape / Propagación
+                NRT & Táctico
               </span>
             </div>
             <p class="text-[11px] text-slate-500 leading-snug">
-              Inyecte focos o modifique viento y humedad para simular conos de propagación y rutas de escape OSRM <b>sin alterar el Calendario Histórico</b>.
+              Inyecte un foco en el mapa o varíe viento/humedad para evaluar en vivo las detecciones satelitales, conos de avance y rutas de escape OSRM.
             </p>
 
             <div class="grid grid-cols-2 gap-2">
@@ -735,7 +677,7 @@ def get_template():
               <button onclick="restoreLiveTelemetry()"
                       class="py-2 px-2.5 rounded-full text-[11px] font-bold bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 transition flex items-center justify-center gap-1">
                 <span>🔄</span>
-                <span>Datos Reales Vivo</span>
+                <span>Restaurar Real</span>
               </button>
             </div>
 
@@ -743,7 +685,7 @@ def get_template():
             <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200/70 space-y-2.5 text-[11px]">
               <div>
                 <div class="flex justify-between text-slate-700 font-medium">
-                  <span>💨 Velocidad Viento Inyectado:</span>
+                  <span>💨 Viento:</span>
                   <b id="sim-lbl-wind-speed" class="text-red-600 font-black">32 km/h</b>
                 </div>
                 <input id="sim-slider-wind-speed" type="range" min="0" max="100" value="32" step="1"
@@ -753,7 +695,7 @@ def get_template():
 
               <div>
                 <div class="flex justify-between text-slate-700 font-medium">
-                  <span>🧭 Dirección Origen Viento:</span>
+                  <span>🧭 Origen Viento:</span>
                   <b id="sim-lbl-wind-dir" class="text-slate-900 font-black">200° (S→N)</b>
                 </div>
                 <input id="sim-slider-wind-dir" type="range" min="0" max="359" value="200" step="1"
@@ -783,6 +725,9 @@ def get_template():
               </div>
             </div>
           </div>
+
+        </div>
+      </div>
 
         </div>
       </div>
@@ -1004,7 +949,6 @@ def get_template():
 
       const calView = document.getElementById('view-calendar');
       const mapView = document.getElementById('view-map-container');
-      const monOverlays = document.getElementById('monitor-overlays');
       const tacOverlays = document.getElementById('tactical-overlays');
       const fsmBanner = document.getElementById('fsm-banner');
 
@@ -1012,19 +956,11 @@ def get_template():
         calView.classList.remove('hidden');
         mapView.classList.add('hidden');
         [80, 250].forEach(ms => setTimeout(() => { if (calMap) calMap.invalidateSize(true); }, ms));
-      } else if (tabName === 'monitor') {
+      } else if (tabName === 'tactical' || tabName === 'monitor') {
         calView.classList.add('hidden');
         mapView.classList.remove('hidden');
-        monOverlays.classList.remove('hidden');
-        tacOverlays.classList.add('hidden');
-        fsmBanner.classList.add('hidden');
-        [80, 250].forEach(ms => setTimeout(() => { if (map) map.invalidateSize(true); }, ms));
-      } else if (tabName === 'tactical') {
-        calView.classList.add('hidden');
-        mapView.classList.remove('hidden');
-        monOverlays.classList.add('hidden');
-        tacOverlays.classList.remove('hidden');
-        fsmBanner.classList.remove('hidden');
+        if (tacOverlays) tacOverlays.classList.remove('hidden');
+        if (fsmBanner) fsmBanner.classList.remove('hidden');
         setTimeout(() => { if (map) map.invalidateSize(true); }, 80);
         setTimeout(() => {
           if (map) map.invalidateSize(true);
@@ -1054,7 +990,7 @@ def get_template():
       // 1) Selector de Año Individual (2000–2026)
       const sel = document.getElementById('cal-year-select');
       if (sel) {
-        sel.innerHTML = '<option value="ALL">Promedio 2000–2026</option>';
+        sel.innerHTML = '';
         for (let yr = 2026; yr >= 2000; yr--) {
           const opt = document.createElement('option');
           opt.value = String(yr);
@@ -1245,9 +1181,11 @@ def get_template():
         const kmLat = Math.abs(ne.lat - sw.lat) * 111.0;
         const kmLon = Math.abs(ne.lng - sw.lng) * 111.0 * Math.cos(((sw.lat + ne.lat) / 2) * Math.PI / 180);
         const areaKm2 = Math.max(1, Math.round(kmLat * kmLon));
-        const coordText = `Parcela [${sw.lat.toFixed(2)}, ${sw.lng.toFixed(2)}] a [${ne.lat.toFixed(2)}, ${ne.lng.toFixed(2)}] (~${areaKm2.toLocaleString()} km²)`;
-        document.getElementById('cal-box-coords-label').innerText = coordText;
-        document.getElementById('cal-stat-parcel-area').innerText = coordText;
+        const coordText = `Coordenadas [${sw.lat.toFixed(2)}, ${sw.lng.toFixed(2)}] a [${ne.lat.toFixed(2)}, ${ne.lng.toFixed(2)}] (~${areaKm2.toLocaleString()} km²)`;
+        const coordsLabel = document.getElementById('cal-box-coords-label');
+        if (coordsLabel) coordsLabel.innerText = coordText;
+        const parcelAreaEl = document.getElementById('cal-stat-parcel-area');
+        if (parcelAreaEl) parcelAreaEl.innerText = coordText;
         renderCalendar();
       });
     }
@@ -1261,13 +1199,13 @@ def get_template():
 
       if (AppState.calendar.isDrawingBox) {
         hint.classList.remove('hidden');
-        txt.innerText = 'Cancelar Delimitación';
+        txt.innerText = 'Cancelar Selección';
         btn.classList.remove('bg-red-600', 'hover:bg-red-700');
         btn.classList.add('bg-slate-800', 'hover:bg-slate-900');
         if (container) container.classList.add('crosshair-cursor');
       } else {
         hint.classList.add('hidden');
-        txt.innerText = 'Delimitar Parcela';
+        txt.innerText = 'Seleccionar área';
         btn.classList.remove('bg-slate-800', 'hover:bg-slate-900');
         btn.classList.add('bg-red-600', 'hover:bg-red-700');
         if (container) container.classList.remove('crosshair-cursor');
@@ -1282,8 +1220,8 @@ def get_template():
       AppState.calendar.selectedBounds = null;
       const coordsLabel = document.getElementById('cal-box-coords-label');
       if (coordsLabel) coordsLabel.innerText = '';
-      document.getElementById('cal-stat-parcel-area').innerText =
-        'Región: Provincias de Córdoba y San Luis';
+      const parcelAreaEl = document.getElementById('cal-stat-parcel-area');
+      if (parcelAreaEl) parcelAreaEl.innerText = 'Región: Provincias de Córdoba y San Luis';
       renderCalendar();
     }
 
@@ -1425,12 +1363,14 @@ def get_template():
         const kmLat = Math.abs(ne.lat - sw.lat) * 111.0;
         const kmLon = Math.abs(ne.lng - sw.lng) * 111.0 * Math.cos(((sw.lat + ne.lat) / 2) * Math.PI / 180);
         const areaKm2 = Math.max(1, Math.round(kmLat * kmLon));
-        const coordText = `Parcela [${sw.lat.toFixed(2)}, ${sw.lng.toFixed(2)}] a [${ne.lat.toFixed(2)}, ${ne.lng.toFixed(2)}] (~${areaKm2.toLocaleString()} km²)`;
+        const coordText = `Coordenadas [${sw.lat.toFixed(2)}, ${sw.lng.toFixed(2)}] a [${ne.lat.toFixed(2)}, ${ne.lng.toFixed(2)}] (~${areaKm2.toLocaleString()} km²)`;
         const coordsLabel = document.getElementById('cal-box-coords-label');
         if (coordsLabel) coordsLabel.innerText = coordText;
-        document.getElementById('cal-stat-parcel-area').innerText = coordText;
+        const parcelAreaEl = document.getElementById('cal-stat-parcel-area');
+        if (parcelAreaEl) parcelAreaEl.innerText = coordText;
       } else {
-        document.getElementById('cal-stat-parcel-area').innerText = `Región: Provincias de Córdoba y San Luis`;
+        const parcelAreaEl = document.getElementById('cal-stat-parcel-area');
+        if (parcelAreaEl) parcelAreaEl.innerText = `Región: Provincias de Córdoba y San Luis`;
       }
 
       const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
@@ -1815,27 +1755,33 @@ def get_template():
       }
 
       if (data && data.kpis) {
-        document.getElementById('mon-kpi-viirs').innerText = data.kpis.viirs_detections;
-        document.getElementById('mon-kpi-modis').innerText = data.kpis.modis_detections;
-        document.getElementById('mon-kpi-fronts').innerText = `${events.length} frentes`;
-        document.getElementById('mon-kpi-peak-frp').innerText = `${data.kpis.peak_pass_frp_mw} MW`;
+        const vEl = document.getElementById('mon-kpi-viirs');
+        const mEl = document.getElementById('mon-kpi-modis');
+        const fEl = document.getElementById('mon-kpi-fronts');
+        const pEl = document.getElementById('mon-kpi-peak-frp');
+        if (vEl) vEl.innerText = data.kpis.viirs_detections;
+        if (mEl) mEl.innerText = data.kpis.modis_detections;
+        if (fEl) fEl.innerText = `${events.length} frentes`;
+        if (pEl) pEl.innerText = `${data.kpis.peak_pass_frp_mw} MW`;
       }
 
       const monList = document.getElementById('monitor-cluster-list');
-      monList.innerHTML = '';
-      events.forEach(ev => {
-        const item = document.createElement('button');
-        item.className = "w-full text-left p-2 rounded-2xl bg-slate-50 hover:bg-red-50 border border-slate-200/80 text-[11px] flex items-center justify-between gap-2 transition";
-        const locLabel = ev.location_name || 'Sierras de Córdoba y San Luis';
-        item.innerHTML = `<div class="truncate"><div class="text-slate-900 font-bold">${ev.event_id}</div><div class="text-[10px] text-slate-500 truncate">${locLabel}</div></div><span class="text-red-600 font-black shrink-0">${Math.round(ev.frp_peak_mw || 120)} MW</span>`;
-        item.onclick = () => {
-          AppState.selectedCluster = ev;
-          updateClusterDisplay();
-          recalculatePredictiveEngine();
-          map.setView([ev.centroid_lat, ev.centroid_lon], 13);
-        };
-        monList.appendChild(item);
-      });
+      if (monList) {
+        monList.innerHTML = '';
+        events.forEach(ev => {
+          const item = document.createElement('button');
+          item.className = "w-full text-left p-2 rounded-2xl bg-slate-50 hover:bg-red-50 border border-slate-200/80 text-[11px] flex items-center justify-between gap-2 transition";
+          const locLabel = ev.location_name || 'Sierras de Córdoba y San Luis';
+          item.innerHTML = `<div class="truncate"><div class="text-slate-900 font-bold">${ev.event_id}</div><div class="text-[10px] text-slate-500 truncate">${locLabel}</div></div><span class="text-red-600 font-black shrink-0">${Math.round(ev.frp_peak_mw || 120)} MW</span>`;
+          item.onclick = () => {
+            AppState.selectedCluster = ev;
+            updateClusterDisplay();
+            recalculatePredictiveEngine();
+            map.setView([ev.centroid_lat, ev.centroid_lon], 13);
+          };
+          monList.appendChild(item);
+        });
+      }
 
       AppState.layers.viirsPoints.clearLayers();
       AppState.layers.modisPoints.clearLayers();
@@ -1987,21 +1933,91 @@ def get_template():
         [lat + d, lon - d]
       ];
       const simCluster = {
-        event_id: `SIM_FIRE_00${idx}`,
-        event_type: 'Foco Inyectado (Simulador)',
-        location_name: `Escenario Inyectado (${lat.toFixed(3)}, ${lon.toFixed(3)})`,
+        event_id: `INJ_FIRE_00${idx}`,
+        event_type: 'Frente Inyectado (NRT & Táctico)',
+        location_name: `Anomalía Térmica (${lat.toFixed(3)}, ${lon.toFixed(3)})`,
         centroid_lat: lat,
         centroid_lon: lon,
-        detection_area_ha: 420.0,
-        frp_peak_mw: 285.0,
-        spread_speed_kmh: 1.85,
+        detection_area_ha: 380.0,
+        frp_peak_mw: 295.0,
+        spread_speed_kmh: 1.75,
         spread_azimuth_deg: (AppState.weather.windDirectionDeg + 180) % 360,
-        severity_level: 'Severidad Alta (Simulado)',
-        satellites_involved: 'Simulador Táctico SeMF',
+        severity_level: 'Severidad Alta (Inyección)',
+        satellites_involved: 'VIIRS (NOAA-21) + MODIS (Aqua)',
         polygon_coords: poly
       };
       AppState.injectedClusters.unshift(simCluster);
       AppState.selectedCluster = simCluster;
+
+      // Puntos satelitales térmicos inyectados
+      const vPt = {
+        latitude: lat + 0.003,
+        longitude: lon - 0.002,
+        satellite_name: 'NOAA-21',
+        frp_mw: 165.4,
+        frp_density_mw_km2: 1181.4,
+        temp_ch4_k: 368.5,
+        delta_temp_k: 46.2,
+        pixel_area_km2: 0.14
+      };
+      const mPt = {
+        latitude: lat - 0.003,
+        longitude: lon + 0.003,
+        satellite_name: 'Aqua',
+        frp_mw: 129.6,
+        frp_density_mw_km2: 129.6,
+        temp_ch4_k: 345.2,
+        delta_temp_k: 38.1,
+        pixel_area_km2: 1.0
+      };
+
+      const popupV = `
+        <div style="font-family: monospace; font-size: 11px; min-width: 190px;">
+          <b style="color: #EA580C;">🟠 VIIRS 375m (${vPt.satellite_name}) [Inyectado]</b><br>
+          <hr style="margin: 4px 0; border-color: #334155;">
+          <b>FRP:</b> ${vPt.frp_mw} MW (${vPt.frp_density_mw_km2} MW/km²)<br>
+          <b>Temp. Brillo (4µm):</b> ${vPt.temp_ch4_k} K<br>
+          <b>Anomalía ΔT:</b> ${vPt.delta_temp_k} K<br>
+          <b>Huella Píxel:</b> ${vPt.pixel_area_km2} km²<br>
+          <b>Estado:</b> Inyección Operativa
+        </div>
+      `;
+      const popupM = `
+        <div style="font-family: monospace; font-size: 11px; min-width: 190px;">
+          <b style="color: #EF4444;">🔴 MODIS 1km (${mPt.satellite_name}) [Inyectado]</b><br>
+          <hr style="margin: 4px 0; border-color: #334155;">
+          <b>FRP:</b> ${mPt.frp_mw} MW (${mPt.frp_density_mw_km2} MW/km²)<br>
+          <b>Temp. Brillo (4µm):</b> ${mPt.temp_ch4_k} K<br>
+          <b>Anomalía ΔT:</b> ${mPt.delta_temp_k} K<br>
+          <b>Huella Píxel:</b> ${mPt.pixel_area_km2} km²<br>
+          <b>Estado:</b> Inyección Operativa
+        </div>
+      `;
+
+      if (AppState.layers.viirsPoints) {
+        L.circleMarker([vPt.latitude, vPt.longitude], {
+          radius: 5.5, color: '#EA580C', fillColor: '#FB923C', fillOpacity: 0.9, weight: 2
+        }).bindPopup(popupV).addTo(AppState.layers.viirsPoints);
+      }
+
+      if (AppState.layers.modisPoints) {
+        L.circleMarker([mPt.latitude, mPt.longitude], {
+          radius: 8.5, color: '#B91C1C', fillColor: '#EF4444', fillOpacity: 0.75, weight: 2
+        }).bindPopup(popupM).addTo(AppState.layers.modisPoints);
+      }
+
+      // Actualizar KPIs satelitales en el panel
+      const baseViirs = (AppState.dashboardData && AppState.dashboardData.kpis) ? AppState.dashboardData.kpis.viirs_detections : 28;
+      const baseModis = (AppState.dashboardData && AppState.dashboardData.kpis) ? AppState.dashboardData.kpis.modis_detections : 3;
+      const vEl = document.getElementById('mon-kpi-viirs');
+      const mEl = document.getElementById('mon-kpi-modis');
+      const fEl = document.getElementById('mon-kpi-fronts');
+      const pEl = document.getElementById('mon-kpi-peak-frp');
+      if (vEl) vEl.innerText = baseViirs + (AppState.injectedClusters.length * 2);
+      if (mEl) mEl.innerText = baseModis + AppState.injectedClusters.length;
+      if (fEl) fEl.innerText = `${getAllTacticalEvents().length} frentes`;
+      if (pEl) pEl.innerText = `295 MW`;
+
       renderClusterPills();
       updateClusterDisplay();
       recalculatePredictiveEngine();
@@ -2014,11 +2030,12 @@ def get_template():
       AppState.selectedCluster = baseEvents[0] || null;
 
       const badge = document.getElementById('hud-telemetry-mode');
-      badge.innerText = '🛰️ Clima Real Open-Meteo';
-      badge.className = 'text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold';
+      if (badge) {
+        badge.innerText = '🛰️ Clima Real Open-Meteo';
+        badge.className = 'text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold';
+      }
 
-      renderClusterPills();
-      updateClusterDisplay();
+      loadActiveFireData();
       await fetchRealWeather();
       recalculatePredictiveEngine();
     }
@@ -2131,6 +2148,29 @@ def get_template():
       return turf.convex(turf.featureCollection(translated));
     }
 
+    // =========================================================================
+    // RED GEORREFERENCIADA DE REFUGIOS Y PUNTOS DE ENCUENTRO OFICIALES
+    // =========================================================================
+    const SAFE_SHELTER_HUBS = [
+      // San Luis
+      { name: "El Trapiche Centro / Balneario", lat: -33.1095, lon: -66.0640, road: "Ruta Prov. 9" },
+      { name: "La Florida / Dique", lat: -33.1180, lon: -65.9870, road: "Ruta Prov. 39" },
+      { name: "Potrero de los Funes Centro", lat: -33.2250, lon: -66.2300, road: "Ruta Prov. 18" },
+      { name: "San Luis Capital (Autopista)", lat: -33.2980, lon: -66.3350, road: "Autopista 25 de Mayo" },
+      { name: "Villa de Merlo Centro", lat: -32.3420, lon: -65.0120, road: "Ruta Nac. 148" },
+
+      // Córdoba - Traslasierra
+      { name: "Mina Clavero Centro", lat: -31.7250, lon: -65.0060, road: "Ruta Prov. 14" },
+      { name: "Villa Cura Brochero (Plaza)", lat: -31.7140, lon: -65.0180, road: "Ruta Prov. 15" },
+      { name: "Nono Centro", lat: -31.7980, lon: -64.9980, road: "Ruta Prov. 14" },
+
+      // Córdoba - Sierras Chicas / Punilla / Centro
+      { name: "Villa Carlos Paz (Autopista)", lat: -31.4240, lon: -64.4980, road: "RN20 / Autopista" },
+      { name: "Cosquín Centro", lat: -31.2460, lon: -64.4650, road: "Ruta Nac. 38" },
+      { name: "La Calera Centro", lat: -31.3440, lon: -64.3350, road: "Ruta Prov. E-55" },
+      { name: "Alta Gracia Centro", lat: -31.6520, lon: -64.4280, road: "Ruta Prov. 5" }
+    ];
+
     function computeSurvivalStateAndSafeZones(cluster, distToFireKm) {
       const uPt = turf.point([AppState.userLocation.lon, AppState.userLocation.lat]);
       const fPt = turf.point([cluster.centroid_lon, cluster.centroid_lat]);
@@ -2153,51 +2193,107 @@ def get_template():
       const desc = document.getElementById('fsm-status-desc');
       const etaDisplay = document.getElementById('fsm-eta-display');
 
+      const hasThreat = (distToFireKm <= 10.0 || AppState.injectedClusters.length > 0 || isHeadingToUser);
+
+      if (!hasThreat) {
+        // MODO VIGILANCIA PREVENTIVA (SIN AMENAZA DIRECTA NI PÁNICO)
+        banner.className = "bg-gradient-to-r from-emerald-700 to-teal-800 text-white px-4 py-2 border-b border-emerald-600/50 flex items-center justify-between shrink-0 shadow-xl";
+        title.innerText = "🛡️ ZONA EN VIGILANCIA — SECTOR DESPEJADO";
+        desc.innerText = `Sin frentes de fuego activos en su proximidad (${distToFireKm.toFixed(1)} km al foco más cercano). Monitoreo satelital activo.`;
+        etaDisplay.innerText = "DESPEJADO";
+
+        AppState.currentSafeZoneTarget = null;
+        AppState.layers.safeZones.clearLayers();
+        AppState.layers.escapeRoute.clearLayers();
+
+        document.getElementById('routing-via-text').innerText = "Vía Libre / Despejada";
+        document.getElementById('stat-route-distance').innerText = "-- km";
+        document.getElementById('stat-route-time').innerText = "-- min";
+        document.getElementById('stat-route-cardinal').innerText = "--";
+        document.getElementById('user-escape-instruction').innerText = "No se requiere evacuación. Sector libre de avance de humo y fuego.";
+        return;
+      }
+
+      // MODO AMENAZA ACTIVA
       if (isHeadingToUser && (etaMinutes <= 90 || distToFireKm < 3.5)) {
         banner.className = "bg-gradient-to-r from-red-600 via-rose-600 to-red-700 text-white px-4 py-2 border-b border-red-500/50 flex items-center justify-between shrink-0 shadow-xl animate-pulse";
         title.innerText = "🚨 ALERTA ROJA: IMPACTO INMINENTE";
-        desc.innerText = `Fuego avanzando a ${cluster.projSpeedKmh.toFixed(1)} km/h hacia su posición. Evacúe de inmediato por la ruta marcada.`;
+        desc.innerText = `Frente de fuego avanzando a ${cluster.projSpeedKmh.toFixed(1)} km/h hacia su posición. Evacúe de inmediato por la ruta marcada.`;
         etaDisplay.innerText = etaMinutes + " MIN";
-      } else if (distToFireKm < 10.0) {
+      } else {
         banner.className = "bg-gradient-to-r from-amber-600 to-orange-600 text-white px-4 py-2 border-b border-amber-500/50 flex items-center justify-between shrink-0 shadow-xl";
         title.innerText = "⚠️ PRE-ALERTA: FUEGO EN LA ZONA";
         desc.innerText = `Frente activo a ${distToFireKm.toFixed(1)} km. Monitoree rotación de viento y prepare salida.`;
         etaDisplay.innerText = isHeadingToUser ? (etaMinutes + " MIN") : "FUERA DE EJE";
-      } else {
-        banner.className = "bg-gradient-to-r from-emerald-700 to-teal-800 text-white px-4 py-2 border-b border-emerald-600/50 flex items-center justify-between shrink-0 shadow-xl";
-        title.innerText = "🛡️ ZONA EN VIGILANCIA";
-        desc.innerText = "Sin frentes activos en trayectoria de impacto directo.";
-        etaDisplay.innerText = "> 3 HORAS";
       }
 
-      // Zona Segura a Barlovento (en dirección al origen del viento, opuesta al avance del fuego)
-      const escapeAzimuth = AppState.weather.windDirectionDeg;
-      const safePt = turf.transformTranslate(uPt, 3.2, escapeAzimuth);
-      const safeCoords = safePt.geometry.coordinates;
+      // SELECCIÓN INTELIGENTE DE REFUGIO SEGURO
+      // Buscamos el refugio que NO esté en el cono de avance del fuego y que esté más próximo al usuario
+      let bestHub = null;
+      let minHubDist = 999999;
 
-      AppState.currentSafeZoneTarget = { lat: safeCoords[1], lon: safeCoords[0] };
+      SAFE_SHELTER_HUBS.forEach(hub => {
+        const hubPt = turf.point([hub.lon, hub.lat]);
+        const distUserToHub = turf.distance(uPt, hubPt);
+        const distFireToHub = turf.distance(fPt, hubPt);
+        const bearingFireToHub = (turf.bearing(fPt, hubPt) + 360) % 360;
 
-      L.circleMarker([safeCoords[1], safeCoords[0]], {
-        radius: 10,
+        let deltaHubAngle = Math.abs(bearingFireToHub - cluster.projAzimuth);
+        if (deltaHubAngle > 180) deltaHubAngle = 360 - deltaHubAngle;
+
+        const isSafeFromSpread = (deltaHubAngle >= 45 || distFireToHub > 12.0);
+
+        if (isSafeFromSpread && distUserToHub < minHubDist) {
+          minHubDist = distUserToHub;
+          bestHub = hub;
+        }
+      });
+
+      let safeLat, safeLon, safeName, safeRoad;
+      if (bestHub && minHubDist < 45.0) {
+        safeLat = bestHub.lat;
+        safeLon = bestHub.lon;
+        safeName = bestHub.name;
+        safeRoad = bestHub.road;
+      } else {
+        const escapeAzimuth = AppState.weather.windDirectionDeg;
+        const safePt = turf.transformTranslate(uPt, 3.5, escapeAzimuth);
+        const coords = safePt.geometry.coordinates;
+        safeLat = coords[1];
+        safeLon = coords[0];
+        safeName = "Refugio Táctico a Barlovento";
+        safeRoad = "Corredor Vial Seguro";
+      }
+
+      AppState.currentSafeZoneTarget = { lat: safeLat, lon: safeLon, name: safeName, road: safeRoad };
+
+      AppState.layers.safeZones.clearLayers();
+      L.circleMarker([safeLat, safeLon], {
+        radius: 11,
         color: '#10B981',
         fillColor: '#059669',
-        fillOpacity: 0.9,
+        fillOpacity: 0.95,
         weight: 3
-      }).bindPopup("<b>🛡️ ZONA SEGURA RECOMENDADA</b><br>Posición a barlovento libre de avance de fuego y humo.")
+      }).bindPopup(`<b>🛡️ ${safeName}</b><br>Vía de acceso: ${safeRoad}<br>Sector seguro libre de avance de fuego.`)
         .addTo(AppState.layers.safeZones);
 
       fetchAndDrawOsrmEscapeRoute(
         AppState.userLocation.lat,
         AppState.userLocation.lon,
-        safeCoords[1],
-        safeCoords[0],
-        escapeAzimuth
+        safeLat,
+        safeLon,
+        safeName,
+        safeRoad
       );
     }
 
-    async function fetchAndDrawOsrmEscapeRoute(uLat, uLon, sLat, sLon, escapeAzimuth) {
-      const cardinal = degreesToCardinal(escapeAzimuth);
-      document.getElementById('stat-route-cardinal').innerText = cardinal;
+    async function fetchAndDrawOsrmEscapeRoute(uLat, uLon, sLat, sLon, targetName, targetRoad) {
+      const uPt = turf.point([uLon, uLat]);
+      const sPt = turf.point([sLon, sLat]);
+      const bearingToSafe = (turf.bearing(uPt, sPt) + 360) % 360;
+      const cardinal = degreesToCardinal(bearingToSafe);
+      const cardEl = document.getElementById('stat-route-cardinal');
+      if (cardEl) cardEl.innerText = cardinal;
 
       try {
         const url = `https://router.project-osrm.org/route/v1/driving/${uLon},${uLat};${sLon},${sLat}?overview=full&geometries=geojson&steps=true`;
@@ -2220,28 +2316,30 @@ def get_template():
             className: 'animated-escape-path'
           }).addTo(AppState.layers.escapeRoute);
 
-          let roadName = "Red Vial Rural / Provincial";
+          let roadName = targetRoad || "Red Vial Oficial";
           if (route.legs && route.legs[0] && route.legs[0].steps) {
             const namedStep = route.legs[0].steps.find(s => s.name && s.name.trim().length > 0);
-            if (namedStep) roadName = namedStep.name;
+            if (namedStep) roadName = `${namedStep.name} (${targetRoad || ''})`.trim();
           }
 
           document.getElementById('routing-via-text').innerText = roadName;
           document.getElementById('stat-route-distance').innerText = `${realDistKm.toFixed(1)} km`;
           document.getElementById('stat-route-time').innerText = `${realTimeMin} min`;
           document.getElementById('user-escape-instruction').innerText =
-            `Evacúe hacia el ${cardinal} por ${roadName}. Refugio a barlovento en ${realDistKm.toFixed(1)} km (~${realTimeMin} min).`;
+            `Evacúe hacia el ${cardinal} por ${roadName} rumbo a ${targetName}. Distancia: ${realDistKm.toFixed(1)} km (~${realTimeMin} min).`;
           return;
         }
       } catch (e) {
-        const directDist = turf.distance(turf.point([uLon, uLat]), turf.point([sLon, sLat]));
+        const directDist = turf.distance(uPt, sPt);
         AppState.layers.escapeRoute.clearLayers();
         L.polyline([[uLat, uLon], [sLat, sLon]], {
           color: '#10B981', weight: 4, className: 'animated-escape-path'
         }).addTo(AppState.layers.escapeRoute);
-        document.getElementById('routing-via-text').innerText = 'Vector Directo Barlovento';
+        document.getElementById('routing-via-text').innerText = targetRoad || 'Corredor Vial';
         document.getElementById('stat-route-distance').innerText = `${directDist.toFixed(1)} km`;
         document.getElementById('stat-route-time').innerText = `${Math.max(2, Math.round(directDist * 2.2))} min`;
+        document.getElementById('user-escape-instruction').innerText =
+          `Evacúe hacia el ${cardinal} rumbo a ${targetName} (${directDist.toFixed(1)} km en línea directa).`;
       }
     }
 
@@ -2296,10 +2394,12 @@ def get_template():
       const gps = `${AppState.userLocation.lat.toFixed(5)}, ${AppState.userLocation.lon.toFixed(5)}`;
       const mapsUrl = `https://maps.google.com/?q=${gps}`;
       const eta = document.getElementById('fsm-eta-display').innerText;
+      const safeDest = AppState.currentSafeZoneTarget ? AppState.currentSafeZoneTarget.name : 'Zona Segura';
       return `🚨 *SOS EMERGENCIA INCENDIO (SeMF / AURA-FIRE)*\n` +
              `📍 *Ubicación GPS:* ${gps}\n` +
              `🗺️ *Ver en Google Maps:* ${mapsUrl}\n` +
              `⏱️ *Tiempo Estimado Impacto:* ${eta}\n` +
+             `🛡️ *Destino de Evacuación:* ${safeDest}\n` +
              `Solicito auxilio urgente de Bomberos y Defensa Civil.`;
     }
 
@@ -2336,7 +2436,7 @@ def main():
     with open(index_path, "w", encoding="utf-8") as f:
         f.write(html_content)
 
-    print(f"📱 Portal Unificado SeMF / AURA-FIRE (3 Pestañas Separadas) generado con éxito:")
+    print(f"📱 Portal Unificado SeMF / AURA-FIRE (2 Pestañas Consolidadas) generado con éxito:")
     print(f"   - {tactical_path} ({os.path.getsize(tactical_path):,} bytes)")
     print(f"   - {index_path} ({os.path.getsize(index_path):,} bytes)")
 
