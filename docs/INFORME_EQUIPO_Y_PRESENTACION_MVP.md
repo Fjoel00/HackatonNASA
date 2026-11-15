@@ -1,6 +1,7 @@
 # 🏔️ AURA-FIRE: Documento Maestro de Entrega, Caso Sierras de Córdoba y San Luis (MVP Pulido)
 **NASA Space Apps Challenge 2026** — *MODIS and VIIRS Hot Spots*  
 **Proyecto:** *AURA-FIRE (Automated Unified Radiative Analytics for Fire Intercomparison & Resilient Evacuation)*  
+**Equipo:** *Maxwell Crew* (Juan Ibañez, Marcos Moleker, Nicolas Calderon, Joel Figueroa, Juan Nicolas Muñoz, Vale Gregorio)  
 **Caso de Estudio Principal:** Sierras de Córdoba y San Luis, Argentina (`BBOX: -66.0, -33.5, -63.5, -31.0`)  
 **Documento para el Equipo:** Guía Definitiva para Pitch, Diapositivas e Informe Oficial  
 
@@ -202,12 +203,14 @@ Running the pipeline on real cached NASA FIRMS NRT data (`-66.0, -33.5, -63.5, -
 
 ---
 
-## 7. 👥 Asignación de Roles y Checklist Final para el Cierre
+## 7. 👥 Asignación de Roles y Checklist Final para el Cierre — Maxwell Crew
 
-- **Integrante 1 (Pitcher / Orador):** Practicar el guion de la Sección 4 cronometrando entre **3:20 y 3:45 minutos**. Memorizar el dato clave de **El Trapiche, San Luis (`367.0 K` saturación VIIRS + `374.55 MW` pico confirmados por Aqua, NOAA-20 y NOAA-21)**.
-- **Integrante 2 (Diseñador de Slides):** Crear las 6 diapositivas usando el gráfico real `output/analisis_estadistico_sensores.png` y capturas limpias de `output/index.html` y `output/mapa_interactivo_nasa.html`.
-- **Integrante 3 (Video Demo):** Grabar 60–90 s abriendo `output/index.html`, cambiando entre las 3 pestañas, seleccionando `🔥 Foco Crítico: El Trapiche / San Luis`, activando/desactivando capas VIIRS/MODIS y ejecutando `🎬 Demo Crítica` hasta abrir el modal SOS.
-- **Integrante 4 (Carga en Plataforma NASA):** Copiar los textos de la Sección 5 en el formulario oficial de NASA Space Apps y adjuntar el enlace al repositorio y al video.
+- **Joel Figueroa (Arquitectura y Desarrollo Web):** Integración general de la arquitectura, compilación del portal web autónomo y despliegue en Vercel.
+- **Juan Ibañez (Pitcher / Orador):** Practicar el guion de la Sección 4 cronometrando entre **3:20 y 3:45 minutos**. Memorizar el dato clave de **El Trapiche, San Luis (`367.0 K` saturación VIIRS + `374.55 MW` pico confirmados por Aqua, NOAA-20 y NOAA-21)**.
+- **Marcos Moleker (Diseñador de Slides):** Crear las 6 diapositivas usando el gráfico real `output/analisis_estadistico_sensores.png` y capturas limpias de `output/index.html` y `output/mapa_interactivo_nasa.html`.
+- **Nicolas Calderon (Geodatos y Algoritmos):** Verificación de envolventes DBSCAN y cálculo de cinemática de avance.
+- **Juan Nicolas Muñoz (Video Demo):** Grabar 60–90 s abriendo `https://hackaton-nasa-k2cr.vercel.app/`, cambiando entre las pestañas, activando/desactivando capas VIIRS/MODIS y ejecutando la simulación hasta abrir el modal SOS.
+- **Vale Gregorio (Carga en Plataforma NASA & Rutas):** Copiar los textos de la Sección 5 en el formulario oficial de NASA Space Apps y adjuntar el enlace al repositorio y al video.
 
 ### Checklist Técnico Verificado
 - [x] Pipeline ejecutado con datos reales de Córdoba y San Luis (`is_synthetic: false`).

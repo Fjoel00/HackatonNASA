@@ -1,46 +1,58 @@
 # 🔥 SeMF / AURA-FIRE — Multi-Sensor Satellite Harmonization & Wildfire Tactical Intelligence
-**NASA Space Apps Challenge 2026** — *MODIS and VIIRS Hot Spots*
+**NASA Space Apps Challenge 2026** — *Challenge Track: MODIS and VIIRS Hot Spots*
 
 [![Deploy Live](https://img.shields.io/badge/Vercel-Live%20Demo-brightgreen?logo=vercel&style=for-the-badge)](https://hackaton-nasa-k2cr.vercel.app/)
-[![NASA Space Apps](https://img.shields.io/badge/NASA%20Space%20Apps-2026-orange.svg?style=for-the-badge)](https://www.spaceappschallenge.org/)
+[![NASA Space Apps Challenge](https://img.shields.io/badge/NASA%20Space%20Apps-2026-orange.svg?style=for-the-badge)](https://www.spaceappschallenge.org/)
 [![Data: NASA FIRMS](https://img.shields.io/badge/Data-NASA%20FIRMS-red.svg?style=for-the-badge)](https://firms.modaps.eosdis.nasa.gov/)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg?style=for-the-badge)](https://www.python.org/)
 [![Docker Ready](https://img.shields.io/badge/Docker-Ready-2496ED.svg?logo=docker&logoColor=white&style=for-the-badge)](docker-compose.yml)
 [![Tests Passing](https://img.shields.io/badge/Tests-8%2F8%20Passing-emerald?style=for-the-badge)](tests/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 
 ---
 
-### 🌐 ACCESO WEB EN VIVO (CERO INSTALACIÓN)
+### 👥 Team: **Maxwell Crew**
+**Members:**  
+- **Juan Ibañez**  
+- **Marcos Moleker**  
+- **Nicolas Calderon**  
+- **Joel Figueroa**  
+- **Juan Nicolas Muñoz**  
+- **Vale Gregorio**  
+
+---
+
+### 🌐 OFFICIAL LIVE WEB ACCESS (ZERO INSTALLATION REQUIRED)
 > ### 🚀 [**https://hackaton-nasa-k2cr.vercel.app/**](https://hackaton-nasa-k2cr.vercel.app/)
-> *Abre de inmediato en cualquier dispositivo (celular o computadora). No requiere Docker, consola ni registros.*
+> *Instant access on any desktop or mobile device. Evaluators can explore live maps, routing, simulation, and 26-year historical analytics with zero installation.*
 
 ---
 
-## 📌 1. Descripción del Proyecto
+## 📌 1. Project Overview
 
-**AURA-FIRE / SeMF** (*Automated Unified Radiative Analytics for Fire Intercomparison & Resilient Evacuation / Sistema de Evaluación y Monitoreo de Fuego*) es una plataforma científica y operacional diseñada para transformar las detecciones satelitales térmicas de **NASA FIRMS** en herramientas procesables de respuesta a emergencias.
+**SeMF / AURA-FIRE** (*Automated Unified Radiative Analytics for Fire Intercomparison & Resilient Evacuation / Fire Evaluation and Monitoring System*) is an aerospace-grade scientific and operational intelligence platform designed to bridge the gap between spaceborne Earth observation data and frontline wildfire emergency response.
 
-El sistema resuelve la disparidad física de sensores térmicos entre **MODIS** (Terra/Aqua, resolución $1000\,\text{m}$) y **VIIRS** (Suomi-NPP / NOAA-20 / NOAA-21, resolución $375\,\text{m}$), integrando una serie temporal histórica continua de **26 años (2000–2026)** y una consola táctica en tiempo real con modelos de propagación y evacuación vial para las **Sierras de Córdoba y San Luis, Argentina**.
+Our system tackles the severe physical and spatial resolution disparities between NASA FIRMS sensors — **MODIS** (Terra/Aqua at $1000\,\text{m}$ resolution) and **VIIRS** (Suomi-NPP / NOAA-20 / NOAA-21 at $375\,\text{m}$ resolution) — unifying a continuous **26-year historical satellite time series (2000–2026)** and a high-readiness **Tactical Mission Control Console** featuring geodetic clustering, predictive Turf.js propagation cones, and real-time OSRM road evacuation routing for the mountain ranges of **Córdoba and San Luis, Argentina**.
 
 ---
 
-## 🎛️ 2. Módulos Principales de la Aplicación
+## 🎛️ 2. Core Platform Modules
 
 ```mermaid
 flowchart TD
-    subgraph NASA ["🛰️ Fuentes Espaciales NASA FIRMS"]
-        MODIS["MODIS (Terra / Aqua)<br>1000m · 2000-2026"]
-        VIIRS["VIIRS (SNPP / NOAA-20 / NOAA-21)<br>375m · 2012-2026"]
+    subgraph Space ["🛰️ NASA FIRMS Spaceborne Feeds"]
+        MODIS["MODIS (Terra / Aqua)<br>1000m · 2000-2026 Time Series"]
+        VIIRS["VIIRS (SNPP / NOAA-20 / NOAA-21)<br>375m · High Resolution NRT"]
     end
 
-    subgraph Core ["⚡ Pipeline Científico AURA-FIRE"]
-        Harmonizer["Armonización Física Multi-Sensor<br>(ΔT, Densidad FRP MW/km², Escala 9.33x)"]
-        DBSCAN["Clustering Geodésico DBSCAN<br>(ε = 2.5 km · Convex Hull en ha)"]
+    subgraph Core ["⚡ Scientific Harmonization Core"]
+        Harmonizer["Physical Multi-Sensor Harmonization<br>(ΔT, Radiative Power Density MW/km², 9.33x Area Scale)"]
+        DBSCAN["Geodetic DBSCAN Clustering<br>(ε = 2.5 km · Convex Hull Area in Hectares)"]
     end
 
-    subgraph App ["🖥️ Portal Web SeMF (2 Pestañas Consolidadas)"]
-        Tab1["📅 PESTAÑA 1: Calendario de Quemas (2000–2026)<br>• Bounding Box Interactivo<br>• Matriz de 52 Semanas<br>• Curva Estacional μ ± 1σ"]
-        Tab2["🛰️🛡️ PESTAÑA 2: Consola SeMF & NRT Táctico<br>• Detecciones Satelitales VIIRS + MODIS<br>• Conos de Avance Turf.js (1h y 3h)<br>• Rutas Viales OSRM a Refugios<br>• Botón SOS Directo a WhatsApp"]
+    subgraph App ["🖥️ SeMF Mission Control Interface"]
+        Tab1["📅 TAB 1: Burning Activity Calendar (2000–2026)<br>• Drag & Drop Bounding Box Spatial Selector<br>• 52-Week Matrix & Climatological Baseline<br>• Seasonal Mean Curve μ ± 1σ & Z-Score Anomaly"]
+        Tab2["🛰️🛡️ TAB 2: SeMF Tactical Console & Escape Routing<br>• Dual VIIRS 375m & MODIS 1km Layer Controls<br>• Forward Turf.js Propagation Cones (1h & 3h)<br>• OSRM Road Evacuation Engine to Safe Shelters<br>• One-Click WhatsApp SOS Emergency Dispatch"]
     end
 
     MODIS --> Harmonizer
@@ -50,105 +62,112 @@ flowchart TD
     DBSCAN --> Tab2
 ```
 
-### 📅 Módulo 1: Riesgo Histórico — Calendario de Quemas (2000–2026)
-- **Línea Base Climatológica de 26 Años:** Análisis de series temporales de más de 2 décadas armonizadas sin solapamientos duplicados.
-- **Selector Espacial Bounding Box:** Herramienta interactiva para dibujar un polígono sobre cualquier sector de las Sierras y calcular al vuelo la distribución temporal.
-- **Matriz de 52 Semanas y Curva Estacional:** Desglose por semana y mes con umbral estadístico ($\mu \pm 1\sigma$) y cálculo de anomalía Z-Score para determinar períodos críticos de riesgo de incendio.
+### 📅 Module 1: Historical Burn Risk — 26-Year Calendar (2000–2026)
+- **26-Year Climatological Baseline:** Uninterrupted integration of NASA FIRMS MODIS (2000–2026) and VIIRS (2012–2026) historical records, filtered to eliminate sensor overlap and duplicate counts.
+- **Interactive Spatial Bounding Box:** Freeform drag-and-drop spatial selection tool enabling users to draw a customized bounding box anywhere across Córdoba and San Luis to calculate immediate historical risk statistics.
+- **52-Week Risk Matrix & Seasonal Envelope:** Comprehensive breakdown of fire frequency per calendar week and month, overlaying a 26-year seasonal expectation curve ($\mu \pm 1\sigma$) with localized Z-Score anomaly alerts.
 
-### 🛰️🛡️ Módulo 2: Monitor NRT & Consola SeMF (Operaciones de Emergencia)
-- **Fusión Satelital Multi-Sensor:** Visualización combinada de puntos térmicos de alta resolución VIIRS ($375\,\text{m}$) y MODIS ($1\,\text{km}$) con escala de color según Potencia Radiativa del Fuego (FRP en MW).
-- **Cinemática del Fuego (DBSCAN Geodésico):** Agrupación espacial de focos en frentes continuos, superficie afectada en hectáreas (`Convex Hull`), rumbo cardinal y azimut de avance.
-- **Simulación Operativa e Inyección Turf.js:** Conos proyectados de propagación a 1 hora y 3 horas según velocidad del viento y humedad relativa.
-- **Ruta de Escape Vial Segura (OSRM):** Cálculo instantáneo de ruta por carretera asfaltada libre de humo hacia el refugio o cuartel de bomberos más cercano, con kilometraje y tiempo estimado de llegada (ETA).
-- **Botón SOS de Auxilio Inmediato:** Transmisión con un clic de coordenadas GPS exactas, frente activo cercano y mensaje preformateado a los servicios de rescate por WhatsApp.
+### 🛰️🛡️ Module 2: SeMF Tactical Console & Emergency Escape System
+- **Multi-Sensor Satellite Fusion:** Synchronized display of high-resolution VIIRS ($375\,\text{m}$) and MODIS ($1\,\text{km}$) thermal pixels color-coded by Fire Radiative Power (FRP in MW).
+- **Fire Front Kinematics (Haversine DBSCAN):** Automated grouping of discrete detections into cohesive fire fronts, computing convex hull surface area (hectares), forward velocity ($\text{km/h}$), and heading azimutal bearings.
+- **Turf.js Operational Propagation Cones:** Dynamic 1-hour and 3-hour projected advance cones incorporating live local wind vectors and relative humidity from Open-Meteo.
+- **Safe Road Evacuation Engine (OSRM):** Real-time highway and road route calculation connecting user coordinates to the nearest official civil defense shelter or fire department station, avoiding active fire perimeters and calculating travel distance (km) and ETA (minutes).
+- **Instant SOS Dispatch:** Single-click emergency trigger compiling exact GPS coordinates, nearest active fire front data, and shelter destination into a preformatted rescue message sent via WhatsApp.
 
 ---
 
-## 🔬 3. Fundamento Científico y Físico
+## 🔬 3. Physical & Scientific Harmonization
 
-| Parámetro Físico | MODIS (Terra / Aqua) | VIIRS (NOAA-20 / SNPP) | Desafío Científico | Solución Implementada |
+| Physical Parameter | MODIS (Terra / Aqua) | VIIRS (NOAA-20 / SNPP) | Scientific Challenge | Maxwell Crew Solution |
 | :--- | :--- | :--- | :--- | :--- |
-| **Resolución Espacial** | $1000\text{ m} \times 1000\text{ m}$ ($1.0\text{ km}^2$) | $375\text{ m} \times 375\text{ m}$ ($\approx 0.14\text{ km}^2$) | Huellas de píxel no comparables directamente | Densidad de FRP: $\text{MW/km}^2 = \frac{\text{FRP}}{A_{\text{pixel}}}$. Relación de escala: $9.33\times$. |
-| **Bandas Infrarrojas** | `brightness` ($T_{21/22}$) y `bright_t31` ($T_{31}$) | `bright_ti4` ($T_{I4}$) y `bright_ti5` ($T_{I5}$) | Nombres dispares en esquemas de API | Unificación en $\text{Ch}_4$ ($\sim 4\,\mu\text{m}$) y $\text{Ch}_5$ ($\sim 11\,\mu\text{m}$). Cálculo de $\Delta T = T_4 - T_5$. |
-| **Escala de Confianza** | Porcentual continuo ($0\text{–}100\%$) | Categórica discreta (`'l'`, `'n'`, `'h'`) | Tipos de datos incompatibles | Mapeo continuo unificado ($0.0\text{–}1.0$) y categorización estandarizada (`Low`, `Nominal`, `High`). |
-| **Agrupación Espacial** | Puntos individuales discretos | Puntos densos | Falta de noción de perímetro y frente | DBSCAN geodésico Haversine ($R = 6371\text{ km}$, $\varepsilon = 2.5\text{ km}$) + envolvente convexa. |
+| **Spatial Resolution** | $1000\text{ m} \times 1000\text{ m}$ ($1.0\text{ km}^2$) | $375\text{ m} \times 375\text{ m}$ ($\approx 0.14\text{ km}^2$) | Incomparable raw pixel footprint areas | Radiative Power Density: $\text{MW/km}^2 = \frac{\text{FRP}}{A_{\text{pixel}}}$. Empirical scale factor ratio: $9.33\times$. |
+| **Infrared Channels** | `brightness` ($T_{21/22}$) & `bright_t31` ($T_{31}$) | `bright_ti4` ($T_{I4}$) & `bright_ti5` ($T_{I5}$) | Divergent column schemas across NASA APIs | Unified lossless mapping into $\text{Ch}_4$ ($\sim 4\,\mu\text{m}$) and $\text{Ch}_5$ ($\sim 11\,\mu\text{m}$). Thermal differential calculation: $\Delta T = T_4 - T_5$. |
+| **Confidence Scale** | Continuous percentage ($0\text{–}100\%$) | Discrete categorical (`'l'`, `'n'`, `'h'`) | Incompatible statistical data types | Normalized continuous score ($0.0\text{–}1.0$) and standardized categorical classification (`Low`, `Nominal`, `High`). |
+| **Spatial Clustering** | Discrete isolated hot spots | Dense point swarms | Lack of perimeter and front directionality | Geodetic Haversine DBSCAN ($R = 6371\text{ km}$, $\varepsilon = 2.5\text{ km}$) + convex hull geometry and centroid heading calculation. |
 
 ---
 
-## 💻 4. Modos de Ejecución
+## 💻 4. Execution Modes
 
-### Opción A: Acceso Inmediato en la Nube (Recomendado)
-Abre directamente: **[https://hackaton-nasa-k2cr.vercel.app/](https://hackaton-nasa-k2cr.vercel.app/)**  
-No requiere dependencias, terminal ni configuración.
+### Mode A: Instant Cloud Access (Recommended for Evaluators)
+Simply open: **[https://hackaton-nasa-k2cr.vercel.app/](https://hackaton-nasa-k2cr.vercel.app/)**  
+Zero installation, zero dependencies, responsive across mobile and desktop.
 
-### Opción B: Ejecución Local con Docker
+### Mode B: Local Containerized Deployment (Docker)
 ```bash
-# 1. Clonar el repositorio
+# 1. Clone the repository
 git clone https://github.com/Fjoel00/HackatonNASA.git
 cd HackatonNASA
 
-# 2. Iniciar el contenedor
+# 2. Build and launch the container
 docker compose up --build
 ```
-Abrir **http://localhost:8080** en el navegador.
+Navigate to **http://localhost:8080** in your web browser.
 
-### Opción C: Ejecución Directa con Python
+### Mode C: Python Direct Execution & Test Suite
 ```bash
-# 1. Instalar requerimientos
+# 1. Install dependencies
 pip install -r requirements.txt
 
-# 2. Ejecutar suite de pruebas unitarias (8/8 tests)
+# 2. Run unit test suite (8/8 automated tests)
 python -m unittest discover tests
 
-# 3. Compilar el portal web interactivo
+# 3. Compile the standalone portal
 python generar_app_tactica.py
 
-# 4. Servir localmente
+# 4. Start the local server
 python app_server.py
 ```
 
 ---
 
-## 📁 5. Estructura Oficial del Repositorio
+## 📁 5. Repository Structure
 
 ```text
 HackatonNASA/
 ├── docs/
-│   └── INFORME_EQUIPO_Y_PRESENTACION_MVP.md   # 📑 Guía maestra para pitch, slides e informe oficial NASA
+│   └── INFORME_EQUIPO_Y_PRESENTACION_MVP.md   # 📑 Official Master Report: Pitch Guide & 99.0/100 Evaluation
 ├── data/
-│   └── raw/                                   # Caché local y series históricas FIRMS (2000-2026)
+│   └── raw/                                   # Local cache & NASA FIRMS 2000-2026 historical archives
 ├── output/
-│   ├── index.html                             # 📱 Portal Oficial Unificado SeMF (13.8 MB, 100% autónomo)
-│   ├── app_tactica_mobile.html                # Interfaz mobile-first consolidada
-│   ├── dashboard_data.json                    # Puntos NRT activos, clusters DBSCAN y cinemática
-│   ├── historico_riesgo_grid.json             # Cuadrícula histórica de 26 años para el calendario
-│   ├── puntos_anuales.json                    # Registro anualizado de anomalías térmicas
-│   ├── analisis_estadistico_sensores.png      # Gráficos comparativos de distribución y FRP
-│   ├── focos_calor_normalizados.csv           # Base de datos tabular normalizada
-│   └── perimetros_incendios.geojson           # Geometrías espaciales para QGIS y ArcGIS
+│   ├── index.html                             # 📱 Official SeMF Standalone Web Portal (13.8 MB, 100% self-contained)
+│   ├── app_tactica_mobile.html                # Consolidated Mobile-First Tactical Interface
+│   ├── dashboard_data.json                    # Active NRT detections, DBSCAN clusters & kinematics
+│   ├── historico_riesgo_grid.json             # 26-year historical risk grid for the seasonal calendar
+│   ├── puntos_anuales.json                    # Annual thermal anomaly distribution dataset
+│   ├── analisis_estadistico_sensores.png      # Comparative sensor distribution and FRP plots
+│   ├── focos_calor_normalizados.csv           # Harmonized tabular fire detection database
+│   └── perimetros_incendios.geojson           # Standard OGC GeoJSON polygons for QGIS and ArcGIS
 ├── tests/
-│   └── test_pipeline.py                       # 🧪 Suite de pruebas unitarias automatizadas (8/8 OK)
-├── app_server.py                              # Servidor HTTP local con endpoint de pipeline
-├── config.yaml                                # Parámetros geográficos y umbrales satelitales
-├── docker-compose.yml & Dockerfile            # Configuración de contenedorización
-├── docker-entrypoint.sh                       # Script de inicialización automatizada
-├── generar_app_tactica.py                     # Compilador autónomo del portal SeMF
-├── pipeline_incendios_nasa.py                 # Pipeline de armonización científica y DBSCAN
-├── procesar_historico_firms.py                # Procesador de series históricas MODIS/VIIRS
-├── requirements.txt                           # Dependencias de Python
-├── vercel.json & .vercelignore                # Configuración de despliegue estático en Vercel
-└── README.md                                  # Documentación maestra del proyecto
+│   └── test_pipeline.py                       # 🧪 Automated unit test suite (8/8 passing)
+├── app_server.py                              # Local HTTP server with on-demand pipeline trigger
+├── config.yaml                                # Geographic bounding box & satellite sensor parameters
+├── docker-compose.yml & Dockerfile            # Production-ready Docker configuration
+├── docker-entrypoint.sh                       # Automated startup and cache initialization script
+├── generar_app_tactica.py                     # Autonomous compiler generating the interactive portal
+├── pipeline_incendios_nasa.py                 # Core scientific harmonization & DBSCAN clustering engine
+├── procesar_historico_firms.py                # 2000-2026 MODIS/VIIRS historical time series processor
+├── requirements.txt                           # Python package dependencies
+├── vercel.json & .vercelignore                # Static deployment configuration for Vercel CDN
+└── README.md                                  # Official project documentation
 ```
 
 ---
 
-## 📑 6. Documentación Adicional y Presentación
+## 👥 6. Team: Maxwell Crew
 
-- Para consultar el desglose de puntuación (99.0/100), el guion para el pitch de 3-4 minutos y las referencias bibliográficas oficiales de NASA, consulta el archivo:
-  👉 **[docs/INFORME_EQUIPO_Y_PRESENTACION_MVP.md](docs/INFORME_EQUIPO_Y_PRESENTACION_MVP.md)**
+| Member | Role & Key Contributions |
+| :--- | :--- |
+| **Joel Figueroa** | Lead Software Architecture, Web Application Development, Vercel Deployment & System Integration |
+| **Juan Ibañez** | Scientific Data Analysis, Sensor Footprint Calculations & Statistical Modeling |
+| **Marcos Moleker** | Satellite Data Ingestion, FIRMS API Integration & Historical Time Series Harmonization |
+| **Nicolas Calderon** | Geospatial Engine, Geodetic Haversine DBSCAN Clustering & Kinematic Algorithms |
+| **Juan Nicolas Muñoz** | UI/UX Tactical Design, Interactive Leaflet Mapping & Turf.js Propagation Cones |
+| **Vale Gregorio** | Emergency Routing Systems, OSRM Road Evacuation Logic & Disaster Preparedness Documentation |
 
 ---
 
-## ⚖️ 7. Licencia
+## ⚖️ 7. License & Acknowledgments
 
-Este proyecto fue desarrollado en el marco del **NASA Space Apps Challenge 2026** bajo la licencia [MIT](LICENSE). Datos provistos por NASA FIRMS (Earthdata EOSDIS).
+This project is developed for the **NASA Space Apps Challenge 2026** under the [MIT License](LICENSE).  
+We acknowledge the use of data and imagery from LANCE FIRMS operated by the NASA Goddard Space Flight Center / Earth Science Data and Information System (ESDIS) project.
