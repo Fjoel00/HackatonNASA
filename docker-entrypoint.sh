@@ -17,6 +17,7 @@ else
 fi
 
 echo "Compilando interfaz SeMF oficial en output/index.html..."
+rm -f output/app_tactica_mobile.html output/index.html
 python generar_app_tactica.py
 
 echo "Aplicación SeMF disponible en http://localhost:8080"

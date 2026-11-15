@@ -24,18 +24,22 @@ import json
 
 def get_template():
     json_path = os.path.join("output", "dashboard_data.json")
+    embedded_data = {}
     if os.path.exists(json_path):
-        with open(json_path, "r", encoding="utf-8") as f:
-            embedded_data = json.load(f)
-    else:
-        embedded_data = {}
+        try:
+            with open(json_path, "r", encoding="utf-8") as f:
+                embedded_data = json.load(f)
+        except Exception as e:
+            print(f"⚠️ Aviso leyendo {json_path}: {e}")
 
     hist_path = os.path.join("output", "historico_riesgo_grid.json")
+    embedded_hist = {}
     if os.path.exists(hist_path):
-        with open(hist_path, "r", encoding="utf-8") as f:
-            embedded_hist = json.load(f)
-    else:
-        embedded_hist = {}
+        try:
+            with open(hist_path, "r", encoding="utf-8") as f:
+                embedded_hist = json.load(f)
+        except Exception as e:
+            print(f"⚠️ Aviso leyendo {hist_path}: {e}")
 
     json_str = json.dumps(embedded_data, ensure_ascii=False)
     hist_str = json.dumps(embedded_hist, ensure_ascii=False)
@@ -131,6 +135,34 @@ def get_template():
     }
     @keyframes dash-animation {
       to { stroke-dashoffset: -16; }
+    }
+    .tactical-compass-dial {
+      position: relative;
+      width: 44px;
+      height: 44px;
+      border-radius: 9999px;
+      background: radial-gradient(circle, #1e293b 0%, #0f172a 100%);
+      border: 1.5px solid #334155;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.25);
+    }
+    .compass-needle {
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform-origin: center center;
+    }
+    .escape-floating-badge {
+      background: rgba(15, 23, 42, 0.94);
+      color: #34D399;
+      border: 1.5px solid #10B981;
+      border-radius: 9999px;
+      padding: 3px 9px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 10px;
+      font-weight: 800;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      transform: translate(-50%, -50%);
+      display: inline-block;
+      letter-spacing: 0.03em;
     }
     .current-week-pulse {
       animation: border-pulse 1.8s infinite;
@@ -230,7 +262,7 @@ def get_template():
         <button id="tab-btn-tactical" onclick="switchMainTab('tactical')"
                 class="view-tab-btn px-4 py-2 rounded-full transition-all duration-200 flex items-center gap-2 text-slate-600 hover:text-slate-900">
           <span>🛰️🛡️</span>
-          <span>Monitor NRT & SeMF Táctico</span>
+          <span>SeMF</span>
         </button>
       </nav>
 
@@ -473,10 +505,25 @@ def get_template():
           </div>
         </div>
       </div>
-      <div class="text-right bg-black/25 px-3 py-1 rounded-2xl border border-white/25">
-        <div class="text-[9px] uppercase tracking-wider text-red-100 font-bold">Tiempo de Impacto (ETA)</div>
-        <div id="fsm-eta-display" class="text-lg font-mono font-black tracking-tight text-white">
-          -- MIN
+      <div class="flex items-center gap-2">
+        <!-- Píldora Táctica de Rumbo de Evacuación -->
+        <div id="fsm-bearing-pill" class="flex items-center gap-2 bg-black/25 px-3 py-1 rounded-2xl border border-white/25">
+          <div id="fsm-bearing-arrow" class="text-emerald-400 font-black text-base transition-transform duration-500 leading-none" style="transform: rotate(0deg);">
+            ▲
+          </div>
+          <div class="text-left">
+            <div class="text-[8px] uppercase tracking-wider text-slate-200 font-bold">Rumbo Huida</div>
+            <div id="fsm-bearing-text" class="text-xs font-mono font-black tracking-tight text-white leading-tight">
+              --
+            </div>
+          </div>
+        </div>
+
+        <div class="text-right bg-black/25 px-3 py-1 rounded-2xl border border-white/25">
+          <div class="text-[9px] uppercase tracking-wider text-red-100 font-bold">Tiempo de Impacto (ETA)</div>
+          <div id="fsm-eta-display" class="text-lg font-mono font-black tracking-tight text-white">
+            -- MIN
+          </div>
         </div>
       </div>
     </div>
@@ -509,6 +556,10 @@ def get_template():
         <span id="hud-telemetry-mode" class="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold">
           🛰️ Clima Real Open-Meteo
         </span>
+        <div class="h-3.5 w-px bg-slate-200"></div>
+        <span id="gps-status-badge" class="text-[10px] px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 font-bold flex items-center gap-1" title="Estado de geolocalización del usuario">
+          📍 GPS: Adquiriendo...
+        </span>
       </div>
 
       <!-- Badge 30-30-30 -->
@@ -521,59 +572,27 @@ def get_template():
     <main class="flex-1 min-h-0 relative overflow-hidden flex flex-col">
       <div id="map"></div>
 
+      <!-- Banner Flotante de Modo Inyección de Foco -->
+      <div id="inject-fire-banner" class="hidden absolute top-4 left-1/2 transform -translate-x-1/2 z-30 bg-slate-900/95 text-white px-4 py-2 rounded-full shadow-2xl border border-red-500/50 flex items-center gap-3 text-xs font-bold pointer-events-auto">
+        <span class="animate-pulse text-red-400">🎯 Haga clic en cualquier punto del mapa para colocar el foco simulado</span>
+        <button onclick="toggleInjectFireMode(false)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded-full border border-slate-600">Cancelar</button>
+      </div>
+
       <!-- =================================================================== -->
-      <!-- OVERLAYS: CONSOLA OPERATIVA (MONITOR NRT & SeMF TÁCTICO)            -->
+      <!-- OVERLAYS: CONSOLA OPERATIVA (SeMF)                                  -->
       <!-- =================================================================== -->
       <div id="tactical-overlays" class="hidden absolute top-3 left-3 bottom-3 w-[370px] sm:w-[410px] z-20 pointer-events-none flex flex-col">
         <div class="bg-white/95 backdrop-blur-xl rounded-3xl border border-slate-200/80 p-4 shadow-xl pointer-events-auto overflow-y-auto space-y-3.5 max-h-full text-slate-800">
 
-          <!-- BLOQUE 1: TELEMETRÍA NRT SATELITAL (NASA FIRMS MODIS & VIIRS) -->
-          <div class="space-y-2.5">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-2">
-              <span class="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                <span>🛰️</span> Detección Satelital NRT
-              </span>
-              <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold">
-                NASA FIRMS Armonizado
-              </span>
-            </div>
-
-            <!-- KPIs de Fusión Multi-Sensor -->
-            <div class="grid grid-cols-2 gap-2 text-xs">
-              <div class="bg-slate-50 p-2 rounded-2xl border border-slate-200/70 flex items-center justify-between">
-                <span class="text-slate-500 text-[11px]">VIIRS (375m):</span>
-                <b id="mon-kpi-viirs" class="text-orange-600 font-black">--</b>
-              </div>
-              <div class="bg-slate-50 p-2 rounded-2xl border border-slate-200/70 flex items-center justify-between">
-                <span class="text-slate-500 text-[11px]">MODIS (1km):</span>
-                <b id="mon-kpi-modis" class="text-red-600 font-black">--</b>
-              </div>
-              <div class="bg-slate-50 p-2 rounded-2xl border border-slate-200/70 flex items-center justify-between">
-                <span class="text-slate-500 text-[11px]">Frentes Activos:</span>
-                <b id="mon-kpi-fronts" class="text-emerald-700 font-black">-- frentes</b>
-              </div>
-              <div class="bg-slate-50 p-2 rounded-2xl border border-slate-200/70 flex items-center justify-between">
-                <span class="text-slate-500 text-[11px]">FRP Pico:</span>
-                <b id="mon-kpi-peak-frp" class="text-red-600 font-black">-- MW</b>
-              </div>
-            </div>
-
-            <!-- Selector de Región / Foco -->
-            <div class="flex items-center gap-2">
-              <select id="select-region" onchange="changeRegion(this.value)"
-                      class="w-full bg-slate-50 hover:bg-slate-100 text-slate-800 text-xs font-semibold py-1.5 px-2.5 rounded-xl border border-slate-200 outline-none cursor-pointer transition-all">
-                <option value="Sierras_Cordoba_SanLuis" selected>📍 Región: Córdoba y San Luis</option>
-                <option value="Trapiche_SanLuis">🔥 Foco: El Trapiche / San Luis</option>
-                <option value="Traslasierra_Cordoba">🔥 Foco: Mina Clavero (Cba)</option>
-                <option value="Cordoba_SierrasChicas">🔥 Foco: Sierras Chicas / Punilla</option>
-              </select>
-            </div>
-
-            <!-- Píldoras de Frentes Consolidados -->
-            <div class="space-y-1">
+          <!-- SELECTOR COMPACTO DE FRENTES EN ESCENA CON VENTANA 24H -->
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
               <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Frentes en Escena:</span>
-              <div id="brigade-cluster-pills" class="flex items-center gap-1.5 overflow-x-auto pb-1"></div>
+              <span id="tactical-window-badge" class="text-[9px] px-2 py-0.5 rounded-full font-bold bg-slate-100 text-slate-600 border border-slate-200" title="Ventana Satelital Táctica">
+                ⏱️ Últimas 24h
+              </span>
             </div>
+            <div id="brigade-cluster-pills" class="flex items-center gap-1.5 overflow-x-auto pb-1"></div>
           </div>
 
           <!-- BLOQUE 2: CINEMÁTICA Y PROPAGACIÓN DEL FRENTE -->
@@ -611,35 +630,40 @@ def get_template():
           <div class="space-y-2.5 border-t border-slate-100 pt-3">
             <div class="flex items-center justify-between">
               <span class="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                <span>🧭</span> Ruta de Escape y Evacuación
-              </span>
-              <span id="routing-engine-badge" class="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold flex items-center gap-1">
-                <span>🛣️</span> OSRM VIAL REAL
+                <span>🧭</span> Brújula & Evacuación Táctica
               </span>
             </div>
 
-            <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200/70 space-y-2 text-xs">
-              <div class="flex items-center justify-between text-slate-600 text-[11px]">
-                <span class="font-medium">Vía de Escape:</span>
-                <span id="routing-via-text" class="text-emerald-700 font-bold">Red Vial Oficial</span>
+            <!-- TARJETA TÁCTICA DE SUPERVIVENCIA: BRÚJULA Y RUMBO -->
+            <div id="escape-card-container" class="rounded-2xl p-2.5 border transition-all duration-300 bg-slate-900 text-white border-slate-800 shadow-md">
+              <div class="flex items-center gap-3">
+                <!-- Mini brújula giroscópica táctica -->
+                <div class="tactical-compass-dial flex items-center justify-center shrink-0">
+                  <span class="text-[7px] text-slate-400 absolute top-0.5 font-mono font-bold leading-none">N</span>
+                  <span class="text-[7px] text-slate-400 absolute bottom-0.5 font-mono font-bold leading-none">S</span>
+                  <span class="text-[7px] text-slate-400 absolute left-1 font-mono font-bold leading-none">O</span>
+                  <span class="text-[7px] text-slate-400 absolute right-1 font-mono font-bold leading-none">E</span>
+                  <div id="escape-compass-needle" class="compass-needle text-emerald-400 text-lg font-black select-none leading-none" style="transform: rotate(0deg);">
+                    ▲
+                  </div>
+                </div>
+
+                <!-- Rumbo y estado de vía -->
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between gap-1 mb-0.5">
+                    <span class="text-[9px] uppercase tracking-wider font-bold text-slate-400">Rumbo de Huida</span>
+                    <span id="escape-status-badge" class="text-[9px] px-2 py-0.5 rounded-full font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                      🛡️ Seguro
+                    </span>
+                  </div>
+                  <div id="escape-bearing-label" class="text-sm font-black text-white truncate font-mono">
+                    Zona Despejada
+                  </div>
+                  <div id="escape-subtext" class="text-[10px] text-slate-300 truncate">
+                    Sin necesidad de evacuación
+                  </div>
+                </div>
               </div>
-              <div class="grid grid-cols-3 gap-2 text-center">
-                <div class="bg-white p-2 rounded-xl border border-slate-200/70 shadow-sm">
-                  <div class="text-[10px] text-slate-400 font-medium">Distancia</div>
-                  <div id="stat-route-distance" class="text-xs font-black text-slate-900">-- km</div>
-                </div>
-                <div class="bg-white p-2 rounded-xl border border-slate-200/70 shadow-sm">
-                  <div class="text-[10px] text-slate-400 font-medium">Tiempo</div>
-                  <div id="stat-route-time" class="text-xs font-black text-emerald-600">-- min</div>
-                </div>
-                <div class="bg-white p-2 rounded-xl border border-slate-200/70 shadow-sm">
-                  <div class="text-[10px] text-slate-400 font-medium">Rumbo Escape</div>
-                  <div id="stat-route-cardinal" class="text-xs font-black text-red-600">--</div>
-                </div>
-              </div>
-              <p id="user-escape-instruction" class="text-[11px] text-slate-600 pt-0.5 leading-snug">
-                Arrastre el marcador GPS o haga clic en el mapa para recalcular su ruta de escape a barlovento.
-              </p>
             </div>
 
             <div class="grid grid-cols-2 gap-2">
@@ -647,41 +671,63 @@ def get_template():
                       class="bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 px-3 rounded-full text-xs flex items-center justify-center gap-1.5 shadow-md transition-all active:scale-95">
                 <span>🗺️</span> Abrir en Maps
               </button>
-              <button onclick="openSosModal()"
+              <button id="btn-pedir-auxilio" onclick="openSosModal()"
                       class="bg-red-600 hover:bg-red-700 text-white font-black py-2.5 px-3 rounded-full text-xs flex items-center justify-center gap-1.5 shadow-md shadow-red-500/30 transition-all active:scale-95">
                 <span>🚨</span> PEDIR AUXILIO
               </button>
             </div>
           </div>
 
-          <!-- BLOQUE 4: INYECCIÓN OPERATIVA ÚNICA (INCIDENTE SATELITAL Y RESPUESTA TÁCTICA) -->
-          <div class="space-y-2.5 border-t border-slate-100 pt-3">
+          <!-- BLOQUE 4: INYECCIÓN OPERATIVA (DESPLEGABLE CON INTERRUPTOR TIPO ANDROID) -->
+          <div class="space-y-2 border-t border-slate-100 pt-3">
             <div class="flex items-center justify-between">
               <span class="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
                 <span>🧪</span> Inyección Operativa
               </span>
-              <span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
-                NRT & Táctico
-              </span>
-            </div>
-            <p class="text-[11px] text-slate-500 leading-snug">
-              Inyecte un foco en el mapa o varíe viento/humedad para evaluar en vivo las detecciones satelitales, conos de avance y rutas de escape OSRM.
-            </p>
-
-            <div class="grid grid-cols-2 gap-2">
-              <button id="btn-inject-fire" onclick="toggleInjectFireMode()"
-                      class="py-2 px-2.5 rounded-full text-[11px] font-bold bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 transition flex items-center justify-center gap-1">
-                <span>🔥</span>
-                <span id="btn-inject-fire-text">Plantar Foco en Mapa</span>
-              </button>
-              <button onclick="restoreLiveTelemetry()"
-                      class="py-2 px-2.5 rounded-full text-[11px] font-bold bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 transition flex items-center justify-center gap-1">
-                <span>🔄</span>
-                <span>Restaurar Real</span>
-              </button>
+              <label class="relative inline-flex items-center cursor-pointer" title="Activar / Desactivar Simulación Operativa">
+                <input id="toggle-operational-injection" type="checkbox" class="sr-only peer" onchange="toggleOperationalInjection(this.checked)">
+                <div class="w-10 h-5 bg-slate-300 rounded-full peer peer-checked:bg-amber-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5 shadow-inner"></div>
+              </label>
             </div>
 
-            <!-- Sliders de Inyección Meteorológica -->
+            <div id="injection-panel-body" class="hidden space-y-2.5 pt-1.5">
+              <p class="text-[11px] text-slate-500 leading-snug">
+                Modo Simulación activo: los focos reales satelitales quedan ocultos para probar escenarios dinámicos controlados.
+              </p>
+
+              <!-- Selector de Severidad de Foco -->
+              <div class="flex items-center justify-between text-[11px] bg-slate-50 p-2 rounded-xl border border-slate-200/70">
+                <span class="font-bold text-slate-700 flex items-center gap-1"><span>🔥</span> Severidad:</span>
+                <select id="sim-fire-severity" class="text-[10px] bg-white border border-slate-300 rounded-lg px-2 py-1 font-semibold text-slate-800">
+                  <option value="moderate">Moderado (120 MW, ~1.0 km)</option>
+                  <option value="critical" selected>Crítico (350 MW, ~2.5 km)</option>
+                  <option value="catastrophic">Catastrófico (750 MW, ~4.2 km)</option>
+                </select>
+              </div>
+
+              <!-- Botones de Acción Táctica -->
+              <div class="grid grid-cols-2 gap-2">
+                <button id="btn-inject-fire" onclick="toggleInjectFireMode()"
+                        class="py-2 px-2.5 rounded-full text-[11px] font-bold bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 transition flex items-center justify-center gap-1 shadow-sm active:scale-95">
+                  <span>🎯</span>
+                  <span id="btn-inject-fire-text">Plantar en Mapa</span>
+                </button>
+                <button id="btn-quick-threat-fire" onclick="injectQuickThreatScenario()"
+                        class="py-2 px-2.5 rounded-full text-[11px] font-bold bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 transition flex items-center justify-center gap-1 shadow-sm active:scale-95"
+                        title="Genera un frente a barlovento amenazando su ubicación">
+                  <span>⚡</span>
+                  <span>Foco Amenazante</span>
+                </button>
+              </div>
+
+              <!-- Botón Limpiar Focos Inyectados -->
+              <button id="btn-clear-injected-fires" onclick="clearAllInjectedFires()"
+                      class="w-full py-1.5 px-3 rounded-full text-[10px] font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition flex items-center justify-center gap-1.5 active:scale-95">
+                <span>🗑️</span>
+                <span>Limpiar Focos Inyectados (<span id="lbl-injected-count">0</span>)</span>
+              </button>
+
+              <!-- Sliders de Inyección Meteorológica -->
             <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200/70 space-y-2.5 text-[11px]">
               <div>
                 <div class="flex justify-between text-slate-700 font-medium">
@@ -723,6 +769,7 @@ def get_template():
                          class="w-full h-1.5 bg-slate-200 rounded-lg accent-emerald-600 cursor-pointer mt-1" />
                 </div>
               </div>
+            </div>
             </div>
           </div>
 
@@ -816,11 +863,17 @@ def get_template():
         rectLayer: null,
         cellsLayer: null
       },
-      // Estado de las Pestañas 2 y 3 (Monitor NRT + Táctico/Escape + Simulador)
+      // Estado de la Pestaña SeMF (Monitor + Táctico + Simulador)
       selectedCluster: null,
       injectedClusters: [],
+      injectedPoints: [],
+      isOperationalInjectionActive: false,
       isInjectingFire: false,
       isUsingInjectedWeather: false,
+      isRealGpsActive: false,
+      userGpsAccuracy: null,
+      gpsAccuracyCircle: null,
+      _hasInitiallyCentered: false,
       userLocation: { lat: -33.2380, lon: -65.9510 },
       userMarker: null,
       weather: {
@@ -834,11 +887,11 @@ def get_template():
         modisPoints: null,
         firePolygons: null,
         projectionCones: null,
-        vectorArrows: null,
         safeZones: null,
         escapeRoute: null
       },
       currentSafeZoneTarget: null,
+      routeRequestSeq: 0,
       CORDOBA_SANLUIS_BOUNDS: L.latLngBounds(
         L.latLng(-36.05, -67.55),
         L.latLng(-29.40, -61.65)
@@ -866,6 +919,7 @@ def get_template():
       refreshDataSourceStatus().catch(e => console.warn('[SeMF] Estado backend:', e));
       try { await fetchRealWeather(); } catch (e) { console.warn('[SeMF] Open-Meteo:', e); }
       safeRun('recalculatePredictiveEngine', recalculatePredictiveEngine);
+      safeRun('requestUserRealLocation', () => requestUserRealLocation(false));
     });
 
     window.addEventListener('resize', () => {
@@ -961,6 +1015,9 @@ def get_template():
         mapView.classList.remove('hidden');
         if (tacOverlays) tacOverlays.classList.remove('hidden');
         if (fsmBanner) fsmBanner.classList.remove('hidden');
+        if (!AppState.isRealGpsActive && !AppState.isOperationalInjectionActive) {
+          requestUserRealLocation(false);
+        }
         setTimeout(() => { if (map) map.invalidateSize(true); }, 80);
         setTimeout(() => {
           if (map) map.invalidateSize(true);
@@ -1678,37 +1735,39 @@ def get_template():
         attribution: 'Esri World Imagery'
       }).addTo(map);
 
-      const darkLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        maxZoom: 19,
-        subdomains: 'abcd',
-        attribution: 'CARTO'
-      });
-
       const osmLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: 'OpenStreetMap'
       });
 
+      // Orden jerárquico de panes para que los puntos satelitales y vectores queden sobre los polígonos
+      map.createPane('conesPane');
+      map.getPane('conesPane').style.zIndex = 410;
+
+      map.createPane('clustersPane');
+      map.getPane('clustersPane').style.zIndex = 420;
+
+      map.createPane('satellitePointsPane');
+      map.getPane('satellitePointsPane').style.zIndex = 450;
+
       addProvinceMaskToMap(map);
 
-      AppState.layers.viirsPoints = L.featureGroup().addTo(map);
-      AppState.layers.modisPoints = L.featureGroup().addTo(map);
-      AppState.layers.firePolygons = L.featureGroup().addTo(map);
       AppState.layers.projectionCones = L.featureGroup().addTo(map);
-      AppState.layers.vectorArrows = L.featureGroup().addTo(map);
+      AppState.layers.firePolygons = L.featureGroup().addTo(map);
+      AppState.layers.modisPoints = L.featureGroup().addTo(map);
+      AppState.layers.viirsPoints = L.featureGroup().addTo(map);
       AppState.layers.safeZones = L.featureGroup().addTo(map);
       AppState.layers.escapeRoute = L.featureGroup().addTo(map);
 
       L.control.layers({
         "🛰️ Satélite Esri": satLayer,
-        "🌑 Táctico Oscuro": darkLayer,
         "🗺️ Calles (OSM)": osmLayer
       }, {
         "📐 Perímetros Frentes": AppState.layers.firePolygons,
         "🧭 Conos Predictivos (1h/3h)": AppState.layers.projectionCones,
         "🟠 Focos VIIRS (375m)": AppState.layers.viirsPoints,
         "🔴 Focos MODIS (1km)": AppState.layers.modisPoints,
-        "🛡️ Ruta de Escape OSRM": AppState.layers.escapeRoute
+        "🧭 Ruta y Vector de Evacuación": AppState.layers.escapeRoute
       }, { position: 'topright' }).addTo(map);
 
       const userIcon = L.divIcon({
@@ -1720,97 +1779,296 @@ def get_template():
       AppState.userMarker = L.marker([initialLat, initialLon], {
         icon: userIcon,
         draggable: true
-      }).addTo(map).bindPopup("<b>📍 Posición del Usuario</b><br>Arrástreme para recalcular ETA y Ruta de Escape OSRM.");
+      }).addTo(map).bindPopup("<b>📍 Posición del Usuario</b><br>Arrástreme o use el botón GPS para ubicarse.");
 
       AppState.userMarker.on('dragend', function (e) {
         const pos = e.target.getLatLng();
         AppState.userLocation.lat = pos.lat;
         AppState.userLocation.lon = pos.lng;
+        if (AppState.gpsAccuracyCircle) {
+          AppState.gpsAccuracyCircle.setLatLng(pos);
+        }
         recalculatePredictiveEngine();
       });
 
+      // Botón flotante para recentrar en GPS Real
+      const gpsControl = L.control({ position: 'topleft' });
+      gpsControl.onAdd = function() {
+        const div = L.DomUtil.create('div', 'leaflet-bar');
+        const btn = L.DomUtil.create('a', '', div);
+        btn.innerHTML = '📍';
+        btn.href = '#';
+        btn.title = 'Centrar en mi ubicación GPS real';
+        btn.style.fontSize = '15px';
+        btn.style.width = '34px';
+        btn.style.height = '34px';
+        btn.style.lineHeight = '34px';
+        btn.style.textAlign = 'center';
+        btn.style.backgroundColor = '#0F172A';
+        btn.style.color = '#38BDF8';
+        btn.style.display = 'block';
+        btn.onclick = function(e) {
+          L.DomEvent.preventDefault(e);
+          L.DomEvent.stopPropagation(e);
+          requestUserRealLocation(true);
+        };
+        return div;
+      };
+      gpsControl.addTo(map);
+
       map.on('click', function(e) {
         if (AppState.isInjectingFire) {
-          injectSimulatedFireAt(e.latlng.lat, e.latlng.lng);
+          const sevEl = document.getElementById('sim-fire-severity');
+          const severity = sevEl ? sevEl.value : 'critical';
+          injectSimulatedFireAt(e.latlng.lat, e.latlng.lng, severity);
           toggleInjectFireMode(false);
           return;
         }
         AppState.userLocation.lat = e.latlng.lat;
         AppState.userLocation.lon = e.latlng.lng;
         AppState.userMarker.setLatLng(e.latlng);
+        if (AppState.gpsAccuracyCircle) {
+          AppState.gpsAccuracyCircle.setLatLng(e.latlng);
+        }
         recalculatePredictiveEngine();
       });
     }
 
+    // =========================================================================
+    // GEOLOCALIZACIÓN GPS REAL DEL DISPOSITIVO
+    // =========================================================================
+    function requestUserRealLocation(autoCenter = true) {
+      const statusBadge = document.getElementById('gps-status-badge');
+      if (!navigator.geolocation) {
+        if (statusBadge) {
+          statusBadge.innerText = '📍 GPS: No Soportado';
+          statusBadge.className = 'text-[10px] px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500 border border-slate-200 font-bold';
+        }
+        return;
+      }
+
+      if (statusBadge) {
+        statusBadge.innerText = '📍 GPS: Adquiriendo...';
+        statusBadge.className = 'text-[10px] px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 font-bold animate-pulse';
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const lat = pos.coords.latitude;
+          const lon = pos.coords.longitude;
+          const accuracy = Math.round(pos.coords.accuracy || 20);
+
+          AppState.userLocation.lat = lat;
+          AppState.userLocation.lon = lon;
+          AppState.userGpsAccuracy = accuracy;
+          AppState.isRealGpsActive = true;
+
+          if (AppState.userMarker) {
+            AppState.userMarker.setLatLng([lat, lon]);
+            AppState.userMarker.setPopupContent(`<b>📍 Mi Ubicación Real (GPS)</b><br>Precisión: ±${accuracy} m<br>Coordenadas: ${lat.toFixed(5)}, ${lon.toFixed(5)}`);
+          }
+
+          if (AppState.gpsAccuracyCircle) {
+            AppState.gpsAccuracyCircle.setLatLng([lat, lon]).setRadius(accuracy);
+          } else if (map) {
+            AppState.gpsAccuracyCircle = L.circle([lat, lon], {
+              radius: accuracy,
+              color: '#0284C7',
+              fillColor: '#38BDF8',
+              fillOpacity: 0.15,
+              weight: 1.5,
+              dashArray: '4, 4'
+            }).addTo(map);
+          }
+
+          if (statusBadge) {
+            statusBadge.innerText = `📍 GPS En Vivo (±${accuracy}m)`;
+            statusBadge.className = 'text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold';
+          }
+
+          if (autoCenter && map) {
+            map.setView([lat, lon], 14);
+          }
+
+          recalculatePredictiveEngine();
+        },
+        (err) => {
+          console.warn('[SeMF] Error o rechazo de GPS:', err);
+          AppState.isRealGpsActive = false;
+          if (statusBadge) {
+            statusBadge.innerText = '📍 GPS: Táctico / Manual';
+            statusBadge.className = 'text-[10px] px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 font-bold';
+          }
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 }
+      );
+    }
+
+    // =========================================================================
+    // FASE B: FILTRO TÁCTICO DE VENTANA DE 24 HORAS (DINÁMICO Y DESLIZANTE)
+    // =========================================================================
+    const TACTICAL_MAX_AGE_MS = 24 * 60 * 60 * 1000;
+    const CLOCK_SKEW_TOLERANCE_MS = 2 * 60 * 60 * 1000; // 2 horas de margen para desfases UTC/reloj
+
+    function parseSatelliteUtcMs(tsStr) {
+      if (!tsStr || typeof tsStr !== 'string') return NaN;
+      const clean = tsStr.trim();
+      const iso = clean.includes('T')
+        ? (clean.endsWith('Z') ? clean : `${clean}Z`)
+        : `${clean.replace(' ', 'T')}Z`;
+      return Date.parse(iso);
+    }
+
+    function getDynamicTacticalReferenceMs() {
+      const clientNowMs = Date.now();
+      const points = (AppState.dashboardData && Array.isArray(AppState.dashboardData.points)) ? AppState.dashboardData.points : [];
+      if (!points.length) return clientNowMs;
+
+      let latestTelemetryMs = 0;
+      for (const pt of points) {
+        const ms = parseSatelliteUtcMs(pt.acq_datetime);
+        if (!isNaN(ms) && ms > latestTelemetryMs) latestTelemetryMs = ms;
+      }
+
+      // 1. Si el pase satelital más reciente está ligeramente adelantado al reloj local por desfase UTC:
+      if (latestTelemetryMs > clientNowMs) {
+        return latestTelemetryMs;
+      }
+      // 2. Si estamos en un dataset histórico grabado de prueba (más de 48h de antigüedad):
+      if (clientNowMs - latestTelemetryMs > 48 * 3600 * 1000) {
+        return latestTelemetryMs;
+      }
+      // 3. Operación estándar en vivo en tiempo real continuo:
+      return clientNowMs;
+    }
+
+    function isWithinTactical24hWindow(tsStr) {
+      const itemMs = parseSatelliteUtcMs(tsStr);
+      if (isNaN(itemMs)) return false;
+      const refMs = getDynamicTacticalReferenceMs();
+      const ageMs = refMs - itemMs;
+      // Dinámico: no más de 24h de antigüedad, tolerando hasta 2h de skew UTC
+      return ageMs <= TACTICAL_MAX_AGE_MS && ageMs >= -CLOCK_SKEW_TOLERANCE_MS;
+    }
+
+    function updateTacticalWindowBadge() {
+      const badge = document.getElementById('tactical-window-badge');
+      if (!badge) return;
+      const refMs = getDynamicTacticalReferenceMs();
+      const isLive = Math.abs(Date.now() - refMs) < 60000;
+      const refDate = new Date(refMs);
+      const timeStr = `${String(refDate.getUTCHours()).padStart(2, '0')}:${String(refDate.getUTCMinutes()).padStart(2, '0')} UTC`;
+      badge.innerText = isLive ? '⏱️ Ventana: Últimas 24h' : `⏱️ Ventana: 24h (${timeStr})`;
+      badge.title = `Filtro Táctico Activo: Focos de las últimas 24 horas (Referencia: ${refDate.toISOString()})`;
+    }
+
     function getAllTacticalEvents() {
-      const baseEvents = (AppState.dashboardData && AppState.dashboardData.events) ? AppState.dashboardData.events : [];
-      return [... AppState.injectedClusters, ...baseEvents];
+      if (AppState.isOperationalInjectionActive) {
+        return [...AppState.injectedClusters];
+      }
+      const rawEvents = (AppState.dashboardData && Array.isArray(AppState.dashboardData.events))
+        ? AppState.dashboardData.events
+        : [];
+      return rawEvents.filter(ev => ev.is_simulated || isWithinTactical24hWindow(ev.last_detected));
+    }
+
+    async function selectTacticalCluster(ev, centerMap = false) {
+      if (!ev) return;
+      AppState.selectedCluster = ev;
+      updateTacticalWindowBadge();
+      renderClusterPills();
+      updateClusterDisplay();
+      if (!AppState.isOperationalInjectionActive && !AppState.isUsingInjectedWeather) {
+        await fetchRealWeather();
+      }
+      recalculatePredictiveEngine();
+      if (centerMap && map) {
+        map.setView([ev.centroid_lat, ev.centroid_lon], 13);
+      }
+    }
+
+    function getFrpColorStyle(frpMw) {
+      const val = Number(frpMw) || 0;
+      if (val < 50) {
+        return { fill: '#FACC15', stroke: '#CA8A04' }; // Amarillo (< 50 MW)
+      }
+      if (val <= 200) {
+        return { fill: '#FB923C', stroke: '#EA580C' }; // Naranja (50 MW a 200 MW)
+      }
+      if (val <= 500) {
+        return { fill: '#EF4444', stroke: '#B91C1C' }; // Rojo (200 MW a 500 MW)
+      }
+      return { fill: '#881337', stroke: '#4C0519' };   // Rojo-Oscuro / Bordó (> 500 MW)
     }
 
     function loadActiveFireData() {
       const data = AppState.dashboardData;
       const events = getAllTacticalEvents();
-      if (!AppState.selectedCluster && events.length > 0) {
+      if ((!AppState.selectedCluster || !events.some(e => e.event_id === AppState.selectedCluster.event_id)) && events.length > 0) {
         AppState.selectedCluster = events[0];
+      } else if (events.length === 0) {
+        AppState.selectedCluster = null;
       }
 
-      if (data && data.kpis) {
-        const vEl = document.getElementById('mon-kpi-viirs');
-        const mEl = document.getElementById('mon-kpi-modis');
-        const fEl = document.getElementById('mon-kpi-fronts');
-        const pEl = document.getElementById('mon-kpi-peak-frp');
-        if (vEl) vEl.innerText = data.kpis.viirs_detections;
-        if (mEl) mEl.innerText = data.kpis.modis_detections;
-        if (fEl) fEl.innerText = `${events.length} frentes`;
-        if (pEl) pEl.innerText = `${data.kpis.peak_pass_frp_mw} MW`;
-      }
-
-      const monList = document.getElementById('monitor-cluster-list');
-      if (monList) {
-        monList.innerHTML = '';
-        events.forEach(ev => {
-          const item = document.createElement('button');
-          item.className = "w-full text-left p-2 rounded-2xl bg-slate-50 hover:bg-red-50 border border-slate-200/80 text-[11px] flex items-center justify-between gap-2 transition";
-          const locLabel = ev.location_name || 'Sierras de Córdoba y San Luis';
-          item.innerHTML = `<div class="truncate"><div class="text-slate-900 font-bold">${ev.event_id}</div><div class="text-[10px] text-slate-500 truncate">${locLabel}</div></div><span class="text-red-600 font-black shrink-0">${Math.round(ev.frp_peak_mw || 120)} MW</span>`;
-          item.onclick = () => {
-            AppState.selectedCluster = ev;
-            updateClusterDisplay();
-            recalculatePredictiveEngine();
-            map.setView([ev.centroid_lat, ev.centroid_lon], 13);
-          };
-          monList.appendChild(item);
-        });
+      // Encuadre inicial inteligente: centra la cámara en el frente activo principal
+      if (!AppState.isRealGpsActive && AppState.selectedCluster && !AppState._hasInitiallyCentered && map) {
+        AppState._hasInitiallyCentered = true;
+        const cLat = AppState.selectedCluster.centroid_lat;
+        const cLon = AppState.selectedCluster.centroid_lon;
+        AppState.userLocation.lat = cLat - 0.035;
+        AppState.userLocation.lon = cLon;
+        if (AppState.userMarker) {
+          AppState.userMarker.setLatLng([AppState.userLocation.lat, AppState.userLocation.lon]);
+        }
+        map.setView([cLat, cLon], 11);
       }
 
       AppState.layers.viirsPoints.clearLayers();
       AppState.layers.modisPoints.clearLayers();
-      if (data && Array.isArray(data.points)) {
-        data.points.forEach(pt => {
-          const isViirs = pt.sensor_family === 'VIIRS';
-          const popupHtml = `
-            <div style="font-family: monospace; font-size: 11px; min-width: 190px;">
-              <b style="color: ${isViirs ? '#F97316' : '#EF4444'};">${isViirs ? '🟠 VIIRS 375m' : '🔴 MODIS 1km'} (${pt.satellite_name})</b><br>
-              <hr style="margin: 4px 0; border-color: #334155;">
-              <b>FRP:</b> ${pt.frp_mw} MW (${pt.frp_density_mw_km2} MW/km²)<br>
-              <b>Temp. Brillo (4µm):</b> ${pt.temp_ch4_k} K<br>
-              <b>Anomalía ΔT:</b> ${pt.delta_temp_k} K<br>
-              <b>Huella Píxel:</b> ${pt.pixel_area_km2} km²<br>
-              <b>UTC:</b> ${pt.acq_datetime}
-            </div>
-          `;
-          if (isViirs) {
-            L.circleMarker([pt.latitude, pt.longitude], {
-              radius: 4.5, color: '#EA580C', fillColor: '#FB923C', fillOpacity: 0.85, weight: 1.5
-            }).bindPopup(popupHtml).addTo(AppState.layers.viirsPoints);
-          } else {
-            L.circleMarker([pt.latitude, pt.longitude], {
-              radius: 7.5, color: '#B91C1C', fillColor: '#EF4444', fillOpacity: 0.7, weight: 2
-            }).bindPopup(popupHtml).addTo(AppState.layers.modisPoints);
-          }
-        });
-      }
 
+      const pointsToRender = AppState.isOperationalInjectionActive
+        ? AppState.injectedPoints
+        : (data && Array.isArray(data.points)
+            ? data.points.filter(pt => pt.is_simulated || isWithinTactical24hWindow(pt.acq_datetime))
+            : []);
+
+      pointsToRender.forEach(pt => {
+        const isViirs = pt.sensor_family === 'VIIRS';
+        const simTag = pt.is_simulated ? ' [Inyectado]' : '';
+        const cStyle = getFrpColorStyle(pt.frp_mw);
+        const popupHtml = `
+          <div style="font-family: monospace; font-size: 11px; min-width: 190px;">
+            <b style="color: ${cStyle.stroke};">${isViirs ? '🟠 VIIRS 375m' : '🔴 MODIS 1km'} (${pt.satellite_name})${simTag}</b><br>
+            <hr style="margin: 4px 0; border-color: #334155;">
+            <b>FRP:</b> ${pt.frp_mw} MW (${pt.frp_density_mw_km2} MW/km²)<br>
+            <b>Temp. Brillo (4µm):</b> ${pt.temp_ch4_k} K<br>
+            <b>Anomalía ΔT:</b> ${pt.delta_temp_k} K<br>
+            <b>Huella Píxel:</b> ${pt.pixel_area_km2} km²<br>
+            <b>${pt.is_simulated ? 'Estado' : 'UTC'}:</b> ${pt.is_simulated ? 'Inyección Operativa' : pt.acq_datetime}
+          </div>
+        `;
+        if (isViirs) {
+          L.circleMarker([pt.latitude, pt.longitude], {
+            pane: 'satellitePointsPane',
+            radius: pt.is_simulated ? 5.5 : 4.5,
+            color: cStyle.stroke,
+            fillColor: cStyle.fill,
+            fillOpacity: pt.is_simulated ? 0.92 : 0.88,
+            weight: pt.is_simulated ? 2 : 1.5
+          }).bindPopup(popupHtml).addTo(AppState.layers.viirsPoints);
+        } else {
+          L.circleMarker([pt.latitude, pt.longitude], {
+            pane: 'satellitePointsPane',
+            radius: pt.is_simulated ? 8.5 : 7.5,
+            color: cStyle.stroke,
+            fillColor: cStyle.fill,
+            fillOpacity: pt.is_simulated ? 0.85 : 0.78,
+            weight: 2
+          }).bindPopup(popupHtml).addTo(AppState.layers.modisPoints);
+        }
+      });
+
+      updateTacticalWindowBadge();
       renderClusterPills();
       updateClusterDisplay();
     }
@@ -1819,6 +2077,10 @@ def get_template():
       const events = getAllTacticalEvents();
       const brigadeContainer = document.getElementById('brigade-cluster-pills');
       brigadeContainer.innerHTML = '';
+      if (!events.length) {
+        brigadeContainer.innerHTML = '<span class="text-[11px] text-emerald-700 font-semibold italic">Sin frentes activos en las últimas 24 h.</span>';
+        return;
+      }
       events.forEach(ev => {
         const isSel = AppState.selectedCluster && AppState.selectedCluster.event_id === ev.event_id;
         const pill = document.createElement('button');
@@ -1826,19 +2088,19 @@ def get_template():
           isSel ? 'bg-red-600 text-white border-red-600 font-bold shadow-sm' : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100 font-medium'
         }`;
         pill.innerText = `${ev.event_id} (${Math.round(ev.frp_peak_mw || 0)} MW)`;
-        pill.onclick = () => {
-          AppState.selectedCluster = ev;
-          renderClusterPills();
-          updateClusterDisplay();
-          recalculatePredictiveEngine();
-          map.setView([ev.centroid_lat, ev.centroid_lon], 13);
-        };
+        pill.onclick = () => selectTacticalCluster(ev, true);
         brigadeContainer.appendChild(pill);
       });
     }
 
     function updateClusterDisplay() {
-      if (!AppState.selectedCluster) return;
+      if (!AppState.selectedCluster) {
+        document.getElementById('brigade-selected-cluster').innerText = '--';
+        document.getElementById('brigade-location-name').innerText = 'Sin frente seleccionado';
+        document.getElementById('brigade-area').innerText = '-- ha';
+        document.getElementById('hud-frp').innerText = '-- MW';
+        return;
+      }
       const c = AppState.selectedCluster;
       document.getElementById('brigade-selected-cluster').innerText = c.event_id;
       document.getElementById('brigade-location-name').innerText = c.location_name || 'Sierras de Córdoba y San Luis';
@@ -1850,7 +2112,7 @@ def get_template():
     // SECCIÓN 5: CLIMA REAL OPEN-METEO Y CONTROLES DEL SIMULADOR INYECTADO
     // =========================================================================
     async function fetchRealWeather() {
-      if (AppState.isUsingInjectedWeather) return;
+      if (AppState.isOperationalInjectionActive || AppState.isUsingInjectedWeather) return;
       if (!AppState.selectedCluster) return;
       const lat = AppState.selectedCluster.centroid_lat;
       const lon = AppState.selectedCluster.centroid_lon;
@@ -1908,22 +2170,113 @@ def get_template():
       recalculatePredictiveEngine();
     }
 
+    function updateInjectedCounter() {
+      const el = document.getElementById('lbl-injected-count');
+      if (el) el.innerText = AppState.injectedClusters.length;
+    }
+
+    function clearAllInjectedFires() {
+      AppState.injectedClusters = [];
+      AppState.injectedPoints = [];
+      AppState.selectedCluster = null;
+      updateInjectedCounter();
+      toggleInjectFireMode(false);
+      loadActiveFireData();
+      recalculatePredictiveEngine();
+    }
+
+    function injectQuickThreatScenario() {
+      if (!AppState.isOperationalInjectionActive) {
+        const toggle = document.getElementById('toggle-operational-injection');
+        if (toggle) {
+          toggle.checked = true;
+          toggleOperationalInjection(true);
+        }
+      }
+      const uPt = turf.point([AppState.userLocation.lon, AppState.userLocation.lat]);
+      // Colocar foco a 2.5 km a barlovento (de donde proviene el viento)
+      const upwindDeg = (AppState.weather.windDirectionDeg) % 360;
+      const threatPt = turf.transformTranslate(uPt, 2.5, upwindDeg);
+      const coords = threatPt.geometry.coordinates;
+      injectSimulatedFireAt(coords[1], coords[0], 'critical');
+      if (map) map.setView([AppState.userLocation.lat, AppState.userLocation.lon], 13);
+    }
+
     function toggleInjectFireMode(force) {
       AppState.isInjectingFire = typeof force === 'boolean' ? force : !AppState.isInjectingFire;
       const btnText = document.getElementById('btn-inject-fire-text');
+      const banner = document.getElementById('inject-fire-banner');
       const container = map ? map.getContainer() : null;
       if (AppState.isInjectingFire) {
-        btnText.innerText = 'Click en el Mapa...';
+        if (btnText) btnText.innerText = 'Click en Mapa...';
+        if (banner) banner.classList.remove('hidden');
         if (container) container.classList.add('crosshair-cursor');
       } else {
-        btnText.innerText = 'Plantar Foco en Mapa';
+        if (btnText) btnText.innerText = 'Plantar en Mapa';
+        if (banner) banner.classList.add('hidden');
         if (container) container.classList.remove('crosshair-cursor');
       }
     }
 
-    function injectSimulatedFireAt(lat, lon) {
+    async function toggleOperationalInjection(enabled) {
+      const panelBody = document.getElementById('injection-panel-body');
+      const sosBtn = document.getElementById('btn-pedir-auxilio');
+
+      AppState.isOperationalInjectionActive = !!enabled;
+
+      if (enabled) {
+        if (panelBody) panelBody.classList.remove('hidden');
+        if (sosBtn) {
+          sosBtn.disabled = true;
+          sosBtn.classList.add('opacity-40', 'cursor-not-allowed');
+          sosBtn.classList.remove('hover:bg-red-700', 'active:scale-95');
+          sosBtn.title = 'Deshabilitado mientras Inyección Operativa está activa';
+        }
+
+        AppState.isUsingInjectedWeather = true;
+        if (AppState.injectedClusters.length === 0) {
+          const center = map ? map.getCenter() : { lat: -32.25, lng: -65.05 };
+          const sevEl = document.getElementById('sim-fire-severity');
+          const severity = sevEl ? sevEl.value : 'critical';
+          injectSimulatedFireAt(center.lat, center.lng, severity);
+        } else {
+          AppState.selectedCluster = AppState.injectedClusters[0];
+          loadActiveFireData();
+        }
+        onSimulatorSliderChange();
+      } else {
+        if (panelBody) panelBody.classList.add('hidden');
+        if (sosBtn) {
+          sosBtn.disabled = false;
+          sosBtn.classList.remove('opacity-40', 'cursor-not-allowed');
+          sosBtn.classList.add('hover:bg-red-700', 'active:scale-95');
+          sosBtn.title = '';
+        }
+
+        toggleInjectFireMode(false);
+        await restoreLiveTelemetry();
+      }
+    }
+
+    function injectSimulatedFireAt(lat, lon, severity = 'critical') {
       const idx = AppState.injectedClusters.length + 1;
-      const d = 0.012;
+      let d = 0.012; // ~1.3 km
+      let areaHa = 380.0;
+      let frpMw = 350.0;
+      let sevLabel = 'Crítica (Inyección)';
+
+      if (severity === 'moderate') {
+        d = 0.007;
+        areaHa = 140.0;
+        frpMw = 120.0;
+        sevLabel = 'Moderada (Inyección)';
+      } else if (severity === 'catastrophic') {
+        d = 0.022;
+        areaHa = 920.0;
+        frpMw = 750.0;
+        sevLabel = 'Catastrófica (Inyección)';
+      }
+
       const poly = [
         [lat + d, lon - d],
         [lat + d * 1.2, lon + d * 0.4],
@@ -1932,17 +2285,23 @@ def get_template():
         [lat - d, lon - d * 0.9],
         [lat + d, lon - d]
       ];
+      const pushAz = (AppState.weather.windDirectionDeg + 180) % 360;
       const simCluster = {
         event_id: `INJ_FIRE_00${idx}`,
-        event_type: 'Frente Inyectado (NRT & Táctico)',
-        location_name: `Anomalía Térmica (${lat.toFixed(3)}, ${lon.toFixed(3)})`,
+        is_simulated: true,
+        event_type: 'Frente Inyectado (SeMF Simulado)',
+        location_name: `Foco Inyectado #${idx} (${lat.toFixed(3)}, ${lon.toFixed(3)})`,
         centroid_lat: lat,
         centroid_lon: lon,
-        detection_area_ha: 380.0,
-        frp_peak_mw: 295.0,
+        points_count: 2,
+        detection_area_ha: areaHa,
+        frp_peak_mw: frpMw,
+        spread_vector_km: 1.75,
         spread_speed_kmh: 1.75,
-        spread_azimuth_deg: (AppState.weather.windDirectionDeg + 180) % 360,
-        severity_level: 'Severidad Alta (Inyección)',
+        spread_azimuth_deg: pushAz,
+        spread_cardinal: degreesToCardinal(pushAz),
+        last_detected: new Date().toISOString().slice(0, 19).replace('T', ' '),
+        severity_level: sevLabel,
         satellites_involved: 'VIIRS (NOAA-21) + MODIS (Aqua)',
         polygon_coords: poly
       };
@@ -1951,82 +2310,43 @@ def get_template():
 
       // Puntos satelitales térmicos inyectados
       const vPt = {
-        latitude: lat + 0.003,
-        longitude: lon - 0.002,
+        sensor_family: 'VIIRS',
+        is_simulated: true,
+        latitude: lat + d * 0.25,
+        longitude: lon - d * 0.2,
         satellite_name: 'NOAA-21',
-        frp_mw: 165.4,
-        frp_density_mw_km2: 1181.4,
+        frp_mw: frpMw * 0.55,
+        frp_density_mw_km2: (frpMw * 0.55) / 0.14,
         temp_ch4_k: 368.5,
         delta_temp_k: 46.2,
         pixel_area_km2: 0.14
       };
       const mPt = {
-        latitude: lat - 0.003,
-        longitude: lon + 0.003,
+        sensor_family: 'MODIS',
+        is_simulated: true,
+        latitude: lat - d * 0.25,
+        longitude: lon + d * 0.25,
         satellite_name: 'Aqua',
-        frp_mw: 129.6,
-        frp_density_mw_km2: 129.6,
+        frp_mw: frpMw * 0.45,
+        frp_density_mw_km2: frpMw * 0.45,
         temp_ch4_k: 345.2,
         delta_temp_k: 38.1,
         pixel_area_km2: 1.0
       };
+      AppState.injectedPoints.push(vPt, mPt);
 
-      const popupV = `
-        <div style="font-family: monospace; font-size: 11px; min-width: 190px;">
-          <b style="color: #EA580C;">🟠 VIIRS 375m (${vPt.satellite_name}) [Inyectado]</b><br>
-          <hr style="margin: 4px 0; border-color: #334155;">
-          <b>FRP:</b> ${vPt.frp_mw} MW (${vPt.frp_density_mw_km2} MW/km²)<br>
-          <b>Temp. Brillo (4µm):</b> ${vPt.temp_ch4_k} K<br>
-          <b>Anomalía ΔT:</b> ${vPt.delta_temp_k} K<br>
-          <b>Huella Píxel:</b> ${vPt.pixel_area_km2} km²<br>
-          <b>Estado:</b> Inyección Operativa
-        </div>
-      `;
-      const popupM = `
-        <div style="font-family: monospace; font-size: 11px; min-width: 190px;">
-          <b style="color: #EF4444;">🔴 MODIS 1km (${mPt.satellite_name}) [Inyectado]</b><br>
-          <hr style="margin: 4px 0; border-color: #334155;">
-          <b>FRP:</b> ${mPt.frp_mw} MW (${mPt.frp_density_mw_km2} MW/km²)<br>
-          <b>Temp. Brillo (4µm):</b> ${mPt.temp_ch4_k} K<br>
-          <b>Anomalía ΔT:</b> ${mPt.delta_temp_k} K<br>
-          <b>Huella Píxel:</b> ${mPt.pixel_area_km2} km²<br>
-          <b>Estado:</b> Inyección Operativa
-        </div>
-      `;
-
-      if (AppState.layers.viirsPoints) {
-        L.circleMarker([vPt.latitude, vPt.longitude], {
-          radius: 5.5, color: '#EA580C', fillColor: '#FB923C', fillOpacity: 0.9, weight: 2
-        }).bindPopup(popupV).addTo(AppState.layers.viirsPoints);
-      }
-
-      if (AppState.layers.modisPoints) {
-        L.circleMarker([mPt.latitude, mPt.longitude], {
-          radius: 8.5, color: '#B91C1C', fillColor: '#EF4444', fillOpacity: 0.75, weight: 2
-        }).bindPopup(popupM).addTo(AppState.layers.modisPoints);
-      }
-
-      // Actualizar KPIs satelitales en el panel
-      const baseViirs = (AppState.dashboardData && AppState.dashboardData.kpis) ? AppState.dashboardData.kpis.viirs_detections : 28;
-      const baseModis = (AppState.dashboardData && AppState.dashboardData.kpis) ? AppState.dashboardData.kpis.modis_detections : 3;
-      const vEl = document.getElementById('mon-kpi-viirs');
-      const mEl = document.getElementById('mon-kpi-modis');
-      const fEl = document.getElementById('mon-kpi-fronts');
-      const pEl = document.getElementById('mon-kpi-peak-frp');
-      if (vEl) vEl.innerText = baseViirs + (AppState.injectedClusters.length * 2);
-      if (mEl) mEl.innerText = baseModis + AppState.injectedClusters.length;
-      if (fEl) fEl.innerText = `${getAllTacticalEvents().length} frentes`;
-      if (pEl) pEl.innerText = `295 MW`;
-
-      renderClusterPills();
-      updateClusterDisplay();
+      updateInjectedCounter();
+      loadActiveFireData();
       recalculatePredictiveEngine();
     }
 
     async function restoreLiveTelemetry() {
+      AppState.isOperationalInjectionActive = false;
       AppState.isUsingInjectedWeather = false;
       AppState.injectedClusters = [];
-      const baseEvents = (AppState.dashboardData && AppState.dashboardData.events) || [];
+      AppState.injectedPoints = [];
+      updateInjectedCounter();
+      const baseEvents = getAllTacticalEvents();
       AppState.selectedCluster = baseEvents[0] || null;
 
       const badge = document.getElementById('hud-telemetry-mode');
@@ -2055,24 +2375,77 @@ def get_template():
     }
 
     // =========================================================================
-    // SECCIÓN 6: MOTOR PREDICTIVO DE AVANCE (TURF.JS) Y RUTA DE ESCAPE (OSRM)
+    // SECCIÓN 6: MOTOR PREDICTIVO (FASE A FLECHAS, FASE B 24H, FASE C CONOS/OSRM)
     // =========================================================================
-    function recalculatePredictiveEngine() {
-      const events = getAllTacticalEvents();
-      if (!events.length || !map) return;
+    function getClusterRadiusKm(ev) {
+      let maxRadiusKm = 1.6;
+      if (ev && Array.isArray(ev.polygon_coords)) {
+        const cPt = turf.point([ev.centroid_lon, ev.centroid_lat]);
+        ev.polygon_coords.forEach(c => {
+          const d = turf.distance(cPt, turf.point([c[1], c[0]]));
+          if (d > maxRadiusKm) maxRadiusKm = d;
+        });
+      }
+      return maxRadiusKm;
+    }
 
+    function recalculatePredictiveEngine() {
+      if (!map) return;
+
+      AppState.routeRequestSeq = (AppState.routeRequestSeq || 0) + 1;
       AppState.layers.firePolygons.clearLayers();
       AppState.layers.projectionCones.clearLayers();
       AppState.layers.safeZones.clearLayers();
       AppState.layers.escapeRoute.clearLayers();
 
+      const events = getAllTacticalEvents();
+      if (!events.length) {
+        const banner = document.getElementById('fsm-banner');
+        const fsmIcon = document.getElementById('fsm-icon');
+        const title = document.getElementById('fsm-status-title');
+        const desc = document.getElementById('fsm-status-desc');
+        const etaDisplay = document.getElementById('fsm-eta-display');
+        if (banner) {
+          banner.className = "bg-gradient-to-r from-emerald-700 to-teal-800 text-white px-4 py-2 border-b border-emerald-600/50 flex items-center justify-between shrink-0 shadow-xl";
+        }
+        if (fsmIcon) {
+          fsmIcon.innerText = "🛡️";
+          fsmIcon.className = "text-2xl";
+        }
+        if (title) title.innerText = "🛡️ ZONA SEGURA — SIN FOCOS ACTIVOS (<24H)";
+        if (desc) desc.innerText = "Sin focos satelitales detectados en las últimas 24 horas. Monitoreo preventivo activo.";
+        if (etaDisplay) etaDisplay.innerText = "ZONA SEGURA";
+        const needle = document.getElementById('escape-compass-needle');
+        const bearingLabel = document.getElementById('escape-bearing-label');
+        const statusBadge = document.getElementById('escape-status-badge');
+        const subtext = document.getElementById('escape-subtext');
+        const fsmArrow = document.getElementById('fsm-bearing-arrow');
+        const fsmBearingText = document.getElementById('fsm-bearing-text');
+        if (needle) { needle.innerText = '🛡️'; needle.style.transform = 'rotate(0deg)'; }
+        if (bearingLabel) bearingLabel.innerText = "Sin Focos Activos";
+        if (statusBadge) {
+          statusBadge.innerText = "🛡️ Seguro";
+          statusBadge.className = "text-[9px] px-2 py-0.5 rounded-full font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+        }
+        if (subtext) subtext.innerText = "Monitoreo preventivo activo";
+        if (fsmArrow) { fsmArrow.innerText = '🛡️'; fsmArrow.style.transform = 'rotate(0deg)'; }
+        if (fsmBearingText) fsmBearingText.innerText = "SEGURO";
+        document.getElementById('brigade-sat-speed').innerText = '-- km/h';
+        document.getElementById('brigade-spread-dir').innerText = '--';
+        AppState.currentSafeZoneTarget = null;
+        return;
+      }
+
       const w = AppState.weather;
       const windPushDir = (w.windDirectionDeg + 180) % 360;
       const hrFactor = Math.max(0.6, 1.0 + (30.0 - w.relativeHumidity) / 100.0);
       const windInducedSpeedKmh = (0.10 * w.windSpeedKmh) * hrFactor;
+      const uPt = turf.point([AppState.userLocation.lon, AppState.userLocation.lat]);
 
       let nearestCluster = null;
       let minDistanceToUser = 999999;
+      let threateningCluster = null;
+      let threateningDist = 999999;
 
       events.forEach((ev) => {
         if (!ev.polygon_coords || ev.polygon_coords.length < 3) return;
@@ -2081,57 +2454,102 @@ def get_template():
         const turfCoords = latLngs.map(p => [p[1], p[0]]);
 
         L.polygon(latLngs, {
+          pane: 'clustersPane',
           color: '#DC2626',
           weight: 2.5,
           fillColor: '#EF4444',
           fillOpacity: 0.55
         }).bindPopup(`<b>🔥 ${ev.event_id}</b><br><b>Zona:</b> ${ev.location_name || 'Sierras de Córdoba y San Luis'}<br>Severidad: ${ev.severity_level}<br>Área: ${ev.detection_area_ha} ha<br>FRP Pico: ${ev.frp_peak_mw} MW`)
+          .on('click', () => selectTacticalCluster(ev, false))
           .addTo(AppState.layers.firePolygons);
 
         const satSpeed = ev.spread_speed_kmh || 0.0;
         const projSpeedKmh = satSpeed > 0 ? (0.4 * satSpeed + 0.6 * windInducedSpeedKmh) : windInducedSpeedKmh;
         const projAzimuth = windPushDir;
+        ev.projSpeedKmh = projSpeedKmh;
+        ev.projAzimuth = projAzimuth;
 
+        // FASE C: Generación de conos Turf.js e intersección espacial booleanPointInPolygon
+        let originalPoly = null;
+        let cone1h = null;
+        let cone3h = null;
         try {
           const ring = [...turfCoords];
           if (ring[0][0] !== ring[ring.length - 1][0] || ring[0][1] !== ring[ring.length - 1][1]) {
             ring.push([ring[0][0], ring[0][1]]);
           }
           if (ring.length >= 4) {
-            const originalPoly = turf.polygon([ring]);
-            const cone1h = generateProjectionCone(originalPoly, projAzimuth, projSpeedKmh * 1.0);
-            const cone3h = generateProjectionCone(originalPoly, projAzimuth, projSpeedKmh * 2.5);
-            if (cone3h) {
-              L.geoJSON(cone3h, {
-                style: { color: '#F59E0B', weight: 1.5, dashArray: '4, 6', fillColor: '#FBBF24', fillOpacity: 0.14 }
-              }).bindPopup(`<b>Cono Predictivo 3h</b><br>Avance: ${projSpeedKmh.toFixed(2)} km/h hacia ${degreesToCardinal(projAzimuth)}`)
-                .addTo(AppState.layers.projectionCones);
-            }
-            if (cone1h) {
-              L.geoJSON(cone1h, {
-                style: { color: '#F97316', weight: 2, dashArray: '5, 5', fillColor: '#FB923C', fillOpacity: 0.28 }
-              }).bindPopup(`<b>Cono Predictivo 1h</b><br>Avance: ${projSpeedKmh.toFixed(2)} km/h hacia ${degreesToCardinal(projAzimuth)}`)
-                .addTo(AppState.layers.projectionCones);
-            }
+            originalPoly = turf.polygon([ring]);
+            cone1h = generateProjectionCone(originalPoly, projAzimuth, Math.max(0.5, projSpeedKmh * 1.0));
+            cone3h = generateProjectionCone(originalPoly, projAzimuth, Math.max(1.2, projSpeedKmh * 2.5));
           }
         } catch (e) {}
 
-        const dist = turf.distance(
-          turf.point([AppState.userLocation.lon, AppState.userLocation.lat]),
-          turf.point([ev.centroid_lon, ev.centroid_lat])
-        );
+        ev._originalPoly = originalPoly;
+        ev._cone1h = cone1h;
+        ev._cone3h = cone3h;
+
+        const inPerimeter = originalPoly ? turf.booleanPointInPolygon(uPt, originalPoly) : false;
+        const inCone1h = cone1h ? turf.booleanPointInPolygon(uPt, cone1h) : false;
+        const inCone3h = cone3h ? turf.booleanPointInPolygon(uPt, cone3h) : false;
+
+        ev._inPerimeter = inPerimeter;
+        ev._inCone1h = inCone1h;
+        ev._inCone3h = inCone3h;
+        ev._inRedZone = (inPerimeter || inCone1h);
+        ev._inOrangeZone = (!ev._inRedZone && inCone3h);
+        ev._inAnyRiskCone = (inPerimeter || inCone1h || inCone3h);
+
+        const isSelectedCluster = AppState.selectedCluster && ev.event_id === AppState.selectedCluster.event_id;
+        if (isSelectedCluster || ev._inAnyRiskCone) {
+          if (cone3h) {
+            L.geoJSON(cone3h, {
+              pane: 'conesPane',
+              style: { color: '#F59E0B', weight: 1.5, dashArray: '4, 6', fillColor: '#FBBF24', fillOpacity: 0.14 }
+            }).bindPopup(`<b>Cono Predictivo 3h (${ev.event_id})</b><br>Avance: ${projSpeedKmh.toFixed(2)} km/h hacia ${degreesToCardinal(projAzimuth)}`)
+              .addTo(AppState.layers.projectionCones);
+          }
+          if (cone1h) {
+            L.geoJSON(cone1h, {
+              pane: 'conesPane',
+              style: { color: '#F97316', weight: 2, dashArray: '5, 5', fillColor: '#FB923C', fillOpacity: 0.28 }
+            }).bindPopup(`<b>Cono Predictivo 1h (${ev.event_id})</b><br>Avance: ${projSpeedKmh.toFixed(2)} km/h hacia ${degreesToCardinal(projAzimuth)}`)
+              .addTo(AppState.layers.projectionCones);
+          }
+        }
+
+        const dist = turf.distance(uPt, turf.point([ev.centroid_lon, ev.centroid_lat]));
         if (dist < minDistanceToUser) {
           minDistanceToUser = dist;
           nearestCluster = ev;
-          nearestCluster.projSpeedKmh = projSpeedKmh;
-          nearestCluster.projAzimuth = projAzimuth;
+        }
+        if (ev._inAnyRiskCone) {
+          const replacesPrev = !threateningCluster ||
+            (ev._inRedZone && !threateningCluster._inRedZone) ||
+            ((ev._inRedZone === threateningCluster._inRedZone) && dist < threateningDist);
+          if (replacesPrev) {
+            threateningCluster = ev;
+            threateningDist = dist;
+          }
         }
       });
 
-      if (nearestCluster) {
-        document.getElementById('brigade-sat-speed').innerText = `${nearestCluster.projSpeedKmh.toFixed(2)} km/h`;
-        document.getElementById('brigade-spread-dir').innerText = `${degreesToCardinal(nearestCluster.projAzimuth)} (${Math.round(nearestCluster.projAzimuth)}°)`;
-        computeSurvivalStateAndSafeZones(nearestCluster, minDistanceToUser);
+      const activeKinematicCluster = threateningCluster || AppState.selectedCluster || nearestCluster;
+      if (activeKinematicCluster) {
+        const spd = activeKinematicCluster.projSpeedKmh ?? windInducedSpeedKmh;
+        const az = activeKinematicCluster.projAzimuth ?? windPushDir;
+        document.getElementById('brigade-sat-speed').innerText = `${spd.toFixed(2)} km/h`;
+        document.getElementById('brigade-spread-dir').innerText = `${degreesToCardinal(az)} (${Math.round(az)}°)`;
+      }
+
+      const evalCluster = threateningCluster || nearestCluster;
+      const evalDist = threateningCluster ? threateningDist : minDistanceToUser;
+      if (evalCluster) {
+        computeSurvivalStateAndSafeZones(evalCluster, evalDist, events);
+      } else {
+        AppState.layers.safeZones.clearLayers();
+        AppState.layers.escapeRoute.clearLayers();
+        AppState.currentSafeZoneTarget = null;
       }
     }
 
@@ -2171,110 +2589,212 @@ def get_template():
       { name: "Alta Gracia Centro", lat: -31.6520, lon: -64.4280, road: "Ruta Prov. 5" }
     ];
 
-    function computeSurvivalStateAndSafeZones(cluster, distToFireKm) {
+    function isPointInsideAnyRiskCone(pt, allEvents) {
+      if (!Array.isArray(allEvents)) return false;
+      return allEvents.some(ev => {
+        const inOrig = ev._originalPoly ? turf.booleanPointInPolygon(pt, ev._originalPoly) : false;
+        const inC3 = ev._cone3h ? turf.booleanPointInPolygon(pt, ev._cone3h) : false;
+        const inC1 = ev._cone1h ? turf.booleanPointInPolygon(pt, ev._cone1h) : false;
+        return inOrig || inC3 || inC1;
+      });
+    }
+
+    function calcSafeEscapeAzimuth(uPt, cluster) {
+      const fPt = turf.point([cluster.centroid_lon, cluster.centroid_lat]);
+      const radialBearing = (turf.bearing(fPt, uPt) + 360) % 360;
+      const advanceAzimuth = (cluster.projAzimuth !== undefined && cluster.projAzimuth !== null)
+        ? cluster.projAzimuth
+        : radialBearing;
+
+      // Ángulo relativo entre el vector de avance del fuego y la posición del usuario
+      let relDiff = (radialBearing - advanceAzimuth + 360) % 360;
+      if (relDiff > 180) relDiff -= 360; // entre -180 y +180
+
+      // Si el usuario está en el eje frontal del avance (|relDiff| <= 65°):
+      // Regla de Oro Forestal: escapar por el flanco lateral más cercano (perpendicular a la cabeza)
+      if (Math.abs(relDiff) <= 65) {
+        if (relDiff >= 0) {
+          return (advanceAzimuth + 80) % 360; // Flanco derecho
+        } else {
+          return (advanceAzimuth - 80 + 360) % 360; // Flanco izquierdo
+        }
+      }
+      // Si el usuario ya está en los flancos o a espaldas del fuego, huir en dirección radial alejándose del centroide
+      return radialBearing;
+    }
+
+    function computeSurvivalStateAndSafeZones(cluster, distToFireKm, allEvents = []) {
       const uPt = turf.point([AppState.userLocation.lon, AppState.userLocation.lat]);
       const fPt = turf.point([cluster.centroid_lon, cluster.centroid_lat]);
-      const bearing = (turf.bearing(fPt, uPt) + 360) % 360;
 
-      let deltaAngle = Math.abs(bearing - cluster.projAzimuth);
-      if (deltaAngle > 180) deltaAngle = 360 - deltaAngle;
-
-      const effectiveSpeed = cluster.projSpeedKmh * Math.cos(deltaAngle * Math.PI / 180);
-      let etaMinutes = 999;
-      const isHeadingToUser = (deltaAngle <= 70 && effectiveSpeed > 0.2);
-
-      if (isHeadingToUser) {
-        const edgeDist = Math.max(0.3, distToFireKm - 0.5);
-        etaMinutes = Math.round((edgeDist / effectiveSpeed) * 60);
-      }
+      const inPerimeter = cluster._originalPoly ? turf.booleanPointInPolygon(uPt, cluster._originalPoly) : false;
+      const inCone1h = cluster._cone1h ? turf.booleanPointInPolygon(uPt, cluster._cone1h) : false;
+      const inCone3h = cluster._cone3h ? turf.booleanPointInPolygon(uPt, cluster._cone3h) : false;
+      const isInsidePropagationCone = Boolean(inPerimeter || inCone1h || inCone3h);
 
       const banner = document.getElementById('fsm-banner');
+      const fsmIcon = document.getElementById('fsm-icon');
       const title = document.getElementById('fsm-status-title');
       const desc = document.getElementById('fsm-status-desc');
       const etaDisplay = document.getElementById('fsm-eta-display');
 
-      const hasThreat = (distToFireKm <= 10.0 || AppState.injectedClusters.length > 0 || isHeadingToUser);
-
-      if (!hasThreat) {
-        // MODO VIGILANCIA PREVENTIVA (SIN AMENAZA DIRECTA NI PÁNICO)
+      // REGLA ESTRICTA: Si no intersecta el cono de propagación (Turf.js), PROHIBIDO mostrar ruta de escape
+      if (!isInsidePropagationCone) {
         banner.className = "bg-gradient-to-r from-emerald-700 to-teal-800 text-white px-4 py-2 border-b border-emerald-600/50 flex items-center justify-between shrink-0 shadow-xl";
-        title.innerText = "🛡️ ZONA EN VIGILANCIA — SECTOR DESPEJADO";
-        desc.innerText = `Sin frentes de fuego activos en su proximidad (${distToFireKm.toFixed(1)} km al foco más cercano). Monitoreo satelital activo.`;
-        etaDisplay.innerText = "DESPEJADO";
+        if (fsmIcon) {
+          fsmIcon.innerText = "🛡️";
+          fsmIcon.className = "text-2xl";
+        }
+        title.innerText = "🛡️ ZONA SEGURA — FUERA DE PELIGRO";
+        desc.innerText = `Su ubicación no intersecta ningún cono de propagación activo (${distToFireKm.toFixed(1)} km al frente más cercano). No se requiere evacuación.`;
+        etaDisplay.innerText = "ZONA SEGURA";
 
-        AppState.currentSafeZoneTarget = null;
+        const needle = document.getElementById('escape-compass-needle');
+        const bearingLabel = document.getElementById('escape-bearing-label');
+        const statusBadge = document.getElementById('escape-status-badge');
+        const subtext = document.getElementById('escape-subtext');
+        const fsmArrow = document.getElementById('fsm-bearing-arrow');
+        const fsmBearingText = document.getElementById('fsm-bearing-text');
+
+        if (needle) {
+          needle.style.transform = 'rotate(0deg)';
+          needle.innerText = '🛡️';
+        }
+        if (bearingLabel) bearingLabel.innerText = "Zona Despejada";
+        if (statusBadge) {
+          statusBadge.innerText = "🛡️ Seguro";
+          statusBadge.className = "text-[9px] px-2 py-0.5 rounded-full font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+        }
+        if (subtext) subtext.innerText = "Sin necesidad de evacuación";
+        if (fsmArrow) {
+          fsmArrow.innerText = '🛡️';
+          fsmArrow.style.transform = 'rotate(0deg)';
+        }
+        if (fsmBearingText) fsmBearingText.innerText = "SEGURO";
+
         AppState.layers.safeZones.clearLayers();
         AppState.layers.escapeRoute.clearLayers();
-
-        document.getElementById('routing-via-text').innerText = "Vía Libre / Despejada";
-        document.getElementById('stat-route-distance').innerText = "-- km";
-        document.getElementById('stat-route-time').innerText = "-- min";
-        document.getElementById('stat-route-cardinal').innerText = "--";
-        document.getElementById('user-escape-instruction').innerText = "No se requiere evacuación. Sector libre de avance de humo y fuego.";
+        AppState.currentSafeZoneTarget = null;
         return;
       }
 
-      // MODO AMENAZA ACTIVA
-      if (isHeadingToUser && (etaMinutes <= 90 || distToFireKm < 3.5)) {
+      // Rumbo seguro de escape calculado por flanco/alejamiento radial
+      const escapeAzimuth = calcSafeEscapeAzimuth(uPt, cluster);
+      const escapeCardinal = degreesToCardinal(escapeAzimuth);
+
+      const needle = document.getElementById('escape-compass-needle');
+      const bearingLabel = document.getElementById('escape-bearing-label');
+      const statusBadge = document.getElementById('escape-status-badge');
+      const subtext = document.getElementById('escape-subtext');
+      const fsmArrow = document.getElementById('fsm-bearing-arrow');
+      const fsmBearingText = document.getElementById('fsm-bearing-text');
+
+      if (needle) {
+        needle.innerText = '▲';
+        needle.style.transform = `rotate(${escapeAzimuth}deg)`;
+      }
+      if (bearingLabel) bearingLabel.innerText = `${escapeCardinal} · ${Math.round(escapeAzimuth)}°`;
+      if (statusBadge) {
+        statusBadge.innerText = "⚠️ Calculando...";
+        statusBadge.className = "text-[9px] px-2 py-0.5 rounded-full font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse";
+      }
+      if (subtext) subtext.innerText = `Evaluando viabilidad de ruta hacia flanco seguro...`;
+      if (fsmArrow) {
+        fsmArrow.innerText = '▲';
+        fsmArrow.style.transform = `rotate(${escapeAzimuth}deg)`;
+      }
+      if (fsmBearingText) fsmBearingText.innerText = `${escapeCardinal} (${Math.round(escapeAzimuth)}°)`;
+
+      const bearing = (turf.bearing(fPt, uPt) + 360) % 360;
+      let deltaAngle = Math.abs(bearing - cluster.projAzimuth);
+      if (deltaAngle > 180) deltaAngle = 360 - deltaAngle;
+
+      const projSpeed = Math.max(0.3, cluster.projSpeedKmh || 0.8);
+      const effectiveSpeed = Math.max(projSpeed * 0.6, projSpeed * Math.cos(deltaAngle * Math.PI / 180));
+      const etaMinutes = inPerimeter
+        ? 0
+        : Math.max(5, Math.min(180, Math.round((Math.max(0.3, distToFireKm * 0.45) / effectiveSpeed) * 60)));
+
+      if (inPerimeter || inCone1h) {
         banner.className = "bg-gradient-to-r from-red-600 via-rose-600 to-red-700 text-white px-4 py-2 border-b border-red-500/50 flex items-center justify-between shrink-0 shadow-xl animate-pulse";
-        title.innerText = "🚨 ALERTA ROJA: IMPACTO INMINENTE";
-        desc.innerText = `Frente de fuego avanzando a ${cluster.projSpeedKmh.toFixed(1)} km/h hacia su posición. Evacúe de inmediato por la ruta marcada.`;
-        etaDisplay.innerText = etaMinutes + " MIN";
+        if (fsmIcon) {
+          fsmIcon.innerText = "🚨";
+          fsmIcon.className = "text-2xl animate-bounce";
+        }
+        title.innerText = `🚨 ALERTA ROJA: IMPACTO INMINENTE — HUIR RUMBO ${escapeCardinal}`;
+        desc.innerText = `Ubicación dentro de zona crítica (${cluster.event_id}). Evacúe rumbo ${escapeCardinal} (${Math.round(escapeAzimuth)}°) hacia terreno seguro.`;
+        etaDisplay.innerText = inPerimeter ? "EN FOCO" : `${etaMinutes} MIN`;
       } else {
         banner.className = "bg-gradient-to-r from-amber-600 to-orange-600 text-white px-4 py-2 border-b border-amber-500/50 flex items-center justify-between shrink-0 shadow-xl";
-        title.innerText = "⚠️ PRE-ALERTA: FUEGO EN LA ZONA";
-        desc.innerText = `Frente activo a ${distToFireKm.toFixed(1)} km. Monitoree rotación de viento y prepare salida.`;
-        etaDisplay.innerText = isHeadingToUser ? (etaMinutes + " MIN") : "FUERA DE EJE";
+        if (fsmIcon) {
+          fsmIcon.innerText = "⚠️";
+          fsmIcon.className = "text-2xl";
+        }
+        title.innerText = `⚠️ PRE-ALERTA: EN CONO DE AVANCE — RUMBO ${escapeCardinal}`;
+        desc.innerText = `Ubicación dentro del cono a 3h (${cluster.event_id}, ${distToFireKm.toFixed(1)} km). Prepare salida rumbo ${escapeCardinal} (${Math.round(escapeAzimuth)}°).`;
+        etaDisplay.innerText = `${etaMinutes} MIN`;
       }
 
-      // SELECCIÓN INTELIGENTE DE REFUGIO SEGURO
-      // Buscamos el refugio que NO esté en el cono de avance del fuego y que esté más próximo al usuario
+      // SELECCIÓN SEGURA DE REFUGIO GARANTIZADO (>12 km de cualquier foco de fuego y fuera de conos)
       let bestHub = null;
       let minHubDist = 999999;
 
       SAFE_SHELTER_HUBS.forEach(hub => {
         const hubPt = turf.point([hub.lon, hub.lat]);
+        if (isPointInsideAnyRiskCone(hubPt, allEvents)) return;
+
+        // Distancia a todos los incendios: debe estar al menos a 12 km de cualquier centroide
+        let isTooCloseToFire = false;
+        for (const ev of allEvents) {
+          const dFireHub = turf.distance(hubPt, turf.point([ev.centroid_lon, ev.centroid_lat]));
+          if (dFireHub < 12.0) {
+            isTooCloseToFire = true;
+            break;
+          }
+        }
+        if (isTooCloseToFire) return;
+
         const distUserToHub = turf.distance(uPt, hubPt);
-        const distFireToHub = turf.distance(fPt, hubPt);
-        const bearingFireToHub = (turf.bearing(fPt, hubPt) + 360) % 360;
+        const bearingUserToHub = (turf.bearing(uPt, hubPt) + 360) % 360;
+        let deltaEscape = Math.abs(bearingUserToHub - escapeAzimuth);
+        if (deltaEscape > 180) deltaEscape = 360 - deltaEscape;
 
-        let deltaHubAngle = Math.abs(bearingFireToHub - cluster.projAzimuth);
-        if (deltaHubAngle > 180) deltaHubAngle = 360 - deltaHubAngle;
-
-        const isSafeFromSpread = (deltaHubAngle >= 45 || distFireToHub > 12.0);
-
-        if (isSafeFromSpread && distUserToHub < minHubDist) {
+        // El refugio debe alinearse con la dirección segura de evacuación (<= 95°)
+        if (deltaEscape <= 95 && distUserToHub < minHubDist) {
           minHubDist = distUserToHub;
           bestHub = hub;
         }
       });
 
       let safeLat, safeLon, safeName, safeRoad;
-      if (bestHub && minHubDist < 45.0) {
+      if (bestHub && minHubDist < 40.0) {
         safeLat = bestHub.lat;
         safeLon = bestHub.lon;
         safeName = bestHub.name;
         safeRoad = bestHub.road;
       } else {
-        const escapeAzimuth = AppState.weather.windDirectionDeg;
-        const safePt = turf.transformTranslate(uPt, 3.5, escapeAzimuth);
+        // Fallback táctico: proyectar punto a 4.0 km alejándose hacia el flanco seguro (NUNCA hacia el fuego)
+        let safePt = turf.transformTranslate(uPt, 4.0, escapeAzimuth);
+        if (isPointInsideAnyRiskCone(safePt, allEvents)) {
+          safePt = turf.transformTranslate(uPt, 6.0, (escapeAzimuth + 35) % 360);
+        }
         const coords = safePt.geometry.coordinates;
         safeLat = coords[1];
         safeLon = coords[0];
-        safeName = "Refugio Táctico a Barlovento";
-        safeRoad = "Corredor Vial Seguro";
+        safeName = `Zona Segura de Flanco (${escapeCardinal})`;
+        safeRoad = "Corredor Táctico de Salida";
       }
 
       AppState.currentSafeZoneTarget = { lat: safeLat, lon: safeLon, name: safeName, road: safeRoad };
 
       AppState.layers.safeZones.clearLayers();
       L.circleMarker([safeLat, safeLon], {
-        radius: 11,
+        radius: 10,
         color: '#10B981',
         fillColor: '#059669',
         fillOpacity: 0.95,
         weight: 3
-      }).bindPopup(`<b>🛡️ ${safeName}</b><br>Vía de acceso: ${safeRoad}<br>Sector seguro libre de avance de fuego.`)
+      }).bindPopup(`<b>🛡️ ${safeName}</b><br>Vía de acceso: ${safeRoad}<br>Sector seguro fuera del eje de avance del fuego.`)
         .addTo(AppState.layers.safeZones);
 
       fetchAndDrawOsrmEscapeRoute(
@@ -2283,38 +2803,142 @@ def get_template():
         safeLat,
         safeLon,
         safeName,
-        safeRoad
+        safeRoad,
+        AppState.routeRequestSeq,
+        escapeAzimuth,
+        escapeCardinal,
+        allEvents
       );
     }
 
-    async function fetchAndDrawOsrmEscapeRoute(uLat, uLon, sLat, sLon, targetName, targetRoad) {
+    async function fetchAndDrawOsrmEscapeRoute(uLat, uLon, sLat, sLon, targetName, targetRoad, reqSeq, escapeAzimuth, escapeCardinal, allEvents = []) {
       const uPt = turf.point([uLon, uLat]);
       const sPt = turf.point([sLon, sLat]);
       const bearingToSafe = (turf.bearing(uPt, sPt) + 360) % 360;
       const cardinal = degreesToCardinal(bearingToSafe);
-      const cardEl = document.getElementById('stat-route-cardinal');
-      if (cardEl) cardEl.innerText = cardinal;
+
+      // Helper para dibujar el Vector Táctico Directo cuando la carretera está cortada por fuego o no hay red
+      function drawTacticalFlankVector(reasonLabel) {
+        AppState.layers.escapeRoute.clearLayers();
+
+        const tipPt = turf.transformTranslate(uPt, 2.8, escapeAzimuth);
+        const wing1Pt = turf.transformTranslate(tipPt, 0.6, (escapeAzimuth + 150) % 360);
+        const wing2Pt = turf.transformTranslate(tipPt, 0.6, (escapeAzimuth + 210) % 360);
+        const tipLL = [tipPt.geometry.coordinates[1], tipPt.geometry.coordinates[0]];
+        const w1LL = [wing1Pt.geometry.coordinates[1], wing1Pt.geometry.coordinates[0]];
+        const w2LL = [wing2Pt.geometry.coordinates[1], wing2Pt.geometry.coordinates[0]];
+
+        // Vástago de la flecha verde con halo de advertencia ámbar
+        L.polyline([[uLat, uLon], tipLL], {
+          color: '#F59E0B',
+          weight: 6,
+          opacity: 0.85,
+          dashArray: '8, 8',
+          className: 'animated-escape-path'
+        }).addTo(AppState.layers.escapeRoute);
+
+        L.polyline([[uLat, uLon], tipLL], {
+          color: '#10B981',
+          weight: 3.5,
+          opacity: 1.0
+        }).addTo(AppState.layers.escapeRoute);
+
+        // Punta triangular
+        L.polygon([w1LL, tipLL, w2LL], {
+          color: '#065F46',
+          fillColor: '#10B981',
+          fillOpacity: 1.0,
+          weight: 2
+        }).addTo(AppState.layers.escapeRoute);
+
+        // Floating Radar Badge sobre la punta de la flecha táctica
+        L.marker(tipLL, {
+          icon: L.divIcon({
+            className: 'escape-floating-badge',
+            html: `<span>🧭 HUIR RUMBO ${escapeCardinal} (${Math.round(escapeAzimuth)}°)</span>`,
+            iconSize: [210, 24],
+            iconAnchor: [105, 12]
+          })
+        }).addTo(AppState.layers.escapeRoute);
+
+        const popupText = `<b>⚠️ ALERTA: ${reasonLabel}</b><br>` +
+          `La vía vial principal atraviesa sectores comprometidos por fuego.<br>` +
+          `<b>🧭 VECTOR DE EVACUACIÓN RECOMENDADO:</b><br>` +
+          `➜ Desplazarse rumbo <b>${escapeCardinal} (${Math.round(escapeAzimuth)}°)</b> hacia terreno abierto fuera del cono.<br>` +
+          `<b>Destino Seguro:</b> ${targetName}`;
+
+        L.popup()
+          .setLatLng([(uLat + tipLL[0]) / 2, (uLon + tipLL[1]) / 2])
+          .setContent(popupText);
+
+        const desc = document.getElementById('fsm-status-desc');
+        if (desc) {
+          desc.innerText = `⚠️ ${reasonLabel}. Evacúe a campo abierto rumbo ${escapeCardinal} (${Math.round(escapeAzimuth)}°) para salir del cono.`;
+        }
+
+        const statusBadge = document.getElementById('escape-status-badge');
+        if (statusBadge) {
+          statusBadge.innerText = "⚠️ Vía Cortada";
+          statusBadge.className = "text-[9px] px-2 py-0.5 rounded-full font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse";
+        }
+        const subtext = document.getElementById('escape-subtext');
+        if (subtext) {
+          subtext.innerText = "Carretera con fuego: huir a campo abierto";
+        }
+      }
 
       try {
         const url = `https://router.project-osrm.org/route/v1/driving/${uLon},${uLat};${sLon},${sLat}?overview=full&geometries=geojson&steps=true`;
-        const res = await fetch(url);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 1800);
+        const res = await fetch(url, { signal: controller.signal });
+        clearTimeout(timeoutId);
         if (!res.ok) throw new Error("OSRM HTTP error");
         const data = await res.json();
 
+        // Evita condición de carrera si el usuario salió a Zona Segura antes de responder OSRM
+        if (reqSeq !== AppState.routeRequestSeq || !AppState.currentSafeZoneTarget) return;
+
         if (data.code === "Ok" && data.routes && data.routes.length > 0) {
           const route = data.routes[0];
+          const coords = route.geometry.coordinates;
+
+          // VALIDACIÓN TOPOLÓGICA ANTI-CRUCE DE FUEGO (turf.lineIntersect)
+          let isRoadCutByFire = false;
+          let cutReason = '';
+          if (coords && coords.length >= 2) {
+            const routeLine = turf.lineString(coords);
+            for (const ev of allEvents) {
+              if (ev._originalPoly) {
+                const cuts = turf.lineIntersect(routeLine, ev._originalPoly);
+                if (cuts && cuts.features && cuts.features.length > 0) {
+                  isRoadCutByFire = true;
+                  cutReason = `Vía cortada por ${ev.event_id}`;
+                  break;
+                }
+              }
+              if (ev._cone1h) {
+                const cutsCone = turf.lineIntersect(routeLine, ev._cone1h);
+                if (cutsCone && cutsCone.features && cutsCone.features.length > 0) {
+                  isRoadCutByFire = true;
+                  cutReason = `Vía bloqueada por cono de avance 1h (${ev.event_id})`;
+                  break;
+                }
+              }
+            }
+          }
+
+          // Si la carretera está cortada por el fuego, PROHIBIDO dibujarla
+          if (isRoadCutByFire) {
+            drawTacticalFlankVector(cutReason);
+            return;
+          }
+
+          // Si la carretera está libre de fuego, dibujarla en verde normal
           const realDistKm = route.distance / 1000.0;
           const realTimeMin = Math.max(1, Math.round(route.duration / 60.0));
-
-          const latLngs = route.geometry.coordinates.map(c => [c[1], c[0]]);
+          const latLngs = coords.map(c => [c[1], c[0]]);
           AppState.layers.escapeRoute.clearLayers();
-
-          L.polyline(latLngs, {
-            color: '#10B981',
-            weight: 5,
-            opacity: 0.95,
-            className: 'animated-escape-path'
-          }).addTo(AppState.layers.escapeRoute);
 
           let roadName = targetRoad || "Red Vial Oficial";
           if (route.legs && route.legs[0] && route.legs[0].steps) {
@@ -2322,24 +2946,28 @@ def get_template():
             if (namedStep) roadName = `${namedStep.name} (${targetRoad || ''})`.trim();
           }
 
-          document.getElementById('routing-via-text').innerText = roadName;
-          document.getElementById('stat-route-distance').innerText = `${realDistKm.toFixed(1)} km`;
-          document.getElementById('stat-route-time').innerText = `${realTimeMin} min`;
-          document.getElementById('user-escape-instruction').innerText =
-            `Evacúe hacia el ${cardinal} por ${roadName} rumbo a ${targetName}. Distancia: ${realDistKm.toFixed(1)} km (~${realTimeMin} min).`;
+          L.polyline(latLngs, {
+            color: '#10B981',
+            weight: 5,
+            opacity: 0.95,
+            className: 'animated-escape-path'
+          }).bindPopup(`<b>🧭 Ruta Vial Oficial (Despejada)</b><br><b>Destino:</b> ${targetName || 'Zona Segura'}<br><b>Vía:</b> ${roadName}<br><b>Distancia:</b> ${realDistKm.toFixed(1)} km (~${realTimeMin} min)<br><b>Rumbo General:</b> ${cardinal}`)
+            .addTo(AppState.layers.escapeRoute);
+
+          const statusBadge = document.getElementById('escape-status-badge');
+          if (statusBadge) {
+            statusBadge.innerText = "🟢 Vía Libre";
+            statusBadge.className = "text-[9px] px-2 py-0.5 rounded-full font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
+          }
+          const subtext = document.getElementById('escape-subtext');
+          if (subtext) {
+            subtext.innerText = `Ruta vial oficial (~${realDistKm.toFixed(1)} km, ${realTimeMin} min)`;
+          }
           return;
         }
       } catch (e) {
-        const directDist = turf.distance(uPt, sPt);
-        AppState.layers.escapeRoute.clearLayers();
-        L.polyline([[uLat, uLon], [sLat, sLon]], {
-          color: '#10B981', weight: 4, className: 'animated-escape-path'
-        }).addTo(AppState.layers.escapeRoute);
-        document.getElementById('routing-via-text').innerText = targetRoad || 'Corredor Vial';
-        document.getElementById('stat-route-distance').innerText = `${directDist.toFixed(1)} km`;
-        document.getElementById('stat-route-time').innerText = `${Math.max(2, Math.round(directDist * 2.2))} min`;
-        document.getElementById('user-escape-instruction').innerText =
-          `Evacúe hacia el ${cardinal} rumbo a ${targetName} (${directDist.toFixed(1)} km en línea directa).`;
+        if (reqSeq !== AppState.routeRequestSeq || !AppState.currentSafeZoneTarget) return;
+        drawTacticalFlankVector("Conexión vial no disponible");
       }
     }
 
@@ -2347,9 +2975,13 @@ def get_template():
       switchMainTab('tactical');
       const targetEv = AppState.selectedCluster || (getAllTacticalEvents()[0]);
       if (targetEv) {
+        const cPt = turf.point([targetEv.centroid_lon, targetEv.centroid_lat]);
+        const polyRadiusKm = getClusterRadiusKm(targetEv);
+        // Ubicar al usuario dentro del cono 1h siguiendo el vector de avance del viento demo (205° -> 25°)
+        const demoPt = turf.transformTranslate(cPt, Math.min(4.8, polyRadiusKm + 1.0), 25.0);
         AppState.userLocation = {
-          lat: targetEv.centroid_lat + 0.022,
-          lon: targetEv.centroid_lon + 0.012
+          lat: demoPt.geometry.coordinates[1],
+          lon: demoPt.geometry.coordinates[0]
         };
       } else {
         AppState.userLocation = { lat: -33.2380, lon: -65.9510 };
@@ -2373,8 +3005,11 @@ def get_template():
     }
 
     function openNativeGoogleMaps() {
-      if (!AppState.currentSafeZoneTarget) return;
       const o = `${AppState.userLocation.lat.toFixed(5)},${AppState.userLocation.lon.toFixed(5)}`;
+      if (!AppState.currentSafeZoneTarget) {
+        window.open(`https://www.google.com/maps/search/?api=1&query=${o}`, '_blank');
+        return;
+      }
       const d = `${AppState.currentSafeZoneTarget.lat.toFixed(5)},${AppState.currentSafeZoneTarget.lon.toFixed(5)}`;
       window.open(`https://www.google.com/maps/dir/?api=1&origin=${o}&destination=${d}&travelmode=driving`, '_blank');
     }
@@ -2422,6 +3057,20 @@ def get_template():
 </html>
 '''
 
+def safe_write_html(target_path: str, content: str):
+    data = content.encode("utf-8")
+    chunk_size = 1024 * 1024  # 1 MB chunks (evita EINVAL en bind mounts 9P/DrvFs de Docker/WSL2)
+    if os.path.exists(target_path):
+        try:
+            os.remove(target_path)
+        except OSError:
+            pass
+    with open(target_path, "wb") as f:
+        for i in range(0, len(data), chunk_size):
+            f.write(data[i:i + chunk_size])
+        f.flush()
+
+
 def main():
     output_dir = "output"
     os.makedirs(output_dir, exist_ok=True)
@@ -2429,12 +3078,10 @@ def main():
     html_content = get_template()
 
     tactical_path = os.path.join(output_dir, "app_tactica_mobile.html")
-    with open(tactical_path, "w", encoding="utf-8") as f:
-        f.write(html_content)
+    safe_write_html(tactical_path, html_content)
 
     index_path = os.path.join(output_dir, "index.html")
-    with open(index_path, "w", encoding="utf-8") as f:
-        f.write(html_content)
+    safe_write_html(index_path, html_content)
 
     print(f"📱 Portal Unificado SeMF / AURA-FIRE (2 Pestañas Consolidadas) generado con éxito:")
     print(f"   - {tactical_path} ({os.path.getsize(tactical_path):,} bytes)")
