@@ -1,0 +1,6 @@
+requirements.txt
+*.py
+data/
+Dockerfile
+docker-compose.yml
+docker-entrypoint.sh
